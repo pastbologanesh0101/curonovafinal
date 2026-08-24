@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vellore Health Network • Ultra Portal</title>
+  <title>CuroNova Healthcare Portal</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,7 +150,7 @@
       box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
     }
 
-    /* GenZ Role Switcher Buttons */
+    /* Role Switcher Buttons */
     .role-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -304,7 +304,7 @@
   <div class="app-viewport">
     
     <header>
-      <div class="brand">⚡ VELLORE HEALTH LABS</div>
+      <div class="brand">CURONOVA</div>
       <div id="roleBadge" class="badge-pill">PATIENT PORTAL</div>
     </header>
 
@@ -316,9 +316,9 @@
         <p class="subtitle">Select portal access type below to continue.</p>
         
         <div class="role-grid">
-          <div class="role-btn active" onclick="setRole('patient')">🧑‍⚕️ PATIENT</div>
-          <div class="role-btn" onclick="setRole('doctor')">🩺 DOCTOR</div>
-          <div class="role-btn" onclick="setRole('admin')">⚡ ADMIN</div>
+          <div class="role-btn active" onclick="setRole('patient')">PATIENT</div>
+          <div class="role-btn" onclick="setRole('doctor')">DOCTOR</div>
+          <div class="role-btn" onclick="setRole('admin')">ADMIN</div>
         </div>
 
         <div class="input-grid">
@@ -332,9 +332,9 @@
           </div>
         </div>
 
-        <p id="loginError" style="color: var(--accent-pink); font-weight:700; display: none; margin-bottom: 1rem;">❌ RESTRICTED: Patient login is locked to vishwa@gmail.com</p>
+        <p id="loginError" style="color: var(--accent-pink); font-weight:700; display: none; margin-bottom: 1rem;">RESTRICTED: Patient login is locked to vishwa@gmail.com</p>
 
-        <button class="btn-action" style="width:100%" onclick="handleLogin()">LAUNCH PORTAL →</button>
+        <button class="btn-action" style="width:100%" onclick="handleLogin()">LAUNCH PORTAL --></button>
       </div>
 
       <!-- 2. PATIENT FLOW: SYMPTOM ASSESSMENT -->
@@ -343,17 +343,17 @@
         <p class="subtitle">Match your health symptoms with 21 verified local hospitals[cite: 2].</p>
         
         <div class="symptom-grid">
-          <div class="chip" onclick="toggleChip(this, 'General Medicine')">🤒 High Fever</div>
-          <div class="chip" onclick="toggleChip(this, 'Emergency')">🚨 Chest Pain</div>
-          <div class="chip" onclick="toggleChip(this, 'Neurology')">🤯 Severe Headache</div>
-          <div class="chip" onclick="toggleChip(this, 'ENT')">👂 Ear / Throat Pain</div>
-          <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">🦴 Joint / Bone Pain</div>
-          <div class="chip" onclick="toggleChip(this, 'Dermatology')">🩺 Skin Rash</div>
-          <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">👁️ Vision Issue</div>
-          <div class="chip" onclick="toggleChip(this, 'Gynaecology')">🚺 Women's Health</div>
+          <div class="chip" onclick="toggleChip(this, 'General Medicine')">High Fever</div>
+          <div class="chip" onclick="toggleChip(this, 'Emergency')">Chest Pain</div>
+          <div class="chip" onclick="toggleChip(this, 'Neurology')">Severe Headache</div>
+          <div class="chip" onclick="toggleChip(this, 'ENT')">Ear / Throat Pain</div>
+          <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">Joint / Bone Pain</div>
+          <div class="chip" onclick="toggleChip(this, 'Dermatology')">Skin Rash</div>
+          <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">Vision Issue</div>
+          <div class="chip" onclick="toggleChip(this, 'Gynaecology')">Women's Health</div>
         </div>
 
-        <button class="btn-action" style="width:100%" onclick="analyzeSymptoms()">FIND MATCHING HOSPITALS →</button>
+        <button class="btn-action" style="width:100%" onclick="analyzeSymptoms()">FIND MATCHING HOSPITALS --></button>
       </div>
 
       <!-- 3. PATIENT FLOW: BOOKING & TIME -->
@@ -381,12 +381,12 @@
           </div>
         </div>
 
-        <button class="btn-action" style="width:100%" onclick="confirmBooking()">CONFIRM & SEND EMAIL →</button>
+        <button class="btn-action" style="width:100%" onclick="confirmBooking()">CONFIRM & SEND EMAIL --></button>
       </div>
 
       <!-- 4. CONFIRMED SCREEN -->
       <div id="screen-confirmed" class="screen" style="text-align:center;">
-        <h1 style="color: var(--accent-green); font-size: 3rem;">BOOKING CONFIRMED ⚡</h1>
+        <h1 style="color: var(--accent-green); font-size: 3rem;">BOOKING CONFIRMED</h1>
         <p class="subtitle">Appointment registered and sent via EmailJS.</p>
         
         <div style="background:#090d16; border:2px solid var(--accent-green); padding:2rem; border-radius:20px; margin-bottom:2rem;">
@@ -453,14 +453,14 @@
           </div>
         </div>
 
-        <button class="btn-action" style="width:100%" onclick="savePrescription()">SAVE TO PATIENT RECORD →</button>
+        <button class="btn-action" style="width:100%" onclick="savePrescription()">SAVE TO PATIENT RECORD --></button>
         <button class="btn-action btn-secondary" style="width:100%; margin-top:1rem;" onclick="logout()">LOGOUT DOCTOR</button>
       </div>
 
     </div>
 
     <footer>
-      <div>📍 VELLORE CARE NETWORK</div>
+      <div>CURONOVA HEALTHCARE NETWORK</div>
       <div>18 INTEGRATED HOSPITALS & CLINICS[cite: 2]</div>
     </footer>
 
@@ -531,9 +531,9 @@
       if (role === 'patient') {
         document.getElementById('loginEmail').value = 'vishwa@gmail.com';
       } else if (role === 'doctor') {
-        document.getElementById('loginEmail').value = 'doctor@vellorehealth.org';
+        document.getElementById('loginEmail').value = 'doctor@curonova.org';
       } else {
-        document.getElementById('loginEmail').value = 'admin@vellorehealth.org';
+        document.getElementById('loginEmail').value = 'admin@curonova.org';
       }
     }
 
@@ -589,7 +589,7 @@
         div.className = `hospital-card ${idx === 0 ? 'selected' : ''}`;
         if (idx === 0) selectedHospital = h;
         
-        div.innerHTML = `<strong>${h.name}</strong><br><small style="color: var(--text-muted);">${h.address} | 📞 ${h.phone}</small>`;
+        div.innerHTML = `<strong>${h.name}</strong><br><small style="color: var(--text-muted);">${h.address} | Phone: ${h.phone}</small>`;
         div.onclick = () => {
           document.querySelectorAll('.hospital-card').forEach(c => c.classList.remove('selected'));
           div.classList.add('selected');
@@ -616,8 +616,8 @@
       });
 
       document.getElementById('resHospital').innerText = selectedHospital.name;
-      document.getElementById('resDate').innerText = `📅 DATE: ${date}`;
-      document.getElementById('resTime').innerText = `⏰ TIME: ${time}`;
+      document.getElementById('resDate').innerText = `DATE: ${date}`;
+      document.getElementById('resTime').innerText = `TIME: ${time}`;
 
       goToScreen('screen-confirmed');
     }
