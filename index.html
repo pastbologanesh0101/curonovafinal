@@ -3,468 +3,638 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CuroNova Healthcare Portal</title>
+  <title>CuroNova Portal</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #131b2e;
-      --card-border: #2a3859;
+      --bg-main: #0a0814;
+      --bg-surface: #120e24;
+      --card-bg: #1a1435;
       
-      --accent-neon: #a855f7;  /* Electric Purple */
-      --accent-cyan: #06b6d4;  /* Neon Cyan */
-      --accent-green: #10b981; /* Lime/Emerald */
-      --accent-pink: #ec4899;  /* Radical Pink */
-
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --purple-primary: #7c4dff;
+      --purple-light: #9e77ff;
+      --purple-dark: #4b23b8;
+      --purple-glow: rgba(124, 77, 255, 0.25);
+      
+      --accent-pill: #251b48;
+      --border-color: rgba(255, 255, 255, 0.08);
+      
+      --text-bright: #ffffff;
+      --text-muted: #a69ebd;
+      --text-sub: #786f91;
+      
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
     body {
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
-      color: var(--text-main);
+      background-color: var(--bg-main);
+      color: var(--text-bright);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 1.5rem;
+      align-items: center;
     }
 
-    /* FULL SCREEN APPARATUS */
-    .app-viewport {
+    /* TOP TICKER TAPE */
+    .ticker-bar {
       width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
+      background: var(--purple-primary);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 0;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
-    /* Top Nav Bar */
+    .ticker-content {
+      display: inline-block;
+      animation: marquee 25s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* HEADER NAV */
     header {
+      width: 100%;
+      max-width: 1280px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--card-bg);
-      border: 2px solid var(--card-border);
       padding: 1.25rem 2rem;
-      border-radius: 18px;
-      box-shadow: 6px 6px 0px var(--accent-neon);
-      margin-bottom: 2rem;
     }
 
     .brand {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1.6rem;
-      letter-spacing: -1px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-neon));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
     }
 
-    .badge-pill {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      background: rgba(168, 85, 247, 0.2);
-      color: var(--accent-neon);
-      border: 2px solid var(--accent-neon);
-      padding: 0.5rem 1.2rem;
-      border-radius: 50px;
-      font-weight: 700;
-      box-shadow: 3px 3px 0px var(--accent-cyan);
+    .brand-badge {
+      background: var(--purple-primary);
+      color: #fff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
     }
 
-    /* Full-width Glass Card Screen Wrapper */
-    .screen-container {
-      background: rgba(19, 27, 46, 0.7);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--card-border);
-      border-radius: 24px;
-      padding: 2.5rem;
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--text-bright); }
+
+    .btn-portal-badge {
+      background: var(--purple-primary);
+      color: #fff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+      width: 100%;
+      max-width: 1240px;
+      background: linear-gradient(135deg, #7c4dff 0%, #4b23b8 100%);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px var(--purple-glow);
+    }
+
+    .hero-banner h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1;
+    }
+
+    /* MAIN CONTENT VIEWPORT */
+    .app-viewport {
+      width: 100%;
+      max-width: 1240px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.75rem;
+      padding-bottom: 3rem;
       flex-grow: 1;
+    }
+
+    /* SIDEBAR / CONTROL PANEL */
+    .sidebar-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      height: fit-content;
+    }
+
+    .sidebar-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .reset-link {
+      color: var(--purple-light);
+      cursor: pointer;
+      font-size: 0.75rem;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    /* MAIN STAGE CARDS */
+    .main-stage {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
-    }
-
-    h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 0.75rem;
-    }
-
-    p.subtitle {
-      color: var(--text-muted);
-      font-size: 1.15rem;
-      margin-bottom: 2rem;
-    }
-
-    /* Inputs & Form Elements */
-    .input-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .input-group label {
-      display: block;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 0.6rem;
-      color: var(--accent-cyan);
-    }
-
-    input, select, textarea {
-      width: 100%;
-      background: #090d16;
-      border: 2px solid var(--card-border);
-      padding: 1.1rem 1.25rem;
-      border-radius: 14px;
-      font-size: 1.05rem;
-      color: var(--text-main);
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent-neon);
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-    }
-
-    /* Role Switcher Buttons */
-    .role-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .role-btn {
-      background: #090d16;
-      border: 2px solid var(--card-border);
-      padding: 1.25rem;
-      border-radius: 16px;
-      color: var(--text-muted);
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .role-btn:hover {
-      border-color: var(--accent-cyan);
-      color: var(--text-main);
-      transform: translateY(-2px);
-    }
-
-    .role-btn.active {
-      background: var(--accent-neon);
-      color: #fff;
-      border-color: #fff;
-      box-shadow: 4px 4px 0px var(--accent-cyan);
-    }
-
-    /* Symptom Chips */
-    .symptom-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .chip {
-      background: #090d16;
-      border: 2px solid var(--card-border);
-      padding: 1.1rem;
-      border-radius: 16px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .chip:hover {
-      border-color: var(--accent-pink);
-      transform: scale(1.02);
-    }
-
-    .chip.selected {
-      background: var(--accent-pink);
-      color: #fff;
-      border-color: #fff;
-      box-shadow: 4px 4px 0px var(--accent-neon);
-    }
-
-    /* Action Buttons */
-    .btn-action {
-      background: var(--accent-cyan);
-      color: #090d16;
-      border: 2px solid #fff;
-      padding: 1.2rem 2rem;
-      border-radius: 16px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1.15rem;
-      cursor: pointer;
-      box-shadow: 5px 5px 0px var(--accent-neon);
-      transition: all 0.2s;
-    }
-
-    .btn-action:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 7px 7px 0px var(--accent-neon);
-    }
-
-    .btn-secondary {
-      background: #334155;
-      color: #fff;
-      box-shadow: 4px 4px 0px #000;
-    }
-
-    /* Data Cards & Lists */
-    .hospital-card {
-      background: #090d16;
-      border: 2px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .hospital-card.selected {
-      border-color: var(--accent-green);
-      box-shadow: 4px 4px 0px var(--accent-green);
-    }
-
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      background: #090d16;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 2px solid var(--card-border);
-    }
-
-    .data-table th, .data-table td {
-      padding: 1rem 1.25rem;
-      text-align: left;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .data-table th {
-      background: #1e293b;
-      color: var(--accent-cyan);
-      font-family: 'Space Grotesk', sans-serif;
     }
 
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* Bottom Widgets/Footer */
-    footer {
-      margin-top: 2rem;
+    /* FORM COMPONENTS */
+    .input-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--accent-pill);
+      border: 1px solid var(--border-color);
+      padding: 0.9rem 1.1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      color: var(--text-bright);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--purple-light);
+      box-shadow: 0 0 0 3px var(--purple-glow);
+    }
+
+    /* ROLE SWITCHER BUTTONS */
+    .role-switcher {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .role-btn {
+      background: var(--accent-pill);
+      border: 1px solid var(--border-color);
+      padding: 0.9rem 1.1rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .role-btn:hover {
       background: var(--card-bg);
-      border: 2px solid var(--card-border);
-      padding: 1.2rem 2rem;
-      border-radius: 18px;
-      font-size: 0.95rem;
+      color: var(--text-bright);
+    }
+
+    .role-btn.active {
+      background: var(--purple-primary);
+      color: #fff;
+      border-color: var(--purple-light);
+    }
+
+    /* CHIPS / SYMPTOMS */
+    .symptom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
       color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chip:hover {
+      border-color: var(--purple-light);
+      color: var(--text-bright);
+    }
+
+    .chip.selected {
+      background: var(--purple-primary);
+      color: #fff;
+      border-color: var(--purple-light);
+    }
+
+    /* ACTION BUTTON */
+    .btn-action {
+      background: var(--purple-primary);
+      color: #fff;
+      border: none;
+      padding: 1rem 1.75rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px var(--purple-glow);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-action:hover {
+      background: var(--purple-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--accent-pill);
+      color: var(--text-bright);
+      box-shadow: none;
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--card-bg);
+    }
+
+    /* HOSPITAL CARD (MATCHING GRAVITAS EVENT CARDS) */
+    .hospital-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .hospital-card:hover {
+      border-color: var(--purple-light);
+      background: var(--card-bg);
+    }
+
+    .hospital-card.selected {
+      border: 2px solid var(--purple-primary);
+      background: var(--card-bg);
+      box-shadow: 0 0 20px var(--purple-glow);
+    }
+
+    .hospital-info h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .hospital-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .arrow-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff;
+      color: var(--bg-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    /* DATA TABLE */
+    .table-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .data-table th, .data-table td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table th {
+      background: var(--accent-pill);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.75rem;
+    }
+
+    /* FOOTER */
+    footer {
+      width: 100%;
+      border-top: 1px solid var(--border-color);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      margin-top: auto;
     }
   </style>
 </head>
 <body>
 
+  <!-- TICKER TOP BAR -->
+  <div class="ticker-bar">
+    <div class="ticker-content">
+      ANCHORED IN PRECISION • DRIVEN BY HEALTHCARE INNOVATION • INTEGRATED CARE NETWORK • SERVING VELLORE REGION
+    </div>
+  </div>
+
+  <!-- HEADER NAV -->
+  <header>
+    <div class="brand">
+      CURONOVA <span class="brand-badge">2026</span>
+    </div>
+    <nav>
+      <a href="#">PORTAL</a>
+      <a href="#">NETWORK</a>
+      <a href="#">FAQS</a>
+    </nav>
+    <div id="roleBadge" class="btn-portal-badge">PATIENT PORTAL</div>
+  </header>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <h1 id="heroTitle">Portal System</h1>
+  </div>
+
+  <!-- MAIN APP VIEWPORT -->
   <div class="app-viewport">
     
-    <header>
-      <div class="brand">CURONOVA</div>
-      <div id="roleBadge" class="badge-pill">PATIENT PORTAL</div>
-    </header>
+    <!-- LEFT SIDEBAR FILTER / NAVIGATION -->
+    <div class="sidebar-panel">
+      <div class="sidebar-title">
+        <span>PORTAL CONTROLS</span>
+        <span class="reset-link" onclick="logout()">LOGOUT</span>
+      </div>
 
-    <div class="screen-container">
+      <div class="role-switcher">
+        <label>ACCESS ROLE</label>
+        <div class="role-btn active" id="role-btn-patient" onclick="setRole('patient')">
+          <span>PATIENT</span>
+          <span>--></span>
+        </div>
+        <div class="role-btn" id="role-btn-doctor" onclick="setRole('doctor')">
+          <span>DOCTOR</span>
+          <span>--></span>
+        </div>
+        <div class="role-btn" id="role-btn-admin" onclick="setRole('admin')">
+          <span>ADMIN</span>
+          <span>--></span>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--border-color); padding-top: 1.25rem; margin-top: 1rem;">
+        <label>NETWORK STATUS</label>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+          21 Medical Specialities Connected across Vellore Network[cite: 2].
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT STAGE CONTENT SCREEN WRAPPER -->
+    <div class="main-stage">
       
       <!-- 1. LOGIN SCREEN -->
       <div id="screen-login" class="screen active">
-        <h1>AUTHENTICATE ROLE</h1>
-        <p class="subtitle">Select portal access type below to continue.</p>
-        
-        <div class="role-grid">
-          <div class="role-btn active" onclick="setRole('patient')">PATIENT</div>
-          <div class="role-btn" onclick="setRole('doctor')">DOCTOR</div>
-          <div class="role-btn" onclick="setRole('admin')">ADMIN</div>
-        </div>
-
-        <div class="input-grid">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">System Authentication</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Sign in to access your designated healthcare dashboard.</p>
+          
           <div class="input-group">
             <label for="loginEmail">EMAIL IDENTIFIER</label>
             <input type="email" id="loginEmail" value="vishwa@gmail.com">
           </div>
+          
           <div class="input-group">
-            <label for="loginPass">SECURITY PIN</label>
+            <label for="loginPass">SECURITY KEY</label>
             <input type="password" id="loginPass" value="1234">
           </div>
+
+          <p id="loginError" style="color: #ff5252; font-size: 0.85rem; display: none; margin-bottom: 1rem;">Restricted: Patient login is locked to vishwa@gmail.com</p>
+
+          <button class="btn-action" style="width: 100%;" onclick="handleLogin()">ENTER PORTAL --></button>
         </div>
-
-        <p id="loginError" style="color: var(--accent-pink); font-weight:700; display: none; margin-bottom: 1rem;">RESTRICTED: Patient login is locked to vishwa@gmail.com</p>
-
-        <button class="btn-action" style="width:100%" onclick="handleLogin()">LAUNCH PORTAL --></button>
       </div>
 
       <!-- 2. PATIENT FLOW: SYMPTOM ASSESSMENT -->
       <div id="screen-symptoms" class="screen">
-        <h1>SELECT SYMPTOMS</h1>
-        <p class="subtitle">Match your health symptoms with 21 verified local hospitals[cite: 2].</p>
-        
-        <div class="symptom-grid">
-          <div class="chip" onclick="toggleChip(this, 'General Medicine')">High Fever</div>
-          <div class="chip" onclick="toggleChip(this, 'Emergency')">Chest Pain</div>
-          <div class="chip" onclick="toggleChip(this, 'Neurology')">Severe Headache</div>
-          <div class="chip" onclick="toggleChip(this, 'ENT')">Ear / Throat Pain</div>
-          <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">Joint / Bone Pain</div>
-          <div class="chip" onclick="toggleChip(this, 'Dermatology')">Skin Rash</div>
-          <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">Vision Issue</div>
-          <div class="chip" onclick="toggleChip(this, 'Gynaecology')">Women's Health</div>
-        </div>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Symptom Triage</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Select your health indicators to filter appropriate hospitals across Vellore[cite: 2].</p>
+          
+          <div class="symptom-grid">
+            <div class="chip" onclick="toggleChip(this, 'General Medicine')">High Fever</div>
+            <div class="chip" onclick="toggleChip(this, 'Emergency')">Chest Pain</div>
+            <div class="chip" onclick="toggleChip(this, 'Neurology')">Severe Headache</div>
+            <div class="chip" onclick="toggleChip(this, 'ENT')">Ear / Throat Pain</div>
+            <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">Joint / Bone Pain</div>
+            <div class="chip" onclick="toggleChip(this, 'Dermatology')">Skin Rash</div>
+            <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">Vision Issue</div>
+            <div class="chip" onclick="toggleChip(this, 'Gynaecology')">Women's Health</div>
+          </div>
 
-        <button class="btn-action" style="width:100%" onclick="analyzeSymptoms()">FIND MATCHING HOSPITALS --></button>
+          <button class="btn-action" style="width: 100%;" onclick="analyzeSymptoms()">RECOMMEND HOSPITALS --></button>
+        </div>
       </div>
 
       <!-- 3. PATIENT FLOW: BOOKING & TIME -->
       <div id="screen-booking" class="screen">
-        <h1>RESERVE SLOT</h1>
-        <p class="subtitle">Pick a recommended facility, date, and preferred time.</p>
-        
-        <label style="font-family:'Space Grotesk'; font-size:1.1rem; color:var(--accent-cyan); font-weight:700; display:block; margin-bottom:0.75rem;">SELECT FACILITY</label>
-        <div id="hospitalListContainer" style="max-height: 220px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Schedule Appointment</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Select a verified hospital and confirm your preferred slot.</p>
+          
+          <label style="margin-bottom: 0.75rem; display: block;">AVAILABLE NETWORK HOSPITALS</label>
+          <div id="hospitalListContainer" style="max-height: 240px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
 
-        <div class="input-grid">
-          <div class="input-group">
-            <label for="bookingDate">APPOINTMENT DATE</label>
-            <input type="date" id="bookingDate">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="input-group">
+              <label for="bookingDate">APPOINTMENT DATE</label>
+              <input type="date" id="bookingDate">
+            </div>
+            <div class="input-group">
+              <label for="bookingTime">TIME SLOT</label>
+              <select id="bookingTime">
+                <option>09:00 AM - 10:00 AM</option>
+                <option>10:30 AM - 11:30 AM</option>
+                <option>02:00 PM - 03:00 PM</option>
+                <option>04:30 PM - 05:30 PM</option>
+                <option>06:00 PM - 07:00 PM</option>
+              </select>
+            </div>
           </div>
-          <div class="input-group">
-            <label for="bookingTime">TIME SLOT</label>
-            <select id="bookingTime">
-              <option>09:00 AM - 10:00 AM</option>
-              <option>10:30 AM - 11:30 AM</option>
-              <option>02:00 PM - 03:00 PM</option>
-              <option>04:30 PM - 05:30 PM</option>
-              <option>06:00 PM - 07:00 PM</option>
-            </select>
-          </div>
+
+          <button class="btn-action" style="width: 100%;" onclick="confirmBooking()">CONFIRM APPOINTMENT --></button>
         </div>
-
-        <button class="btn-action" style="width:100%" onclick="confirmBooking()">CONFIRM & SEND EMAIL --></button>
       </div>
 
       <!-- 4. CONFIRMED SCREEN -->
-      <div id="screen-confirmed" class="screen" style="text-align:center;">
-        <h1 style="color: var(--accent-green); font-size: 3rem;">BOOKING CONFIRMED</h1>
-        <p class="subtitle">Appointment registered and sent via EmailJS.</p>
-        
-        <div style="background:#090d16; border:2px solid var(--accent-green); padding:2rem; border-radius:20px; margin-bottom:2rem;">
-          <h2 id="resHospital" style="color:var(--accent-cyan); font-size:1.6rem; margin-bottom:0.5rem;">Hospital</h2>
-          <p id="resDate" style="font-size:1.2rem; font-weight:700;"></p>
-          <p id="resTime" style="font-size:1.1rem; color:var(--text-muted); margin-top:0.4rem;"></p>
-        </div>
+      <div id="screen-confirmed" class="screen">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 3rem; border-radius: var(--radius-lg); text-align: center;">
+          <h2 style="font-size: 2rem; color: var(--purple-light); margin-bottom: 0.5rem;">Booking Confirmed</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">Details dispatched via EmailJS.</p>
+          
+          <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); margin-bottom: 2rem; text-align: left;">
+            <h3 id="resHospital" style="color: var(--purple-light); font-size: 1.3rem; margin-bottom: 0.5rem;">Hospital Name</h3>
+            <p id="resDate" style="font-size: 0.95rem; margin-top: 0.4rem;"></p>
+            <p id="resTime" style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.2rem;"></p>
+          </div>
 
-        <button class="btn-action btn-secondary" onclick="logout()">LOGOUT</button>
+          <button class="btn-action btn-secondary" onclick="logout()">RETURN TO LOGIN</button>
+        </div>
       </div>
 
       <!-- 5. ADMIN DASHBOARD -->
       <div id="screen-admin" class="screen">
-        <h1>ADMIN SYSTEM DASHBOARD</h1>
-        <p class="subtitle">Manage appointments and patient histories across all registered hospitals[cite: 2].</p>
-        
-        <div class="input-group" style="margin-bottom:1.5rem;">
-          <label for="adminFilterHospital">FILTER BY FACILITY</label>
-          <select id="adminFilterHospital" onchange="renderAdminTable()">
-            <option value="ALL">All Network Hospitals (21 Total Facilities)</option>
-          </select>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">System Dashboard</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Hospital operations and record logs across 21 network entries[cite: 2].</p>
+          
+          <div class="input-group" style="margin-bottom: 1.5rem;">
+            <label for="adminFilterHospital">FILTER BY FACILITY</label>
+            <select id="adminFilterHospital" onchange="renderAdminTable()">
+              <option value="ALL">All Network Hospitals (21 Total Facilities)</option>
+            </select>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>PATIENT</th>
+                  <th>HOSPITAL</th>
+                  <th>DATE & TIME</th>
+                  <th>SPECIALTY</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody"></tbody>
+            </table>
+          </div>
         </div>
-
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>PATIENT</th>
-              <th>HOSPITAL</th>
-              <th>DATE & TIME</th>
-              <th>SPECIALTY</th>
-            </tr>
-          </thead>
-          <tbody id="adminTableBody"></tbody>
-        </table>
-
-        <button class="btn-action btn-secondary" style="margin-top:2rem;" onclick="logout()">LOGOUT ADMIN</button>
       </div>
 
       <!-- 6. DOCTOR PORTAL -->
       <div id="screen-doctor" class="screen">
-        <h1>PHYSICIAN EMR PORTAL</h1>
-        <p class="subtitle">Review patient history records and write new digital prescriptions.</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Physician EMR Interface</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Review records and publish digital prescriptions.</p>
 
-        <div class="input-grid">
           <div class="input-group">
-            <label for="docPatientSelect">SELECT PATIENT</label>
+            <label for="docPatientSelect">SELECT PATIENT PROFILE</label>
             <select id="docPatientSelect" onchange="loadPatientHistoryForDoctor()">
               <option value="vishwa@gmail.com">Vishwa K (vishwa@gmail.com)</option>
             </select>
           </div>
-        </div>
 
-        <label style="font-family:'Space Grotesk'; color:var(--accent-cyan); font-weight:700;">PREVIOUS MEDICAL RECORD HISTORY</label>
-        <div id="docHistoryBox" style="background:#090d16; border:2px solid var(--card-border); padding:1.2rem; border-radius:14px; margin:0.5rem 0 1.5rem 0;"></div>
+          <label style="margin-top: 1rem; display: block;">PATIENT HISTORY RECORDS</label>
+          <div id="docHistoryBox" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.5rem; margin-top: 0.5rem;"></div>
 
-        <div class="input-grid">
           <div class="input-group">
             <label for="docDiagnosis">DIAGNOSIS</label>
             <input type="text" id="docDiagnosis" placeholder="e.g. Acute Pharyngitis">
           </div>
+          
           <div class="input-group">
-            <label for="docRx">PRESCRIPTION & DOSAGE</label>
+            <label for="docRx">PRESCRIPTION & DOSAGES</label>
             <textarea id="docRx" rows="2" placeholder="e.g. Amoxicillin 500mg - 1-0-1 after food for 5 days"></textarea>
           </div>
-        </div>
 
-        <button class="btn-action" style="width:100%" onclick="savePrescription()">SAVE TO PATIENT RECORD --></button>
-        <button class="btn-action btn-secondary" style="width:100%; margin-top:1rem;" onclick="logout()">LOGOUT DOCTOR</button>
+          <button class="btn-action" style="width: 100%;" onclick="savePrescription()">SAVE TO MEDICAL RECORD --></button>
+        </div>
       </div>
 
     </div>
 
-    <footer>
-      <div>CURONOVA HEALTHCARE NETWORK</div>
-      <div>18 INTEGRATED HOSPITALS & CLINICS[cite: 2]</div>
-    </footer>
-
   </div>
+
+  <footer>
+    CURONOVA HEALTH NETWORK • 18 INTEGRATED HOSPITALS & CLINICS[cite: 2] • ALL RIGHTS RESERVED
+  </footer>
 
   <script>
     // 21 SQL Hospitals Database[cite: 2]
@@ -524,9 +694,10 @@
 
     function setRole(role) {
       selectedRole = role;
-      document.querySelectorAll('.role-btn').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`role-btn-${role}`).classList.add('active');
       document.getElementById('roleBadge').innerText = role.toUpperCase() + ' PORTAL';
+      document.getElementById('heroTitle').innerText = role.toUpperCase() + ' PORTAL';
       
       if (role === 'patient') {
         document.getElementById('loginEmail').value = 'vishwa@gmail.com';
@@ -589,7 +760,13 @@
         div.className = `hospital-card ${idx === 0 ? 'selected' : ''}`;
         if (idx === 0) selectedHospital = h;
         
-        div.innerHTML = `<strong>${h.name}</strong><br><small style="color: var(--text-muted);">${h.address} | Phone: ${h.phone}</small>`;
+        div.innerHTML = `
+          <div class="hospital-info">
+            <h3>${h.name}</h3>
+            <p>${h.address} • Phone: ${h.phone}</p>
+          </div>
+          <div class="arrow-circle">-></div>
+        `;
         div.onclick = () => {
           document.querySelectorAll('.hospital-card').forEach(c => c.classList.remove('selected'));
           div.classList.add('selected');
@@ -647,10 +824,10 @@
       }
 
       container.innerHTML = records.map(r => `
-        <div style="border-bottom: 1px dashed var(--card-border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
           <strong>DATE:</strong> ${r.date} | <strong>DOCTOR:</strong> ${r.doctor}<br>
           <strong>DIAGNOSIS:</strong> ${r.diagnosis}<br>
-          <strong style="color: var(--accent-cyan);">PRESCRIPTION:</strong> ${r.rx}
+          <strong style="color: var(--purple-light);">PRESCRIPTION:</strong> ${r.rx}
         </div>
       `).join('');
     }
