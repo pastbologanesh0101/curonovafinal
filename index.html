@@ -12,80 +12,82 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   <style>
+    /* Dark Slate Clinical Palette - High contrast, zero eye strain */
     :root {
-      --bg-surface: #f8fafc;
-      --card-bg: #ffffff;
-      --brand-primary: #0284c7;
-      --brand-hover: #0369a1;
-      --brand-light: #e0f2fe;
+      --bg-surface: #0f172a;       /* Deep Slate Background */
+      --card-bg: #1e293b;          /* Dark Surface Card */
+      --card-hover: #334155;
+      --brand-primary: #38bdf8;    /* High-contrast Cyan */
+      --brand-hover: #0284c7;
+      --brand-light: rgba(56, 189, 248, 0.12);
       
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --border-color: #cbd5e1;
+      --text-main: #f8fafc;        /* Soft High-Contrast White */
+      --text-muted: #94a3b8;       /* Legible Secondary Gray */
+      --border-color: #334155;     /* Subtle Surface Border */
       
-      --status-low-bg: #dcfce7;
-      --status-low-text: #166534;
-      --status-med-bg: #fef3c7;
-      --status-med-text: #92400e;
-      --status-high-bg: #fee2e2;
-      --status-high-text: #991b1b;
+      --status-low-bg: rgba(34, 197, 94, 0.2);
+      --status-low-text: #4ade80;
+      --status-high-bg: rgba(239, 68, 68, 0.2);
+      --status-high-text: #f87171;
       
       --radius: 12px;
-      --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08);
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
     body { background-color: var(--bg-surface); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem; }
     .app-container { width: 100%; max-width: 720px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); }
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-surface); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem; }
     .brand { font-weight: 700; font-size: 1.35rem; color: var(--brand-primary); }
-    .user-badge { font-size: 0.85rem; background: var(--brand-light); color: var(--brand-primary); padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: 600; }
+    .user-badge { font-size: 0.85rem; background: var(--brand-light); color: var(--brand-primary); padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: 600; border: 1px solid var(--brand-primary); }
     
-    h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
-    h2 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.5rem 0; }
+    h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); }
+    h2 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.5rem 0; color: var(--text-main); }
     p.subtitle { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; }
     
     .input-group { margin-bottom: 1.25rem; }
-    label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
-    input, select, textarea { width: 100%; background: #fff; border: 1.5px solid var(--border-color); padding: 0.85rem 1rem; border-radius: 8px; font-size: 1rem; color: var(--text-main); outline: none; }
+    label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-main); }
+    input, select, textarea { width: 100%; background: #0f172a; border: 1.5px solid var(--border-color); padding: 0.85rem 1rem; border-radius: 8px; font-size: 1rem; color: var(--text-main); outline: none; transition: border-color 0.2s ease; }
     input:focus, select:focus, textarea:focus { border-color: var(--brand-primary); }
 
     .role-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .role-tab { flex: 1; padding: 0.75rem; border: 1.5px solid var(--border-color); border-radius: 8px; background: var(--bg-surface); font-weight: 600; text-align: center; cursor: pointer; }
+    .role-tab { flex: 1; padding: 0.75rem; border: 1.5px solid var(--border-color); border-radius: 8px; background: #0f172a; color: var(--text-muted); font-weight: 600; text-align: center; cursor: pointer; transition: all 0.2s; }
     .role-tab.active { background: var(--brand-light); color: var(--brand-primary); border-color: var(--brand-primary); }
 
     .symptom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.6rem; margin-bottom: 1.2rem; }
-    .chip { background: var(--bg-surface); border: 1.5px solid var(--border-color); padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; text-align: center; }
+    .chip { background: #0f172a; border: 1.5px solid var(--border-color); padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; text-align: center; color: var(--text-main); transition: all 0.2s; }
+    .chip:hover { border-color: var(--brand-primary); }
     .chip.selected { background: var(--brand-light); color: var(--brand-primary); border-color: var(--brand-primary); font-weight: 600; }
 
-    .btn-main { width: 100%; background: var(--brand-primary); color: #fff; border: none; padding: 0.95rem; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 1rem; }
-    .btn-main:hover { background: var(--brand-hover); }
-    .btn-secondary { background: #64748b; margin-top: 0.5rem; }
+    .btn-main { width: 100%; background: var(--brand-primary); color: #0f172a; border: none; padding: 0.95rem; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 1rem; transition: background 0.2s ease; }
+    .btn-main:hover { background: #7dd3fc; }
+    .btn-secondary { background: #475569; color: var(--text-main); margin-top: 0.5rem; }
+    .btn-secondary:hover { background: #64748b; }
 
     .screen { display: none; }
     .screen.active { display: block; }
 
-    .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; background: #0f172a; border-radius: 8px; overflow: hidden; }
     .data-table th, .data-table td { border: 1px solid var(--border-color); padding: 0.75rem; text-align: left; }
-    .data-table th { background: var(--bg-surface); font-weight: 600; }
+    .data-table th { background: #1e293b; font-weight: 600; color: var(--brand-primary); }
 
-    .hospital-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; cursor: pointer; }
+    .hospital-card { border: 1.5px solid var(--border-color); background: #0f172a; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .hospital-card:hover { border-color: var(--brand-primary); }
     .hospital-card.selected { border-color: var(--brand-primary); background: var(--brand-light); }
   </style>
 </head>
 <body>
 
   <div class="app-container">
-    
     <header>
       <div class="brand">🏥 Vellore Health Network</div>
-      <div id="roleBadge" class="user-badge">Portal Auth</div>
+      <div id="roleBadge" class="user-badge">PATIENT PORTAL</div>
     </header>
 
-    <!-- 1. LOGIN SCREEN WITH 3 ROLES -->
+    <!-- 1. LOGIN SCREEN -->
     <div id="screen-login" class="screen active">
-      <h1>Portal Login</h1>
-      <p class="subtitle">Select your account type to log into the medical network.</p>
+      <h1>Portal Sign-In</h1>
+      <p class="subtitle">Access medical services across verified Vellore healthcare facilities[cite: 2].</p>
       
       <div class="role-tabs">
         <div class="role-tab active" onclick="setRole('patient')">Patient</div>
@@ -95,7 +97,7 @@
 
       <div class="input-group">
         <label for="loginEmail">Email Address</label>
-        <input type="email" id="loginEmail" placeholder="vishwa@gmail.com">
+        <input type="email" id="loginEmail" value="vishwa@gmail.com">
       </div>
       
       <div class="input-group">
@@ -103,7 +105,7 @@
         <input type="password" id="loginPass" value="1234">
       </div>
 
-      <p id="loginError" style="color: var(--status-high-text); font-size: 0.85rem; display: none; margin-bottom: 1rem;">Access Denied: Patient portal only permits access to vishwa@gmail.com</p>
+      <p id="loginError" style="color: var(--status-high-text); font-size: 0.85rem; display: none; margin-bottom: 1rem;">Access Restricted: Patient portal login only accepts vishwa@gmail.com</p>
 
       <button class="btn-main" onclick="handleLogin()">Sign In</button>
     </div>
@@ -111,7 +113,7 @@
     <!-- 2. PATIENT FLOW: SYMPTOM ASSESSMENT -->
     <div id="screen-symptoms" class="screen">
       <h1>Patient Triage</h1>
-      <p class="subtitle">Select your symptoms to find specialized care in Vellore.</p>
+      <p class="subtitle">Select your symptoms to find specialized care centers in Vellore.</p>
       
       <div class="symptom-grid">
         <div class="chip" onclick="toggleChip(this, 'General Medicine')">🤒 High Fever</div>
@@ -130,9 +132,9 @@
     <!-- 3. PATIENT FLOW: HOSPITAL & DATE/TIME SELECTION -->
     <div id="screen-booking" class="screen">
       <h1>Schedule Appointment</h1>
-      <p class="subtitle">Choose your facility, date, and time slot.</p>
+      <p class="subtitle">Select a facility, date, and preferred time slot.</p>
       
-      <label>Select Verified Hospital:</label>
+      <label>Matched Verified Hospitals:</label>
       <div id="hospitalListContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem;"></div>
 
       <div class="input-group">
@@ -159,7 +161,7 @@
       <h1 style="color: var(--status-low-text);">Booking Confirmed</h1>
       <p class="subtitle">Your appointment details have been dispatched via EmailJS.</p>
       
-      <div style="border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
+      <div style="border: 1px solid var(--border-color); background: #0f172a; padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
         <h3 id="resHospital" style="color: var(--brand-primary);">Hospital Name</h3>
         <p id="resDate" style="font-size: 0.9rem; margin-top: 0.5rem;"></p>
         <p id="resTime" style="font-size: 0.9rem; color: var(--text-muted);"></p>
@@ -169,11 +171,11 @@
 
     <!-- 5. ADMIN DASHBOARD -->
     <div id="screen-admin" class="screen">
-      <h1>Administrator Control Panel</h1>
-      <p class="subtitle">Hospital network operations and patient history tracking across all facilities[cite: 2].</p>
+      <h1>Administrator Panel</h1>
+      <p class="subtitle">Hospital operations and network history tracking across all 21 SQL entries[cite: 2].</p>
       
       <div class="input-group">
-        <label for="adminFilterHospital">Filter by Hospital</label>
+        <label for="adminFilterHospital">Filter by Facility</label>
         <select id="adminFilterHospital" onchange="renderAdminTable()">
           <option value="ALL">All Network Hospitals (21 Facilities)</option>
         </select>
@@ -196,18 +198,18 @@
 
     <!-- 6. DOCTOR PORTAL -->
     <div id="screen-doctor" class="screen">
-      <h1>Physician Consultation Portal</h1>
-      <p class="subtitle">Review patient histories and issue new prescriptions.</p>
+      <h1>Physician Portal</h1>
+      <p class="subtitle">Review patient medical records and log new prescriptions.</p>
 
       <div class="input-group">
-        <label for="docPatientSelect" onchange="loadPatientHistoryForDoctor()">Select Patient</label>
+        <label for="docPatientSelect">Select Patient Profile</label>
         <select id="docPatientSelect" onchange="loadPatientHistoryForDoctor()">
           <option value="vishwa@gmail.com">Vishwa K (vishwa@gmail.com)</option>
         </select>
       </div>
 
-      <h2>Medical History</h2>
-      <div id="docHistoryBox" style="background: var(--bg-surface); padding: 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem;">
+      <h2>Medical Record History</h2>
+      <div id="docHistoryBox" style="background: #0f172a; padding: 1rem; border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border-color); margin-bottom: 1rem;">
         No prior prescription records logged.
       </div>
 
@@ -224,7 +226,6 @@
       <button class="btn-main" onclick="savePrescription()">Save Prescription to Patient Record</button>
       <button class="btn-main btn-secondary" onclick="logout()">Logout Doctor</button>
     </div>
-
   </div>
 
   <script>
@@ -253,7 +254,6 @@
       { name: "Saaral Fertility and Women's Health Centre", address: "Katpadi, Vellore", phone: "+916385169309", specialties: ['Gynaecology'] }
     ];
 
-    // Mock Database Persistence
     let globalAppointments = [
       { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Christian Medical College Hospital", dateTime: "2026-08-26 | 10:30 AM", specialty: "General Medicine" },
       { patient: "Ananthi R", hospital: "The Eye Foundation", dateTime: "2026-08-25 | 02:00 PM", specialty: "Ophthalmology" }
@@ -272,12 +272,10 @@
     (function(){
       emailjs.init("YOUR_PUBLIC_KEY");
       
-      // Default Date Picker to Tomorrow
       const today = new Date();
       today.setDate(today.getDate() + 1);
       document.getElementById('bookingDate').value = today.toISOString().split('T')[0];
 
-      // Populates Admin Dropdown
       const adminSelect = document.getElementById('adminFilterHospital');
       HOSPITALS_DATABASE.forEach(h => {
         const opt = document.createElement('option');
@@ -335,7 +333,7 @@
 
     function analyzeSymptoms() {
       if (selectedSpecialties.length === 0) {
-        alert("Please choose at least one symptom.");
+        alert("Please select at least one symptom.");
         return;
       }
       populateHospitals();
@@ -369,7 +367,7 @@
       const time = document.getElementById('bookingTime').value;
 
       if (!date) {
-        alert("Please pick an appointment date.");
+        alert("Please choose an appointment date.");
         return;
       }
 
@@ -407,7 +405,7 @@
       const records = globalPrescriptions[patientEmail] || [];
 
       if (records.length === 0) {
-        container.innerHTML = "<em>No previous records logged for this patient.</em>";
+        container.innerHTML = "<em>No previous medical history recorded.</em>";
         return;
       }
 
@@ -415,7 +413,7 @@
         <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
           <strong>Date:</strong> ${r.date} | <strong>Doctor:</strong> ${r.doctor}<br>
           <strong>Diagnosis:</strong> ${r.diagnosis}<br>
-          <strong>Prescription:</strong> ${r.rx}
+          <strong style="color: var(--brand-primary);">Prescription:</strong> ${r.rx}
         </div>
       `).join('');
     }
@@ -426,7 +424,7 @@
       const rx = document.getElementById('docRx').value;
 
       if (!diag || !rx) {
-        alert("Please fill in both the diagnosis and prescription fields.");
+        alert("Please enter both the diagnosis and prescription.");
         return;
       }
 
@@ -441,7 +439,7 @@
 
       document.getElementById('docDiagnosis').value = '';
       document.getElementById('docRx').value = '';
-      alert("Prescription added to patient's record.");
+      alert("Prescription saved to patient profile.");
       loadPatientHistoryForDoctor();
     }
 
