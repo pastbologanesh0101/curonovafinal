@@ -3,33 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vellore Smart Health & Hospital Booking</title>
+  <title>Vellore Health Network Portal</title>
   
-  <!-- Clean, highly legibile typography for all age demographics -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- EmailJS SDK -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   <style>
-    /* ==========================================================================
-       ACCESSIBLE & MODERN CLINICAL DESIGN SYSTEM
-       Designed for legibility across young adults, parents, and elderly users.
-       ========================================================================== */
     :root {
       --bg-surface: #f8fafc;
       --card-bg: #ffffff;
-      --brand-primary: #0284c7;    /* Accessible Trust Blue */
+      --brand-primary: #0284c7;
       --brand-hover: #0369a1;
       --brand-light: #e0f2fe;
       
-      --text-main: #0f172a;       /* High Contrast Dark Gray */
-      --text-muted: #475569;      /* Accessible Subtext */
+      --text-main: #0f172a;
+      --text-muted: #475569;
       --border-color: #cbd5e1;
       
-      /* Medical Urgency Palette */
       --status-low-bg: #dcfce7;
       --status-low-text: #166534;
       --status-med-bg: #fef3c7;
@@ -41,241 +34,43 @@
       --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+    body { background-color: var(--bg-surface); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem; }
+    .app-container { width: 100%; max-width: 720px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-surface); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    .brand { font-weight: 700; font-size: 1.35rem; color: var(--brand-primary); }
+    .user-badge { font-size: 0.85rem; background: var(--brand-light); color: var(--brand-primary); padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: 600; }
+    
+    h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.5rem 0; }
+    p.subtitle { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; }
+    
+    .input-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+    input, select, textarea { width: 100%; background: #fff; border: 1.5px solid var(--border-color); padding: 0.85rem 1rem; border-radius: 8px; font-size: 1rem; color: var(--text-main); outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--brand-primary); }
 
-    body {
-      background-color: var(--bg-surface);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.5rem 1rem;
-    }
+    .role-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .role-tab { flex: 1; padding: 0.75rem; border: 1.5px solid var(--border-color); border-radius: 8px; background: var(--bg-surface); font-weight: 600; text-align: center; cursor: pointer; }
+    .role-tab.active { background: var(--brand-light); color: var(--brand-primary); border-color: var(--brand-primary); }
 
-    /* Container setup */
-    .app-container {
-      width: 100%;
-      max-width: 640px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow);
-    }
+    .symptom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.6rem; margin-bottom: 1.2rem; }
+    .chip { background: var(--bg-surface); border: 1.5px solid var(--border-color); padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; text-align: center; }
+    .chip.selected { background: var(--brand-light); color: var(--brand-primary); border-color: var(--brand-primary); font-weight: 600; }
 
-    /* Header Bar */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid var(--bg-surface);
-      padding-bottom: 1rem;
-      margin-bottom: 1.5rem;
-    }
+    .btn-main { width: 100%; background: var(--brand-primary); color: #fff; border: none; padding: 0.95rem; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 1rem; }
+    .btn-main:hover { background: var(--brand-hover); }
+    .btn-secondary { background: #64748b; margin-top: 0.5rem; }
 
-    .brand {
-      font-weight: 700;
-      font-size: 1.35rem;
-      color: var(--brand-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+    .screen { display: none; }
+    .screen.active { display: block; }
 
-    .location-tag {
-      font-size: 0.85rem;
-      background: var(--brand-light);
-      color: var(--brand-primary);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      font-weight: 600;
-    }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+    .data-table th, .data-table td { border: 1px solid var(--border-color); padding: 0.75rem; text-align: left; }
+    .data-table th { background: var(--bg-surface); font-weight: 600; }
 
-    /* Typography */
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.5rem;
-    }
-
-    p.subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-    }
-
-    /* Input Forms */
-    .input-group {
-      margin-bottom: 1.25rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 0.4rem;
-    }
-
-    input, select {
-      width: 100%;
-      background: #ffffff;
-      border: 1.5px solid var(--border-color);
-      padding: 0.85rem 1rem;
-      border-radius: 8px;
-      color: var(--text-main);
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--brand-primary);
-    }
-
-    /* Expanded Symptom Grid */
-    .symptom-category {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin: 1rem 0 0.5rem 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .symptom-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 0.6rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .chip {
-      background: var(--bg-surface);
-      border: 1.5px solid var(--border-color);
-      padding: 0.75rem 0.85rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--text-main);
-      cursor: pointer;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.15s ease;
-    }
-
-    .chip:hover {
-      border-color: var(--brand-primary);
-    }
-
-    .chip.selected {
-      background: var(--brand-light);
-      color: var(--brand-primary);
-      border-color: var(--brand-primary);
-      font-weight: 600;
-    }
-
-    /* Action Buttons */
-    .btn-main {
-      width: 100%;
-      background: var(--brand-primary);
-      color: #ffffff;
-      border: none;
-      padding: 0.95rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background 0.2s ease;
-    }
-
-    .btn-main:hover {
-      background: var(--brand-hover);
-    }
-
-    /* Dynamic UI Screen Handlers */
-    .screen {
-      display: none;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    /* Medical Assessment Result Box */
-    .assessment-card {
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-      background: #ffffff;
-    }
-
-    .urgency-badge {
-      display: inline-block;
-      padding: 0.3rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      text-transform: uppercase;
-    }
-
-    .urgency-low { background: var(--status-low-bg); color: var(--status-low-text); }
-    .urgency-med { background: var(--status-med-bg); color: var(--status-med-text); }
-    .urgency-high { background: var(--status-high-bg); color: var(--status-high-text); }
-
-    .hospital-card {
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 0.75rem;
-      cursor: pointer;
-      transition: border-color 0.2s ease;
-    }
-
-    .hospital-card.selected {
-      border-color: var(--brand-primary);
-      background: var(--brand-light);
-    }
-
-    .hospital-name {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--text-main);
-    }
-
-    .hospital-address {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    .hospital-phone {
-      font-size: 0.8rem;
-      color: var(--brand-primary);
-      font-weight: 600;
-      margin-top: 0.4rem;
-    }
-
-    footer {
-      margin-top: 1.5rem;
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
+    .hospital-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; cursor: pointer; }
+    .hospital-card.selected { border-color: var(--brand-primary); background: var(--brand-light); }
   </style>
 </head>
 <body>
@@ -283,375 +78,380 @@
   <div class="app-container">
     
     <header>
-      <div class="brand">🏥 Vellore CareAssist</div>
-      <div class="location-tag">Vellore, TN</div>
+      <div class="brand">🏥 Vellore Health Network</div>
+      <div id="roleBadge" class="user-badge">Portal Auth</div>
     </header>
 
-    <!-- SCREEN 1: Patient Information -->
-    <div id="screen-user" class="screen active">
-      <h1>Patient Registration</h1>
-      <p class="subtitle">Please enter your basic information to begin triage and doctor matching.</p>
+    <!-- 1. LOGIN SCREEN WITH 3 ROLES -->
+    <div id="screen-login" class="screen active">
+      <h1>Portal Login</h1>
+      <p class="subtitle">Select your account type to log into the medical network.</p>
       
-      <div class="input-group">
-        <label for="userName">Full Name</label>
-        <input type="text" id="userName" placeholder="e.g. Ramachandran K" required>
-      </div>
-      
-      <div class="input-group">
-        <label for="userAge">Age</label>
-        <input type="number" id="userAge" placeholder="e.g. 54" required>
+      <div class="role-tabs">
+        <div class="role-tab active" onclick="setRole('patient')">Patient</div>
+        <div class="role-tab" onclick="setRole('doctor')">Doctor</div>
+        <div class="role-tab" onclick="setRole('admin')">Admin</div>
       </div>
 
       <div class="input-group">
-        <label for="userEmail">Email Address (for appointment confirmation)</label>
-        <input type="email" id="userEmail" placeholder="name@example.com" required>
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" placeholder="vishwa@gmail.com">
+      </div>
+      
+      <div class="input-group">
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" value="1234">
       </div>
 
-      <button class="btn-main" onclick="goToScreen('screen-symptoms')">Continue to Symptom Selection</button>
+      <p id="loginError" style="color: var(--status-high-text); font-size: 0.85rem; display: none; margin-bottom: 1rem;">Access Denied: Patient portal only permits access to vishwa@gmail.com</p>
+
+      <button class="btn-main" onclick="handleLogin()">Sign In</button>
     </div>
 
-    <!-- SCREEN 2: Comprehensive Symptom Checker -->
+    <!-- 2. PATIENT FLOW: SYMPTOM ASSESSMENT -->
     <div id="screen-symptoms" class="screen">
-      <h1>Symptom Assessment</h1>
-      <p class="subtitle">Select all symptoms you or the patient are currently experiencing.</p>
+      <h1>Patient Triage</h1>
+      <p class="subtitle">Select your symptoms to find specialized care in Vellore.</p>
       
-      <div class="symptom-category">General & Urgent</div>
       <div class="symptom-grid">
         <div class="chip" onclick="toggleChip(this, 'General Medicine')">🤒 High Fever</div>
         <div class="chip" onclick="toggleChip(this, 'Emergency')">🚨 Chest Pain</div>
-        <div class="chip" onclick="toggleChip(this, 'General Medicine')">🔋 Extreme Fatigue</div>
-        <div class="chip" onclick="toggleChip(this, 'Emergency')">🫁 Severe Breathlessness</div>
-      </div>
-
-      <div class="symptom-category">Head, ENT & Eyes</div>
-      <div class="symptom-grid">
         <div class="chip" onclick="toggleChip(this, 'Neurology')">🤯 Severe Headache</div>
-        <div class="chip" onclick="toggleChip(this, 'ENT')">👂 Ear Pain / Hearing Loss</div>
-        <div class="chip" onclick="toggleChip(this, 'ENT')">🗣️ Throat Infection</div>
-        <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">👁️ Vision Blur / Red Eye</div>
+        <div class="chip" onclick="toggleChip(this, 'ENT')">👂 Ear/Throat Care</div>
+        <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">🦴 Joint/Bone Pain</div>
+        <div class="chip" onclick="toggleChip(this, 'Dermatology')">🩺 Skin Rash</div>
+        <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">👁️ Vision Care</div>
+        <div class="chip" onclick="toggleChip(this, 'Gynaecology')">🚺 Women's Health</div>
       </div>
 
-      <div class="symptom-category">Bones, Joints & Organs</div>
-      <div class="symptom-grid">
-        <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">🦴 Joint / Bone Pain</div>
-        <div class="chip" onclick="toggleChip(this, 'Gastroenterology')">🤢 Stomach Ache / Vomiting</div>
-        <div class="chip" onclick="toggleChip(this, 'Dermatology')">🩺 Skin Rash / Itching</div>
-        <div class="chip" onclick="toggleChip(this, 'Gynaecology')">🚺 Pregnancy / Women's Care</div>
-        <div class="chip" onclick="toggleChip(this, 'Paediatrics')">👶 Child Health Concerns</div>
-      </div>
-
-      <button class="btn-main" onclick="analyzeSymptoms()">Analyze Symptoms & Find Hospitals</button>
+      <button class="btn-main" onclick="analyzeSymptoms()">Search Recommended Hospitals</button>
     </div>
 
-    <!-- SCREEN 3: Triage Assessment & Hospital Matching -->
-    <div id="screen-results" class="screen">
-      <h1>Recommended Care Facilities</h1>
-      <p class="subtitle">Based on your symptoms, we matched verified medical centers in Vellore[cite: 2].</p>
+    <!-- 3. PATIENT FLOW: HOSPITAL & DATE/TIME SELECTION -->
+    <div id="screen-booking" class="screen">
+      <h1>Schedule Appointment</h1>
+      <p class="subtitle">Choose your facility, date, and time slot.</p>
       
-      <div class="assessment-card">
-        <span id="urgencyBadge" class="urgency-badge urgency-low">Low Urgency</span>
-        <h3 id="recommendedSpecialty" style="margin-bottom: 0.4rem;">General Medicine</h3>
-        <p id="assessmentSummary" style="font-size: 0.9rem; color: var(--text-muted);">Please select a facility below to reserve your consultation slot.</p>
+      <label>Select Verified Hospital:</label>
+      <div id="hospitalListContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem;"></div>
+
+      <div class="input-group">
+        <label for="bookingDate">Appointment Date</label>
+        <input type="date" id="bookingDate">
       </div>
 
-      <label>Select a Medical Center (Filtered by Specialty):</label>
-      <div id="hospitalListContainer" style="margin-top: 0.5rem; max-height: 280px; overflow-y: auto;">
-        <!-- Dynamically Populated from SQL Seed Data -->
+      <div class="input-group">
+        <label for="bookingTime">Preferred Time Slot</label>
+        <select id="bookingTime">
+          <option>09:00 AM - 10:00 AM</option>
+          <option>10:30 AM - 11:30 AM</option>
+          <option>02:00 PM - 03:00 PM</option>
+          <option>04:30 PM - 05:30 PM</option>
+          <option>06:00 PM - 07:00 PM</option>
+        </select>
       </div>
 
-      <button class="btn-main" onclick="bookAppointment()">Confirm & Book Appointment</button>
+      <button class="btn-main" onclick="confirmBooking()">Confirm Schedule & Send Email</button>
     </div>
 
-    <!-- SCREEN 4: Confirmation Screen -->
+    <!-- 4. PATIENT FLOW: CONFIRMATION -->
     <div id="screen-confirmed" class="screen">
-      <h1 style="color: var(--status-low-text);">Appointment Requested</h1>
-      <p class="subtitle">Your details have been submitted to the selected healthcare provider[cite: 2].</p>
+      <h1 style="color: var(--status-low-text);">Booking Confirmed</h1>
+      <p class="subtitle">Your appointment details have been dispatched via EmailJS.</p>
       
-      <div class="assessment-card" style="text-align: center; padding: 1.5rem;">
-        <h3 id="confirmHospitalName" style="color: var(--brand-primary); margin-bottom: 0.5rem;">Hospital Name</h3>
-        <p id="confirmDetails" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;"></p>
-        <p style="font-size: 0.85rem; color: var(--text-main);"><strong>Emergency Direct Line:</strong> <span id="confirmPhone"></span></p>
+      <div style="border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h3 id="resHospital" style="color: var(--brand-primary);">Hospital Name</h3>
+        <p id="resDate" style="font-size: 0.9rem; margin-top: 0.5rem;"></p>
+        <p id="resTime" style="font-size: 0.9rem; color: var(--text-muted);"></p>
       </div>
-
-      <button class="btn-main" onclick="goToScreen('screen-user')">Return to Home Screen</button>
+      <button class="btn-main btn-secondary" onclick="logout()">Logout</button>
     </div>
 
-    <footer>Vellore Medical Assistance Network • 18 Verified Centers Integrated[cite: 2]</footer>
+    <!-- 5. ADMIN DASHBOARD -->
+    <div id="screen-admin" class="screen">
+      <h1>Administrator Control Panel</h1>
+      <p class="subtitle">Hospital network operations and patient history tracking across all facilities[cite: 2].</p>
+      
+      <div class="input-group">
+        <label for="adminFilterHospital">Filter by Hospital</label>
+        <select id="adminFilterHospital" onchange="renderAdminTable()">
+          <option value="ALL">All Network Hospitals (21 Facilities)</option>
+        </select>
+      </div>
+
+      <h2>Scheduled & Past Patient Records</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Hospital</th>
+            <th>Date & Time</th>
+            <th>Specialty</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+      <button class="btn-main btn-secondary" onclick="logout()">Logout Admin</button>
+    </div>
+
+    <!-- 6. DOCTOR PORTAL -->
+    <div id="screen-doctor" class="screen">
+      <h1>Physician Consultation Portal</h1>
+      <p class="subtitle">Review patient histories and issue new prescriptions.</p>
+
+      <div class="input-group">
+        <label for="docPatientSelect" onchange="loadPatientHistoryForDoctor()">Select Patient</label>
+        <select id="docPatientSelect" onchange="loadPatientHistoryForDoctor()">
+          <option value="vishwa@gmail.com">Vishwa K (vishwa@gmail.com)</option>
+        </select>
+      </div>
+
+      <h2>Medical History</h2>
+      <div id="docHistoryBox" style="background: var(--bg-surface); padding: 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem;">
+        No prior prescription records logged.
+      </div>
+
+      <h2>Write New Prescription</h2>
+      <div class="input-group">
+        <label for="docDiagnosis">Diagnosis & Observations</label>
+        <input type="text" id="docDiagnosis" placeholder="e.g. Acute Pharyngitis">
+      </div>
+      <div class="input-group">
+        <label for="docRx">Prescribed Medications & Dosages</label>
+        <textarea id="docRx" rows="3" placeholder="e.g. Amoxicillin 500mg - 1-0-1 after food for 5 days"></textarea>
+      </div>
+
+      <button class="btn-main" onclick="savePrescription()">Save Prescription to Patient Record</button>
+      <button class="btn-main btn-secondary" onclick="logout()">Logout Doctor</button>
+    </div>
 
   </div>
 
   <script>
-    // Database Seed Parsed directly from your SQL Migration file[cite: 2]
+    // 21 Hospitals Parsed from your SQL File[cite: 2]
     const HOSPITALS_DATABASE = [
-      {
-        name: "Christian Medical College Hospital",
-        address: "Ida Scudder Road, Thottapalayam, Vellore - 632004",
-        phone: "+918000338855",
-        specialties: ['General Medicine','Cardiology','Neurology','Gastroenterology','Orthopaedics','Paediatrics','Psychiatry','Emergency'],
-        isPartner: true
-      },
-      {
-        name: "Naruvi Hospitals",
-        address: "12, Chennai-Bengaluru Highway, Thottapalayam, Vellore - 632004",
-        phone: "+914166661111",
-        specialties: ['General Medicine','Cardiology','Orthopaedics','Neurology','Gastroenterology','Emergency'],
-        isPartner: true
-      },
-      {
-        name: "Sri Narayani Hospital & Research Centre",
-        address: "Azad Road, Thirumalaikodi, Vellore - 632055",
-        phone: "+914162206300",
-        specialties: ['General Medicine','Gynaecology','Cardiology','ENT','Emergency'],
-        isPartner: true
-      },
-      {
-        name: "Dr. Sivakumar Multi Speciality Hospital",
-        address: "C-3, Arcot Road, Phase 2, Sathuvachari, Vellore - 632009",
-        phone: "+914162253400",
-        specialties: ['General Medicine','Gynaecology','Orthopaedics','Emergency'],
-        isPartner: true
-      },
-      {
-        name: "Indira Superspeciality Hospital",
-        address: "54, Katpadi Road, Gandhi Nagar, Vellore - 632006",
-        phone: "+919842324425",
-        specialties: ['General Medicine','Gastroenterology','Emergency'],
-        isPartner: false
-      },
-      {
-        name: "Nalam Medical Center and Hospital",
-        address: "44, Arcot Road, Phase 2, Sathuvachari, Vellore - 632009",
-        phone: "+914162254461",
-        specialties: ['General Medicine','Orthopaedics','Paediatrics','Emergency'],
-        isPartner: false
-      },
-      {
-        name: "Sri Ragavendra Super Speciality Hospital",
-        address: "218, Phase 1 South Service Road, Sathuvachari, Vellore - 632009",
-        phone: "+919597649557",
-        specialties: ['General Medicine','Gynaecology','Paediatrics','Gastroenterology'],
-        isPartner: false
-      },
-      {
-        name: "Manisundaram Medical Mission Hospital",
-        address: "288, South Avenue Road, Phase III, Sathuvachari, Vellore - 632009",
-        phone: "+914162256007",
-        specialties: ['Orthopaedics','General Medicine'],
-        isPartner: false
-      },
-      {
-        name: "Saint Mary's Multi Speciality Hospital",
-        address: "53, Balaji Nagar Extension, Katpadi, Vellore - 632007",
-        phone: "+919943334063",
-        specialties: ['General Medicine','Gynaecology','Paediatrics','Emergency'],
-        isPartner: true
-      },
-      {
-        name: "Dhanya Medical Centre",
-        address: "19, Pillaiyar Koil Street, Sripuram, Velapadi, Vellore - 632001",
-        phone: "+919894399326",
-        specialties: ['Orthopaedics','General Medicine','Paediatrics'],
-        isPartner: false
-      },
-      {
-        name: "Arun Hospital Ortho & Trauma Care",
-        address: "15, Thiyagarajapuram Road, Veerasamy Nagar, Vellore - 632001",
-        phone: "+914162234217",
-        specialties: ['Orthopaedics','Emergency'],
-        isPartner: false
-      },
-      {
-        name: "The Eye Foundation",
-        address: "47/1A, Katpadi Road, Viruthampet, Vellore - 632006",
-        phone: "+918925851213",
-        specialties: ['Ophthalmology'],
-        isPartner: true
-      },
-      {
-        name: "CMC Schell Eye Hospital",
-        address: "Schell Campus, Arni Road, Srinivasan Nagar, Vellore - 632001",
-        phone: "+914162281226",
-        specialties: ['Ophthalmology'],
-        isPartner: false
-      },
-      {
-        name: "Dr Sherinz Skin and Cosmetology Centre",
-        address: "34, Kalinjur Main Road, Gandhinagar West, Katpadi, Vellore - 632006",
-        phone: "+918807338560",
-        specialties: ['Dermatology'],
-        isPartner: true
-      },
-      {
-        name: "Kleara Skin, Hair & Laser Clinic",
-        address: "15, 10th East Cross Road, Gandhi Nagar, Vellore - 632006",
-        phone: "+919600960160",
-        specialties: ['Dermatology'],
-        isPartner: false
-      },
-      {
-        name: "Vivan ENT Clinic",
-        address: "1/1, 4th Street, Venkatraman Nagar, Katpadi, Vellore - 632006",
-        phone: "+918220545111",
-        specialties: ['ENT'],
-        isPartner: true
-      },
-      {
-        name: "Vellore Speciality Centre",
-        address: "1315, South Avenue Road, Phase 2, Sathuvachari, Vellore - 632009",
-        phone: "+914162220052",
-        specialties: ['ENT','General Medicine'],
-        isPartner: false
-      },
-      {
-        name: "Dr Arulalan Children's Clinic",
-        address: "17, 10th East Cross Road, Gandhi Nagar, Vellore - 632006",
-        phone: "+914162244710",
-        specialties: ['Paediatrics'],
-        isPartner: true
-      },
-      {
-        name: "Pediatree Child Clinic",
-        address: "10, Post Office Road, Krishna Nagar, Vellore - 632001",
-        phone: "+918056745999",
-        specialties: ['Paediatrics'],
-        isPartner: false
-      },
-      {
-        name: "Sandhya Hospital",
-        address: "565, Phase I, Sathuvachari, Vellore - 632009",
-        phone: "+914162253357",
-        specialties: ['Gynaecology','Paediatrics'],
-        isPartner: true
-      },
-      {
-        name: "Saaral Fertility and Women's Health Centre",
-        address: "73/1, Vellore-Chittoor Road, Katpadi, Vellore - 632006",
-        phone: "+916385169309",
-        specialties: ['Gynaecology'],
-        isPartner: true
-      }
+      { name: "Christian Medical College Hospital", address: "Thottapalayam, Vellore", phone: "+918000338855", specialties: ['General Medicine','Cardiology','Neurology','Gastroenterology','Orthopaedics','Paediatrics','Psychiatry','Emergency'] },
+      { name: "Naruvi Hospitals", address: "Thottapalayam, Vellore", phone: "+914166661111", specialties: ['General Medicine','Cardiology','Orthopaedics','Neurology','Gastroenterology','Emergency'] },
+      { name: "Sri Narayani Hospital & Research Centre", address: "Thirumalaikodi, Vellore", phone: "+914162206300", specialties: ['General Medicine','Gynaecology','Cardiology','ENT','Emergency'] },
+      { name: "Dr. Sivakumar Multi Speciality Hospital", address: "Sathuvachari, Vellore", phone: "+914162253400", specialties: ['General Medicine','Gynaecology','Orthopaedics','Emergency'] },
+      { name: "Indira Superspeciality Hospital", address: "Gandhi Nagar, Vellore", phone: "+919842324425", specialties: ['General Medicine','Gastroenterology','Emergency'] },
+      { name: "Nalam Medical Center and Hospital", address: "Sathuvachari, Vellore", phone: "+914162254461", specialties: ['General Medicine','Orthopaedics','Paediatrics','Emergency'] },
+      { name: "Sri Ragavendra Super Speciality Hospital", address: "Sathuvachari, Vellore", phone: "+919597649557", specialties: ['General Medicine','Gynaecology','Paediatrics','Gastroenterology'] },
+      { name: "Manisundaram Medical Mission Hospital", address: "Sathuvachari, Vellore", phone: "+914162256007", specialties: ['Orthopaedics','General Medicine'] },
+      { name: "Saint Mary's Multi Speciality Hospital", address: "Katpadi, Vellore", phone: "+919943334063", specialties: ['General Medicine','Gynaecology','Paediatrics','Emergency'] },
+      { name: "Dhanya Medical Centre", address: "Sripuram, Vellore", phone: "+919894399326", specialties: ['Orthopaedics','General Medicine','Paediatrics'] },
+      { name: "Arun Hospital Ortho & Trauma Care", address: "Veerasamy Nagar, Vellore", phone: "+914162234217", specialties: ['Orthopaedics','Emergency'] },
+      { name: "The Eye Foundation", address: "Viruthampet, Vellore", phone: "+918925851213", specialties: ['Ophthalmology'] },
+      { name: "CMC Schell Eye Hospital", address: "Arni Road, Vellore", phone: "+914162281226", specialties: ['Ophthalmology'] },
+      { name: "Dr Sherinz Skin and Cosmetology Centre", address: "Katpadi, Vellore", phone: "+918807338560", specialties: ['Dermatology'] },
+      { name: "Kleara Skin, Hair & Laser Clinic", address: "Gandhi Nagar, Vellore", phone: "+919600960160", specialties: ['Dermatology'] },
+      { name: "Vivan ENT Clinic", address: "Katpadi, Vellore", phone: "+918220545111", specialties: ['ENT'] },
+      { name: "Vellore Speciality Centre", address: "Sathuvachari, Vellore", phone: "+914162220052", specialties: ['ENT','General Medicine'] },
+      { name: "Dr Arulalan Children's Clinic", address: "Gandhi Nagar, Vellore", phone: "+914162244710", specialties: ['Paediatrics'] },
+      { name: "Pediatree Child Clinic", address: "Krishna Nagar, Vellore", phone: "+918056745999", specialties: ['Paediatrics'] },
+      { name: "Sandhya Hospital", address: "Sathuvachari, Vellore", phone: "+914162253357", specialties: ['Gynaecology','Paediatrics'] },
+      { name: "Saaral Fertility and Women's Health Centre", address: "Katpadi, Vellore", phone: "+916385169309", specialties: ['Gynaecology'] }
     ];
 
+    // Mock Database Persistence
+    let globalAppointments = [
+      { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Christian Medical College Hospital", dateTime: "2026-08-26 | 10:30 AM", specialty: "General Medicine" },
+      { patient: "Ananthi R", hospital: "The Eye Foundation", dateTime: "2026-08-25 | 02:00 PM", specialty: "Ophthalmology" }
+    ];
+
+    let globalPrescriptions = {
+      "vishwa@gmail.com": [
+        { date: "2026-05-12", doctor: "Dr. A. Kumar", diagnosis: "Seasonal Allergies", rx: "Cetirizine 10mg daily" }
+      ]
+    };
+
+    let selectedRole = 'patient';
     let selectedSpecialties = [];
     let selectedHospital = null;
 
-    // EmailJS Initialization
     (function(){
       emailjs.init("YOUR_PUBLIC_KEY");
+      
+      // Default Date Picker to Tomorrow
+      const today = new Date();
+      today.setDate(today.getDate() + 1);
+      document.getElementById('bookingDate').value = today.toISOString().split('T')[0];
+
+      // Populates Admin Dropdown
+      const adminSelect = document.getElementById('adminFilterHospital');
+      HOSPITALS_DATABASE.forEach(h => {
+        const opt = document.createElement('option');
+        opt.value = h.name;
+        opt.innerText = h.name;
+        adminSelect.appendChild(opt);
+      });
     })();
 
-    function goToScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
+    function setRole(role) {
+      selectedRole = role;
+      document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('roleBadge').innerText = role.toUpperCase() + ' PORTAL';
+      
+      if (role === 'patient') {
+        document.getElementById('loginEmail').value = 'vishwa@gmail.com';
+      } else if (role === 'doctor') {
+        document.getElementById('loginEmail').value = 'doctor@vellorehealth.org';
+      } else {
+        document.getElementById('loginEmail').value = 'admin@vellorehealth.org';
+      }
     }
 
-    function toggleChip(element, specialty) {
-      element.classList.toggle('selected');
-      if (selectedSpecialties.includes(specialty)) {
-        selectedSpecialties = selectedSpecialties.filter(s => s !== specialty);
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const err = document.getElementById('loginError');
+
+      if (selectedRole === 'patient') {
+        if (email.toLowerCase() !== 'vishwa@gmail.com') {
+          err.style.display = 'block';
+          return;
+        }
+        err.style.display = 'none';
+        goToScreen('screen-symptoms');
+      } else if (selectedRole === 'admin') {
+        err.style.display = 'none';
+        renderAdminTable();
+        goToScreen('screen-admin');
+      } else if (selectedRole === 'doctor') {
+        err.style.display = 'none';
+        loadPatientHistoryForDoctor();
+        goToScreen('screen-doctor');
+      }
+    }
+
+    function toggleChip(el, spec) {
+      el.classList.toggle('selected');
+      if (selectedSpecialties.includes(spec)) {
+        selectedSpecialties = selectedSpecialties.filter(s => s !== spec);
       } else {
-        selectedSpecialties.push(specialty);
+        selectedSpecialties.push(spec);
       }
     }
 
     function analyzeSymptoms() {
       if (selectedSpecialties.length === 0) {
-        alert("Please select at least one symptom to proceed.");
+        alert("Please choose at least one symptom.");
         return;
       }
-
-      const urgencyBadge = document.getElementById('urgencyBadge');
-      const recommendedSpecialty = document.getElementById('recommendedSpecialty');
-      const assessmentSummary = document.getElementById('assessmentSummary');
-      
-      let targetSpecialty = 'General Medicine';
-      let urgencyLevel = 'Low Urgency';
-
-      if (selectedSpecialties.includes('Emergency')) {
-        urgencyLevel = 'High Urgency';
-        targetSpecialty = 'Emergency Care / General Medicine';
-        urgencyBadge.className = "urgency-badge urgency-high";
-      } else if (selectedSpecialties.includes('Neurology') || selectedSpecialties.includes('Cardiology')) {
-        urgencyLevel = 'Moderate Urgency';
-        targetSpecialty = selectedSpecialties[0];
-        urgencyBadge.className = "urgency-badge urgency-med";
-      } else {
-        urgencyLevel = 'Routine Consultation';
-        targetSpecialty = selectedSpecialties[0];
-        urgencyBadge.className = "urgency-badge urgency-low";
-      }
-
-      urgencyBadge.innerText = urgencyLevel;
-      recommendedSpecialty.innerText = targetSpecialty;
-      assessmentSummary.innerText = `Matched facilities below provide specialist care in ${targetSpecialty}.`;
-
-      populateHospitals(selectedSpecialties);
-      goToScreen('screen-results');
+      populateHospitals();
+      goToScreen('screen-booking');
     }
 
-    function populateHospitals(specialties) {
+    function populateHospitals() {
       const container = document.getElementById('hospitalListContainer');
       container.innerHTML = '';
 
-      // Filter SQL data based on selected specialties[cite: 2]
-      const matches = HOSPITALS_DATABASE.filter(h => 
-        h.specialties.some(s => specialties.includes(s))
-      );
+      const matches = HOSPITALS_DATABASE.filter(h => h.specialties.some(s => selectedSpecialties.includes(s)));
+      const list = matches.length > 0 ? matches : HOSPITALS_DATABASE;
 
-      const displayList = matches.length > 0 ? matches : HOSPITALS_DATABASE;
-
-      displayList.forEach((h, index) => {
-        const card = document.createElement('div');
-        card.className = `hospital-card ${index === 0 ? 'selected' : ''}`;
-        if (index === 0) selectedHospital = h;
-
-        card.innerHTML = `
-          <div class="hospital-name">${h.name} ${h.isPartner ? '✔ (Verified Partner)' : ''}</div>
-          <div class="hospital-address">${h.address}</div>
-          <div class="hospital-phone">📞 ${h.phone}</div>
-        `;
-
-        card.onclick = () => {
+      list.forEach((h, idx) => {
+        const div = document.createElement('div');
+        div.className = `hospital-card ${idx === 0 ? 'selected' : ''}`;
+        if (idx === 0) selectedHospital = h;
+        
+        div.innerHTML = `<strong>${h.name}</strong><br><small style="color: var(--text-muted);">${h.address} | 📞 ${h.phone}</small>`;
+        div.onclick = () => {
           document.querySelectorAll('.hospital-card').forEach(c => c.classList.remove('selected'));
-          card.classList.add('selected');
+          div.classList.add('selected');
           selectedHospital = h;
         };
-
-        container.appendChild(card);
+        container.appendChild(div);
       });
     }
 
-    function bookAppointment() {
-      const name = document.getElementById('userName').value;
-      const email = document.getElementById('userEmail').value;
-      const age = document.getElementById('userAge').value;
+    function confirmBooking() {
+      const date = document.getElementById('bookingDate').value;
+      const time = document.getElementById('bookingTime').value;
 
-      if (!name || !email || !age) {
-        alert("Please provide patient name, age, and email address.");
-        goToScreen('screen-user');
+      if (!date) {
+        alert("Please pick an appointment date.");
         return;
       }
 
-      if (!selectedHospital) {
-        alert("Please select a hospital to proceed.");
-        return;
-      }
+      globalAppointments.push({
+        patient: "Vishwa K (vishwa@gmail.com)",
+        hospital: selectedHospital.name,
+        dateTime: `${date} | ${time}`,
+        specialty: selectedSpecialties[0] || 'General'
+      });
 
-      document.getElementById('confirmHospitalName').innerText = selectedHospital.name;
-      document.getElementById('confirmDetails').innerText = `Confirmation generated for ${name} (${age} yrs). Destination: ${selectedHospital.address}`;
-      document.getElementById('confirmPhone').innerText = selectedHospital.phone;
-
-      // EmailJS logic to dispatch appointment details
-      const templateParams = {
-        to_email: email,
-        patient_name: name,
-        hospital_name: selectedHospital.name,
-        contact_phone: selectedHospital.phone
-      };
-
-      // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+      document.getElementById('resHospital').innerText = selectedHospital.name;
+      document.getElementById('resDate').innerText = `📅 Scheduled Date: ${date}`;
+      document.getElementById('resTime').innerText = `⏰ Time Slot: ${time}`;
 
       goToScreen('screen-confirmed');
+    }
+
+    function renderAdminTable() {
+      const filter = document.getElementById('adminFilterHospital').value;
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
+
+      const rows = filter === 'ALL' ? globalAppointments : globalAppointments.filter(a => a.hospital === filter);
+
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.patient}</td><td>${r.hospital}</td><td>${r.dateTime}</td><td>${r.specialty}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadPatientHistoryForDoctor() {
+      const patientEmail = document.getElementById('docPatientSelect').value;
+      const container = document.getElementById('docHistoryBox');
+      const records = globalPrescriptions[patientEmail] || [];
+
+      if (records.length === 0) {
+        container.innerHTML = "<em>No previous records logged for this patient.</em>";
+        return;
+      }
+
+      container.innerHTML = records.map(r => `
+        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+          <strong>Date:</strong> ${r.date} | <strong>Doctor:</strong> ${r.doctor}<br>
+          <strong>Diagnosis:</strong> ${r.diagnosis}<br>
+          <strong>Prescription:</strong> ${r.rx}
+        </div>
+      `).join('');
+    }
+
+    function savePrescription() {
+      const patientEmail = document.getElementById('docPatientSelect').value;
+      const diag = document.getElementById('docDiagnosis').value;
+      const rx = document.getElementById('docRx').value;
+
+      if (!diag || !rx) {
+        alert("Please fill in both the diagnosis and prescription fields.");
+        return;
+      }
+
+      if (!globalPrescriptions[patientEmail]) globalPrescriptions[patientEmail] = [];
+
+      globalPrescriptions[patientEmail].push({
+        date: new Date().toISOString().split('T')[0],
+        doctor: "Dr. S. Ramanathan",
+        diagnosis: diag,
+        rx: rx
+      });
+
+      document.getElementById('docDiagnosis').value = '';
+      document.getElementById('docRx').value = '';
+      alert("Prescription added to patient's record.");
+      loadPatientHistoryForDoctor();
+    }
+
+    function goToScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function logout() {
+      goToScreen('screen-login');
     }
   </script>
 </body>
