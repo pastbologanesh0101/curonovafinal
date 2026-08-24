@@ -13,28 +13,29 @@
 
   <style>
     :root {
-      --bg-main: #0a0814;
-      --bg-surface: #120e24;
-      --card-bg: #1a1435;
+      --bg-main: #000000;
+      --bg-surface: #0a0a0a;
+      --card-bg: #141414;
       
-      --purple-primary: #7c4dff;
-      --purple-light: #9e77ff;
-      --purple-dark: #4b23b8;
-      --purple-glow: rgba(124, 77, 255, 0.25);
-      
-      --accent-pill: #251b48;
-      --border-color: rgba(255, 255, 255, 0.08);
+      --border-color: #262626;
+      --border-focus: #ffffff;
       
       --text-bright: #ffffff;
-      --text-muted: #a69ebd;
-      --text-sub: #786f91;
+      --text-muted: #a3a3a3;
+      --text-sub: #525252;
       
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --radius-sm: 10px;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       background-color: var(--bg-main);
@@ -48,13 +49,13 @@
     /* TOP TICKER TAPE */
     .ticker-bar {
       width: 100%;
-      background: var(--purple-primary);
-      color: #fff;
+      background: #ffffff;
+      color: #000000;
       font-size: 0.75rem;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
-      padding: 0.4rem 0;
+      padding: 0.5rem 0;
       text-align: center;
       overflow: hidden;
       white-space: nowrap;
@@ -73,74 +74,60 @@
     /* HEADER NAV */
     header {
       width: 100%;
-      max-width: 1280px;
+      max-width: 1240px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 2rem;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
       font-weight: 800;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       letter-spacing: -0.5px;
     }
 
     .brand-badge {
-      background: var(--purple-primary);
-      color: #fff;
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
+      background: #ffffff;
+      color: #000000;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 800;
     }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-
-    nav a:hover { color: var(--text-bright); }
 
     .btn-portal-badge {
-      background: var(--purple-primary);
-      color: #fff;
-      padding: 0.6rem 1.4rem;
+      background: #ffffff;
+      color: #000000;
+      padding: 0.5rem 1rem;
       border-radius: 30px;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
     /* HERO BANNER */
     .hero-banner {
       width: 100%;
       max-width: 1240px;
-      background: linear-gradient(135deg, #7c4dff 0%, #4b23b8 100%);
+      background: #ffffff;
+      color: #000000;
       border-radius: var(--radius-lg);
-      padding: 3rem 2.5rem;
-      margin-bottom: 2rem;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 20px 40px var(--purple-glow);
+      padding: 2.5rem 2rem;
+      margin: 1.5rem 0;
     }
 
     .hero-banner h1 {
-      font-size: 3.5rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      letter-spacing: -1.5px;
-      line-height: 1;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      text-transform: uppercase;
     }
 
     /* MAIN CONTENT VIEWPORT */
@@ -148,9 +135,9 @@
       width: 100%;
       max-width: 1240px;
       display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 1.75rem;
-      padding-bottom: 3rem;
+      grid-template-columns: 280px 1fr;
+      gap: 1.5rem;
+      padding: 0 1.5rem 3rem 1.5rem;
       flex-grow: 1;
     }
 
@@ -159,28 +146,27 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.75rem;
+      padding: 1.5rem;
       height: fit-content;
     }
 
     .sidebar-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-sub);
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-muted);
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .reset-link {
-      color: var(--purple-light);
+      color: var(--text-bright);
       cursor: pointer;
       font-size: 0.75rem;
-      text-transform: none;
-      letter-spacing: 0;
+      text-decoration: underline;
     }
 
     /* MAIN STAGE CARDS */
@@ -188,6 +174,7 @@
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
+      min-width: 0;
     }
 
     .screen { display: none; }
@@ -210,209 +197,254 @@
 
     input, select, textarea {
       width: 100%;
-      background: var(--accent-pill);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
-      padding: 0.9rem 1.1rem;
+      padding: 0.85rem 1rem;
       border-radius: var(--radius-sm);
       font-size: 0.95rem;
       color: var(--text-bright);
       outline: none;
-      transition: all 0.2s ease;
+      transition: border-color 0.2s ease;
     }
 
     input:focus, select:focus, textarea:focus {
-      border-color: var(--purple-light);
-      box-shadow: 0 0 0 3px var(--purple-glow);
+      border-color: var(--border-focus);
     }
 
     /* ROLE SWITCHER BUTTONS */
     .role-switcher {
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
-      margin-bottom: 1.5rem;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .role-btn {
-      background: var(--accent-pill);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
-      padding: 0.9rem 1.1rem;
+      padding: 0.85rem 1rem;
       border-radius: var(--radius-sm);
       color: var(--text-muted);
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      text-align: left;
-      transition: all 0.2s ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: all 0.2s ease;
     }
 
     .role-btn:hover {
-      background: var(--card-bg);
+      border-color: var(--text-bright);
       color: var(--text-bright);
     }
 
     .role-btn.active {
-      background: var(--purple-primary);
-      color: #fff;
-      border-color: var(--purple-light);
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
     }
 
     /* CHIPS / SYMPTOMS */
     .symptom-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 0.75rem;
       margin-bottom: 1.5rem;
     }
 
     .chip {
-      background: var(--bg-surface);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
-      padding: 1rem;
-      border-radius: var(--radius-md);
-      font-size: 0.9rem;
+      padding: 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
+      text-align: center;
       transition: all 0.2s ease;
     }
 
     .chip:hover {
-      border-color: var(--purple-light);
+      border-color: var(--text-bright);
       color: var(--text-bright);
     }
 
     .chip.selected {
-      background: var(--purple-primary);
-      color: #fff;
-      border-color: var(--purple-light);
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
     }
 
     /* ACTION BUTTON */
     .btn-action {
-      background: var(--purple-primary);
-      color: #fff;
-      border: none;
-      padding: 1rem 1.75rem;
-      border-radius: 30px;
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid #ffffff;
+      padding: 0.9rem 1.5rem;
+      border-radius: var(--radius-sm);
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       letter-spacing: 0.5px;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 15px var(--purple-glow);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      width: 100%;
+      text-transform: uppercase;
     }
 
     .btn-action:hover {
-      background: var(--purple-light);
-      transform: translateY(-2px);
+      background: #e5e5e5;
     }
 
     .btn-secondary {
-      background: var(--accent-pill);
+      background: transparent;
       color: var(--text-bright);
-      box-shadow: none;
       border: 1px solid var(--border-color);
     }
 
     .btn-secondary:hover {
-      background: var(--card-bg);
+      border-color: var(--text-bright);
+      background: transparent;
     }
 
-    /* HOSPITAL CARD (MATCHING GRAVITAS EVENT CARDS) */
+    /* HOSPITAL CARD */
     .hospital-card {
-      background: var(--bg-surface);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      margin-bottom: 1rem;
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.2s ease;
+      transition: border-color 0.2s ease;
     }
 
     .hospital-card:hover {
-      border-color: var(--purple-light);
-      background: var(--card-bg);
+      border-color: var(--text-bright);
     }
 
     .hospital-card.selected {
-      border: 2px solid var(--purple-primary);
+      border: 1px solid #ffffff;
       background: var(--card-bg);
-      box-shadow: 0 0 20px var(--purple-glow);
     }
 
     .hospital-info h3 {
-      font-size: 1.15rem;
+      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
     }
 
     .hospital-info p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
 
-    .arrow-circle {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #fff;
-      color: var(--bg-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.1rem;
+    .arrow-icon {
+      font-weight: 700;
+      font-size: 1rem;
     }
 
-    /* DATA TABLE */
+    /* DATA TABLE & MOBILE SCROLL WRAPPER */
     .table-container {
-      background: var(--bg-surface);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .data-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
+      white-space: nowrap;
     }
 
     .data-table th, .data-table td {
-      padding: 1rem 1.25rem;
+      padding: 0.85rem 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border-color);
     }
 
     .data-table th {
-      background: var(--accent-pill);
+      background: var(--bg-surface);
       color: var(--text-muted);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
 
     /* FOOTER */
     footer {
       width: 100%;
       border-top: 1px solid var(--border-color);
-      padding: 2rem;
+      padding: 1.5rem;
       text-align: center;
       color: var(--text-sub);
-      font-size: 0.85rem;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
       margin-top: auto;
+    }
+
+    /* MOBILE RESPONSIVE MEDIA QUERIES */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+      }
+      
+      .hero-banner {
+        margin: 1rem 0;
+        padding: 1.5rem 1rem;
+        border-radius: 0;
+      }
+
+      .hero-banner h1 {
+        font-size: 1.75rem;
+      }
+
+      .app-viewport {
+        grid-template-columns: 1fr;
+        padding: 0 1rem 2rem 1rem;
+        gap: 1rem;
+      }
+
+      .sidebar-panel {
+        padding: 1rem;
+      }
+
+      .role-switcher {
+        flex-direction: row;
+      }
+
+      .role-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.65rem;
+        font-size: 0.75rem;
+      }
+
+      .role-btn span:last-child {
+        display: none;
+      }
+
+      .symptom-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .screen > div {
+        padding: 1.25rem !important;
+      }
+
+      .grid-2col-mobile {
+        grid-template-columns: 1fr !important;
+      }
     }
   </style>
 </head>
@@ -421,7 +453,7 @@
   <!-- TICKER TOP BAR -->
   <div class="ticker-bar">
     <div class="ticker-content">
-      ANCHORED IN PRECISION • DRIVEN BY HEALTHCARE INNOVATION • INTEGRATED CARE NETWORK • SERVING VELLORE REGION
+      ANCHORED IN PRECISION -- DRIVEN BY HEALTHCARE INNOVATION -- INTEGRATED CARE NETWORK -- SERVING VELLORE REGION
     </div>
   </div>
 
@@ -430,17 +462,12 @@
     <div class="brand">
       CURONOVA <span class="brand-badge">2026</span>
     </div>
-    <nav>
-      <a href="#">PORTAL</a>
-      <a href="#">NETWORK</a>
-      <a href="#">FAQS</a>
-    </nav>
     <div id="roleBadge" class="btn-portal-badge">PATIENT PORTAL</div>
   </header>
 
   <!-- HERO BANNER -->
   <div class="hero-banner">
-    <h1 id="heroTitle">Portal System</h1>
+    <h1 id="heroTitle">PATIENT PORTAL</h1>
   </div>
 
   <!-- MAIN APP VIEWPORT -->
@@ -454,7 +481,6 @@
       </div>
 
       <div class="role-switcher">
-        <label>ACCESS ROLE</label>
         <div class="role-btn active" id="role-btn-patient" onclick="setRole('patient')">
           <span>PATIENT</span>
           <span>--></span>
@@ -469,9 +495,9 @@
         </div>
       </div>
 
-      <div style="border-top: 1px solid var(--border-color); padding-top: 1.25rem; margin-top: 1rem;">
+      <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 0.5rem;">
         <label>NETWORK STATUS</label>
-        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
           21 Medical Specialities Connected across Vellore Network[cite: 2].
         </p>
       </div>
@@ -482,9 +508,9 @@
       
       <!-- 1. LOGIN SCREEN -->
       <div id="screen-login" class="screen active">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">System Authentication</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Sign in to access your designated healthcare dashboard.</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Authentication</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Sign in to access your designated healthcare dashboard.</p>
           
           <div class="input-group">
             <label for="loginEmail">EMAIL IDENTIFIER</label>
@@ -496,17 +522,17 @@
             <input type="password" id="loginPass" value="1234">
           </div>
 
-          <p id="loginError" style="color: #ff5252; font-size: 0.85rem; display: none; margin-bottom: 1rem;">Restricted: Patient login is locked to vishwa@gmail.com</p>
+          <p id="loginError" style="color: #ffffff; background: #262626; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem; display: none; margin-bottom: 1rem;">Restricted: Patient login is locked to vishwa@gmail.com</p>
 
-          <button class="btn-action" style="width: 100%;" onclick="handleLogin()">ENTER PORTAL --></button>
+          <button class="btn-action" onclick="handleLogin()">ENTER PORTAL --></button>
         </div>
       </div>
 
       <!-- 2. PATIENT FLOW: SYMPTOM ASSESSMENT -->
       <div id="screen-symptoms" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Symptom Triage</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Select your health indicators to filter appropriate hospitals across Vellore[cite: 2].</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Symptom Triage</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select your health indicators to filter appropriate hospitals across Vellore[cite: 2].</p>
           
           <div class="symptom-grid">
             <div class="chip" onclick="toggleChip(this, 'General Medicine')">High Fever</div>
@@ -519,25 +545,25 @@
             <div class="chip" onclick="toggleChip(this, 'Gynaecology')">Women's Health</div>
           </div>
 
-          <button class="btn-action" style="width: 100%;" onclick="analyzeSymptoms()">RECOMMEND HOSPITALS --></button>
+          <button class="btn-action" onclick="analyzeSymptoms()">RECOMMEND HOSPITALS --></button>
         </div>
       </div>
 
       <!-- 3. PATIENT FLOW: BOOKING & TIME -->
       <div id="screen-booking" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Schedule Appointment</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Select a verified hospital and confirm your preferred slot.</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Schedule Appointment</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select a verified hospital and confirm your preferred slot.</p>
           
-          <label style="margin-bottom: 0.75rem; display: block;">AVAILABLE NETWORK HOSPITALS</label>
-          <div id="hospitalListContainer" style="max-height: 240px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
+          <label style="margin-bottom: 0.5rem;">AVAILABLE NETWORK HOSPITALS</label>
+          <div id="hospitalListContainer" style="max-height: 240px; overflow-y: auto; margin-bottom: 1.25rem;"></div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-            <div class="input-group">
+          <div class="grid-2col-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <div class="input-group" style="margin-bottom: 0;">
               <label for="bookingDate">APPOINTMENT DATE</label>
               <input type="date" id="bookingDate">
             </div>
-            <div class="input-group">
+            <div class="input-group" style="margin-bottom: 0;">
               <label for="bookingTime">TIME SLOT</label>
               <select id="bookingTime">
                 <option>09:00 AM - 10:00 AM</option>
@@ -549,20 +575,20 @@
             </div>
           </div>
 
-          <button class="btn-action" style="width: 100%;" onclick="confirmBooking()">CONFIRM APPOINTMENT --></button>
+          <button class="btn-action" onclick="confirmBooking()">CONFIRM APPOINTMENT --></button>
         </div>
       </div>
 
       <!-- 4. CONFIRMED SCREEN -->
       <div id="screen-confirmed" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 3rem; border-radius: var(--radius-lg); text-align: center;">
-          <h2 style="font-size: 2rem; color: var(--purple-light); margin-bottom: 0.5rem;">Booking Confirmed</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">Details dispatched via EmailJS.</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem 1.5rem; border-radius: var(--radius-lg); text-align: center;">
+          <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem; text-transform: uppercase;">Booking Confirmed</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Details dispatched via EmailJS.</p>
           
-          <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); margin-bottom: 2rem; text-align: left;">
-            <h3 id="resHospital" style="color: var(--purple-light); font-size: 1.3rem; margin-bottom: 0.5rem;">Hospital Name</h3>
-            <p id="resDate" style="font-size: 0.95rem; margin-top: 0.4rem;"></p>
-            <p id="resTime" style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.2rem;"></p>
+          <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; text-align: left;">
+            <h3 id="resHospital" style="font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Hospital Name</h3>
+            <p id="resDate" style="font-size: 0.85rem;"></p>
+            <p id="resTime" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;"></p>
           </div>
 
           <button class="btn-action btn-secondary" onclick="logout()">RETURN TO LOGIN</button>
@@ -571,11 +597,11 @@
 
       <!-- 5. ADMIN DASHBOARD -->
       <div id="screen-admin" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">System Dashboard</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Hospital operations and record logs across 21 network entries[cite: 2].</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Dashboard</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Hospital operations and record logs across 21 network entries[cite: 2].</p>
           
-          <div class="input-group" style="margin-bottom: 1.5rem;">
+          <div class="input-group" style="margin-bottom: 1.25rem;">
             <label for="adminFilterHospital">FILTER BY FACILITY</label>
             <select id="adminFilterHospital" onchange="renderAdminTable()">
               <option value="ALL">All Network Hospitals (21 Total Facilities)</option>
@@ -600,9 +626,9 @@
 
       <!-- 6. DOCTOR PORTAL -->
       <div id="screen-doctor" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Physician EMR Interface</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Review records and publish digital prescriptions.</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Physician EMR Interface</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Review records and publish digital prescriptions.</p>
 
           <div class="input-group">
             <label for="docPatientSelect">SELECT PATIENT PROFILE</label>
@@ -611,8 +637,8 @@
             </select>
           </div>
 
-          <label style="margin-top: 1rem; display: block;">PATIENT HISTORY RECORDS</label>
-          <div id="docHistoryBox" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.5rem; margin-top: 0.5rem;"></div>
+          <label style="margin-top: 1rem;">PATIENT HISTORY RECORDS</label>
+          <div id="docHistoryBox" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.8rem; margin-bottom: 1.25rem; margin-top: 0.5rem;"></div>
 
           <div class="input-group">
             <label for="docDiagnosis">DIAGNOSIS</label>
@@ -624,7 +650,7 @@
             <textarea id="docRx" rows="2" placeholder="e.g. Amoxicillin 500mg - 1-0-1 after food for 5 days"></textarea>
           </div>
 
-          <button class="btn-action" style="width: 100%;" onclick="savePrescription()">SAVE TO MEDICAL RECORD --></button>
+          <button class="btn-action" onclick="savePrescription()">SAVE TO MEDICAL RECORD --></button>
         </div>
       </div>
 
@@ -633,7 +659,7 @@
   </div>
 
   <footer>
-    CURONOVA HEALTH NETWORK • 18 INTEGRATED HOSPITALS & CLINICS[cite: 2] • ALL RIGHTS RESERVED
+    CURONOVA HEALTH NETWORK -- 18 INTEGRATED HOSPITALS & CLINICS[cite: 2] -- ALL RIGHTS RESERVED
   </footer>
 
   <script>
@@ -763,9 +789,9 @@
         div.innerHTML = `
           <div class="hospital-info">
             <h3>${h.name}</h3>
-            <p>${h.address} • Phone: ${h.phone}</p>
+            <p>${h.address} • ${h.phone}</p>
           </div>
-          <div class="arrow-circle">-></div>
+          <div class="arrow-icon">--></div>
         `;
         div.onclick = () => {
           document.querySelectorAll('.hospital-card').forEach(c => c.classList.remove('selected'));
@@ -827,7 +853,7 @@
         <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
           <strong>DATE:</strong> ${r.date} | <strong>DOCTOR:</strong> ${r.doctor}<br>
           <strong>DIAGNOSIS:</strong> ${r.diagnosis}<br>
-          <strong style="color: var(--purple-light);">PRESCRIPTION:</strong> ${r.rx}
+          <strong>PRESCRIPTION:</strong> ${r.rx}
         </div>
       `).join('');
     }
