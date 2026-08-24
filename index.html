@@ -13,20 +13,20 @@
 
   <style>
     :root {
-      --bg-main: #000000;
-      --bg-surface: #0a0a0a;
-      --card-bg: #141414;
+      --bg-main: #020204;
+      --bg-surface: #0a0a0f;
+      --card-bg: #12121a;
       
-      --border-color: #262626;
+      --border-color: #222233;
       --border-focus: #ffffff;
       
       --text-bright: #ffffff;
-      --text-muted: #a3a3a3;
-      --text-sub: #525252;
+      --text-muted: #8e8ea0;
+      --text-sub: #4e4e60;
       
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --radius-sm: 6px;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
     }
 
     * { 
@@ -45,25 +45,20 @@
       flex-direction: column;
       align-items: center;
       overflow-x: hidden;
-      perspective: 1000px;
+      perspective: 1200px;
       width: 100vw;
     }
 
-    /* SPACE BACKGROUND CANVAS PATTERN */
-    .space-bg {
+    /* 3D CANVAS STARFIELD & PARTICLES */
+    #spaceCanvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, #111111 0%, #000000 100%);
       z-index: -1;
       pointer-events: none;
-      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .space-bg.warp {
-      transform: scale(1.6) rotate(3deg);
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* TOP TICKER TAPE */
@@ -92,7 +87,7 @@
       100% { transform: translateX(-100%); }
     }
 
-    /* HEADER NAV - FULL WIDTH */
+    /* HEADER NAV */
     header {
       width: 100%;
       display: flex;
@@ -101,6 +96,8 @@
       padding: 1.25rem 2rem;
       border-bottom: 1px solid var(--border-color);
       z-index: 10;
+      background: rgba(2, 2, 4, 0.7);
+      backdrop-filter: blur(12px);
     }
 
     .brand {
@@ -130,9 +127,10 @@
       font-size: 0.75rem;
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
 
-    /* HERO BANNER - FULL WIDTH */
+    /* HERO BANNER */
     .hero-banner {
       width: 100%;
       padding: 0 2rem;
@@ -146,6 +144,7 @@
       color: #000000;
       border-radius: var(--radius-lg);
       padding: 2.25rem 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
     .hero-banner h1 {
@@ -156,7 +155,7 @@
       text-transform: uppercase;
     }
 
-    /* MAIN CONTENT VIEWPORT - FULL WIDTH GRID */
+    /* MAIN CONTENT VIEWPORT */
     .app-viewport {
       width: 100%;
       display: grid;
@@ -169,11 +168,12 @@
 
     /* SIDEBAR / CONTROL PANEL */
     .sidebar-panel {
-      background: var(--bg-surface);
+      background: rgba(10, 10, 15, 0.75);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       padding: 1.5rem;
       height: fit-content;
+      backdrop-filter: blur(16px);
     }
 
     .sidebar-title {
@@ -195,49 +195,70 @@
       text-decoration: underline;
     }
 
-    /* MAIN STAGE CARDS & SPACE ANIMATIONS */
+    /* 3D STAGE & SCREEN ANIMATIONS */
     .main-stage {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
       min-width: 0;
       position: relative;
+      transform-style: preserve-3d;
     }
 
     .screen { 
       display: none; 
       opacity: 0;
-      transform: translateZ(-200px) scale(0.85);
-      filter: blur(10px);
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateZ(-600px) rotateX(15deg) scale(0.6);
+      filter: blur(20px);
+      transition: none;
     }
     
     .screen.active { 
       display: block;
-      opacity: 1;
-      transform: translateZ(0deg) scale(1);
-      filter: blur(0px);
-      animation: spaceEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: flyIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .screen.warp-exit {
+    .screen.fly-out {
       display: block;
-      opacity: 0;
-      transform: translateZ(400px) scale(1.35);
-      filter: blur(15px);
+      animation: flyOut 0.7s cubic-bezier(0.7, 0, 0.84, 0) forwards;
     }
 
-    @keyframes spaceEnter {
+    @keyframes flyIn {
       0% {
         opacity: 0;
-        transform: translateZ(-300px) scale(0.8);
-        filter: blur(12px);
+        transform: translateZ(-800px) rotateY(-10deg) scale(0.5);
+        filter: blur(25px);
+      }
+      50% {
+        filter: blur(5px);
       }
       100% {
+        opacity: 1;
+        transform: translateZ(0) rotateY(0deg) scale(1);
+        filter: blur(0px);
+      }
+    }
+
+    @keyframes flyOut {
+      0% {
         opacity: 1;
         transform: translateZ(0) scale(1);
         filter: blur(0px);
       }
+      100% {
+        opacity: 0;
+        transform: translateZ(800px) rotateX(-20deg) scale(1.8);
+        filter: blur(30px);
+      }
+    }
+
+    .screen-card {
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid var(--border-color);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     /* FORM COMPONENTS */
@@ -264,11 +285,12 @@
       font-size: 0.95rem;
       color: var(--text-bright);
       outline: none;
-      transition: border-color 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--border-focus);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
     }
 
     /* ROLE SWITCHER BUTTONS */
@@ -291,25 +313,27 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .role-btn:hover {
       border-color: var(--text-bright);
       color: var(--text-bright);
+      transform: translateX(4px);
     }
 
     .role-btn.active {
       background: #ffffff;
       color: #000000;
       border-color: #ffffff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
     }
 
     /* CHIPS / SYMPTOMS & MEDICAL HISTORY */
     .symptom-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 0.65rem;
+      gap: 0.75rem;
       margin-bottom: 1.5rem;
       max-height: 380px;
       overflow-y: auto;
@@ -319,36 +343,47 @@
     .chip {
       background: var(--bg-main);
       border: 1px solid var(--border-color);
-      padding: 0.75rem;
+      padding: 0.85rem;
       border-radius: var(--radius-sm);
       font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
 
     .chip:hover {
       border-color: var(--text-bright);
       color: var(--text-bright);
-      transform: translateY(-2px);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     }
 
     .chip.selected {
       background: #ffffff;
       color: #000000;
       border-color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      transform: scale(1.03);
     }
 
     /* AI DIAGNOSIS CARDS */
     .ai-card {
-      background: var(--bg-main);
+      background: rgba(2, 2, 4, 0.8);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
       margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .ai-card:hover {
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
     }
 
     .ai-badge {
@@ -357,35 +392,38 @@
       color: #000000;
       font-weight: 800;
       font-size: 0.65rem;
-      padding: 0.2rem 0.5rem;
+      padding: 0.25rem 0.6rem;
       border-radius: 4px;
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
+      box-shadow: 0 0 10px rgba(255,255,255,0.3);
     }
 
     .ai-disease-title {
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 800;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.4rem;
       text-transform: uppercase;
+      letter-spacing: -0.3px;
     }
 
     .ai-disease-desc {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 0.75rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
     }
 
     .ai-meta {
       display: flex;
+      justify-content: space-between;
       gap: 1.5rem;
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--text-bright);
       border-top: 1px dashed var(--border-color);
-      padding-top: 0.75rem;
+      padding-top: 0.85rem;
     }
 
     /* ACTION BUTTON */
@@ -393,11 +431,11 @@
       background: #ffffff;
       color: #000000;
       border: 1px solid #ffffff;
-      padding: 0.9rem 1.5rem;
+      padding: 1rem 1.75rem;
       border-radius: var(--radius-sm);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.85rem;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       display: inline-flex;
@@ -405,52 +443,56 @@
       justify-content: center;
       width: 100%;
       text-transform: uppercase;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
     }
 
     .btn-action:hover {
       background: #e5e5e5;
-      transform: scale(1.01);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
+      box-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
     }
 
     .btn-secondary {
       background: transparent;
       color: var(--text-bright);
       border: 1px solid var(--border-color);
+      box-shadow: none;
     }
 
     .btn-secondary:hover {
       border-color: var(--text-bright);
       background: transparent;
-      box-shadow: none;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
     }
 
     /* HOSPITAL CARD */
     .hospital-card {
       background: var(--bg-main);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       padding: 1.25rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .hospital-card:hover {
       border-color: var(--text-bright);
-      transform: translateX(4px);
+      transform: translateX(6px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
 
     .hospital-card.selected {
       border: 1px solid #ffffff;
       background: var(--card-bg);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
     }
 
     .hospital-info h3 {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       margin-bottom: 0.25rem;
     }
@@ -461,16 +503,17 @@
     }
 
     .arrow-icon {
-      font-weight: 700;
-      font-size: 1rem;
+      font-weight: 800;
+      font-size: 1.1rem;
     }
 
-    /* DATA TABLE - RESPONSIVE NO SCROLLBAR FIT */
+    /* DATA TABLE */
     .table-container {
       background: var(--bg-main);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       width: 100%;
+      overflow: hidden;
     }
 
     .data-table {
@@ -481,7 +524,7 @@
     }
 
     .data-table th, .data-table td {
-      padding: 0.9rem 1rem;
+      padding: 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border-color);
       word-wrap: break-word;
@@ -513,26 +556,16 @@
       letter-spacing: 1px;
       margin-top: auto;
       z-index: 10;
+      background: rgba(2, 2, 4, 0.7);
+      backdrop-filter: blur(12px);
     }
 
     /* MOBILE RESPONSIVE MEDIA QUERIES */
     @media (max-width: 900px) {
-      header {
-        padding: 1rem;
-      }
-      
-      .hero-banner {
-        padding: 0 1rem;
-        margin: 1rem 0;
-      }
-      
-      .hero-banner-inner {
-        padding: 1.5rem 1rem;
-      }
-
-      .hero-banner h1 {
-        font-size: 1.75rem;
-      }
+      header { padding: 1rem; }
+      .hero-banner { padding: 0 1rem; margin: 1rem 0; }
+      .hero-banner-inner { padding: 1.5rem 1rem; }
+      .hero-banner h1 { font-size: 1.75rem; }
 
       .app-viewport {
         grid-template-columns: 1fr;
@@ -540,13 +573,8 @@
         gap: 1rem;
       }
 
-      .sidebar-panel {
-        padding: 1rem;
-      }
-
-      .role-switcher {
-        flex-direction: row;
-      }
+      .sidebar-panel { padding: 1rem; }
+      .role-switcher { flex-direction: row; }
 
       .role-btn {
         flex: 1;
@@ -555,29 +583,16 @@
         font-size: 0.75rem;
       }
 
-      .role-btn span:last-child {
-        display: none;
-      }
-
-      .symptom-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 30%; }
-      .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 30%; }
-      .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 22%; }
-      .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 18%; }
-
-      .grid-2col-mobile {
-        grid-template-columns: 1fr !important;
-      }
+      .role-btn span:last-child { display: none; }
+      .symptom-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid-2col-mobile { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- BACKGROUND DYNAMIC WARP EFFECT -->
-  <div class="space-bg" id="spaceBg"></div>
+  <!-- BACKGROUND DYNAMIC 3D CANVAS STARFIELD -->
+  <canvas id="spaceCanvas"></canvas>
 
   <!-- TICKER TOP BAR -->
   <div class="ticker-bar">
@@ -639,9 +654,9 @@
       
       <!-- 1. LOGIN SCREEN -->
       <div id="screen-login" class="screen active">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Authentication</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Sign in to access your designated healthcare dashboard.</p>
+        <div class="screen-card">
+          <h2 style="font-size: 1.35rem; margin-bottom: 0.35rem; text-transform: uppercase;">System Authentication</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Sign in to access your designated healthcare dashboard.</p>
           
           <div class="input-group">
             <label for="loginEmail">EMAIL IDENTIFIER</label>
@@ -653,7 +668,7 @@
             <input type="password" id="loginPass" value="1234">
           </div>
 
-          <p id="loginError" style="color: #ffffff; background: #262626; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem; display: none; margin-bottom: 1rem;">Restricted: Patient login is locked to vishwa@gmail.com</p>
+          <p id="loginError" style="color: #ffffff; background: #262626; padding: 0.6rem; border-radius: 6px; font-size: 0.8rem; display: none; margin-bottom: 1.25rem;">Restricted: Patient login is locked to vishwa@gmail.com</p>
 
           <button class="btn-action" onclick="handleLogin()">ENTER PORTAL --></button>
         </div>
@@ -661,9 +676,9 @@
 
       <!-- 2. PATIENT FLOW: 40+ SYMPTOMS ASSESSMENT -->
       <div id="screen-symptoms" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Symptom Triage (40 Indicators)</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select all relevant health indicators to match top specialists across Vellore[cite: 2].</p>
+        <div class="screen-card">
+          <h2 style="font-size: 1.35rem; margin-bottom: 0.35rem; text-transform: uppercase;">Symptom Triage (40 Indicators)</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Select all relevant health indicators to match top specialists across Vellore[cite: 2].</p>
           
           <div class="symptom-grid" id="symptomGrid"></div>
 
@@ -673,12 +688,12 @@
 
       <!-- 3. PATIENT FLOW: MEDICAL HISTORY & PREVIOUS CONDITIONS -->
       <div id="screen-history" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Previous Medical History</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Log past conditions and chronic illnesses for physician review.</p>
+        <div class="screen-card">
+          <h2 style="font-size: 1.35rem; margin-bottom: 0.35rem; text-transform: uppercase;">Previous Medical History</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Log past conditions and chronic illnesses for physician review.</p>
           
           <label style="margin-bottom: 0.5rem;">CHRONIC CONDITIONS / DIAGNOSES</label>
-          <div class="symptom-grid" style="max-height: 200px; margin-bottom: 1.25rem;">
+          <div class="symptom-grid" style="max-height: 200px; margin-bottom: 1.5rem;">
             <div class="chip" onclick="toggleHistoryChip(this, 'Diabetes Mellitus')">Diabetes Mellitus</div>
             <div class="chip" onclick="toggleHistoryChip(this, 'Hypertension (High BP)')">Hypertension (High BP)</div>
             <div class="chip" onclick="toggleHistoryChip(this, 'Asthma / COPD')">Asthma / COPD</div>
@@ -700,9 +715,9 @@
 
       <!-- 4. PATIENT FLOW: AI PREDICTED DISEASE & CLINICAL ANALYSIS -->
       <div id="screen-ai-result" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">AI Disease Prediction</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Clinical triage algorithm output based on selected symptoms and past medical history.</p>
+        <div class="screen-card">
+          <h2 style="font-size: 1.35rem; margin-bottom: 0.35rem; text-transform: uppercase;">AI Disease Prediction</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Clinical triage algorithm output based on selected symptoms and past medical history.</p>
           
           <div id="aiPredictionResults"></div>
 
@@ -712,14 +727,14 @@
 
       <!-- 5. PATIENT FLOW: BOOKING & TIME -->
       <div id="screen-booking" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Schedule Appointment</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select a hospital and confirm your preferred slot.</p>
+        <div class="screen-card">
+          <h2 style="font-size: 1.35rem; margin-bottom: 0.35rem; text-transform: uppercase;">Schedule Appointment</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Select a hospital and confirm your preferred slot.</p>
           
           <label style="margin-bottom: 0.5rem;">RECOMMENDED NETWORK HOSPITALS</label>
-          <div id="hospitalListContainer" style="max-height: 240px; overflow-y: auto; margin-bottom: 1.25rem;"></div>
+          <div id="hospitalListContainer" style="max-height: 240px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
 
-          <div class="grid-2col-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+          <div class="grid-2col-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
             <div class="input-group" style="margin-bottom: 0;">
               <label for="bookingDate">APPOINTMENT DATE</label>
               <input type="date" id="bookingDate">
@@ -742,27 +757,27 @@
 
       <!-- 6. CONFIRMED SCREEN -->
       <div id="screen-confirmed" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem 1.5rem; border-radius: var(--radius-lg); text-align: center;">
-          <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem; text-transform: uppercase;">Booking Confirmed</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Appointment details synced to network EMR.</p>
+        <div class="screen-card" style="text-align: center; padding: 3rem 2rem;">
+          <h2 style="font-size: 1.6rem; margin-bottom: 0.35rem; text-transform: uppercase;">Booking Confirmed</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.75rem;">Appointment details synced to network EMR.</p>
           
-          <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; text-align: left;">
-            <h3 id="resHospital" style="font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Hospital Name</h3>
-            <p id="resDate" style="font-size: 0.85rem;"></p>
-            <p id="resTime" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;"></p>
+          <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.75rem; text-align: left;">
+            <h3 id="resHospital" style="font-size: 1.15rem; margin-bottom: 0.5rem; text-transform: uppercase;">Hospital Name</h3>
+            <p id="resDate" style="font-size: 0.88rem;"></p>
+            <p id="resTime" style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.25rem;"></p>
           </div>
 
           <button class="btn-action btn-secondary" onclick="logout()">RETURN TO LOGIN</button>
         </div>
       </div>
 
-      <!-- 7. ADMIN DASHBOARD - FIT TO SCREEN FULL WIDTH -->
+      <!-- 7. ADMIN DASHBOARD -->
       <div id="screen-admin" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Dashboard</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Hospital operations and record logs across 21 network entries[cite: 2].</p>
+        <div class="screen-card">
+          <h2 style="font-size: 1.35rem; margin-bottom: 0.35rem; text-transform: uppercase;">System Dashboard</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Hospital operations and record logs across 21 network entries[cite: 2].</p>
           
-          <div class="input-group" style="margin-bottom: 1.25rem;">
+          <div class="input-group" style="margin-bottom: 1.5rem;">
             <label for="adminFilterHospital">FILTER BY FACILITY</label>
             <select id="adminFilterHospital" onchange="renderAdminTable()">
               <option value="ALL">All Network Hospitals (21 Total Facilities)</option>
@@ -787,9 +802,9 @@
 
       <!-- 8. DOCTOR PORTAL -->
       <div id="screen-doctor" class="screen">
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Physician EMR Interface</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Review records, past history, and publish prescriptions.</p>
+        <div class="screen-card">
+          <h2 style="font-size: 1.35rem; margin-bottom: 0.35rem; text-transform: uppercase;">Physician EMR Interface</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Review records, past history, and publish prescriptions.</p>
 
           <div class="input-group">
             <label for="docPatientSelect">SELECT PATIENT PROFILE</label>
@@ -799,7 +814,7 @@
           </div>
 
           <label style="margin-top: 1rem;">PATIENT MEDICAL & SYMPTOM HISTORY</label>
-          <div id="docHistoryBox" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.8rem; margin-bottom: 1.25rem; margin-top: 0.5rem; max-height: 200px; overflow-y: auto;"></div>
+          <div id="docHistoryBox" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.5rem; margin-top: 0.5rem; max-height: 200px; overflow-y: auto;"></div>
 
           <div class="input-group">
             <label for="docDiagnosis">DIAGNOSIS</label>
@@ -824,6 +839,61 @@
   </footer>
 
   <script>
+    // 3D PARTICLES CANVAS SYSTEM
+    const canvas = document.getElementById('spaceCanvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    let speedMult = 1;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 200; i++) {
+      stars.push({
+        x: (Math.random() - 0.5) * canvas.width * 2,
+        y: (Math.random() - 0.5) * canvas.height * 2,
+        z: Math.random() * canvas.width,
+        size: Math.random() * 1.5 + 0.5
+      });
+    }
+
+    function renderCanvas() {
+      ctx.fillStyle = '#020204';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      stars.forEach(star => {
+        star.z -= 0.8 * speedMult;
+        if (star.z <= 0) {
+          star.z = canvas.width;
+          star.x = (Math.random() - 0.5) * canvas.width * 2;
+          star.y = (Math.random() - 0.5) * canvas.height * 2;
+        }
+
+        const k = 250 / star.z;
+        const px = star.x * k + cx;
+        const py = star.y * k + cy;
+
+        if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+          const size = Math.max(0.1, (1 - star.z / canvas.width) * 2.5 * star.size);
+          const alpha = 1 - star.z / canvas.width;
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(px, py, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      requestAnimationFrame(renderCanvas);
+    }
+    renderCanvas();
+
     // 40 CLINICAL SYMPTOMS & AI DIAGNOSIS MAPPING
     const SYMPTOMS_40 = [
       { name: "High Fever", spec: "General Medicine", disease: "Acute Viral Syndrome / Malaria Risk", matchScore: "92%" },
@@ -918,7 +988,6 @@
       today.setDate(today.getDate() + 1);
       document.getElementById('bookingDate').value = today.toISOString().split('T')[0];
 
-      // Render 40 symptoms dynamically
       const grid = document.getElementById('symptomGrid');
       SYMPTOMS_40.forEach(s => {
         const div = document.createElement('div');
@@ -1157,31 +1226,33 @@
       loadPatientHistoryForDoctor();
     }
 
-    // SPACE WARP TRANSITION CONTROLLER
+    // HIGH-FLYING 3D PERSPECTIVE SCREEN TRANSITION ENGINE
     function goToScreen(targetId) {
       if (targetId === currentScreenId) return;
 
       const currentScreen = document.getElementById(currentScreenId);
       const targetScreen = document.getElementById(targetId);
-      const spaceBg = document.getElementById('spaceBg');
 
-      spaceBg.classList.add('warp');
+      // Accelerate particle speed during screen shift
+      speedMult = 18;
 
       currentScreen.classList.remove('active');
-      currentScreen.classList.add('warp-exit');
+      currentScreen.classList.add('fly-out');
 
       setTimeout(() => {
-        currentScreen.classList.remove('warp-exit');
+        currentScreen.classList.remove('fly-out');
         currentScreen.style.display = 'none';
 
-        spaceBg.classList.remove('warp');
         targetScreen.style.display = 'block';
-        
-        void targetScreen.offsetWidth;
+        void targetScreen.offsetWidth; // Force reflow trigger
 
         targetScreen.classList.add('active');
         currentScreenId = targetId;
-      }, 350);
+
+        setTimeout(() => {
+          speedMult = 1; // Reset particle speed back to smooth drift
+        }, 500);
+      }, 400);
     }
 
     function logout() {
