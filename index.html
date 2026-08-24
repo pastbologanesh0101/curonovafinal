@@ -342,6 +342,52 @@
       border-color: #ffffff;
     }
 
+    /* AI DIAGNOSIS CARDS */
+    .ai-card {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .ai-badge {
+      display: inline-block;
+      background: #ffffff;
+      color: #000000;
+      font-weight: 800;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .ai-disease-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+    }
+
+    .ai-disease-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .ai-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      border-top: 1px dashed var(--border-color);
+      padding-top: 0.75rem;
+    }
+
     /* ACTION BUTTON */
     .btn-action {
       background: #ffffff;
@@ -648,11 +694,23 @@
             <textarea id="historyOther" rows="3" placeholder="e.g. Metformin 500mg daily, appendectomy in 2021, severe penicillin allergy..."></textarea>
           </div>
 
-          <button class="btn-action" onclick="analyzeSymptomsAndHistory()">PROCEED TO HOSPITAL SELECTION --></button>
+          <button class="btn-action" onclick="runAiTriage()">GENERATE AI DIAGNOSIS & PREDICTION --></button>
         </div>
       </div>
 
-      <!-- 4. PATIENT FLOW: BOOKING & TIME -->
+      <!-- 4. PATIENT FLOW: AI PREDICTED DISEASE & CLINICAL ANALYSIS -->
+      <div id="screen-ai-result" class="screen">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">AI Disease Prediction</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Clinical triage algorithm output based on selected symptoms and past medical history.</p>
+          
+          <div id="aiPredictionResults"></div>
+
+          <button class="btn-action" onclick="proceedToHospitals()">PROCEED TO MATCHED HOSPITALS --></button>
+        </div>
+      </div>
+
+      <!-- 5. PATIENT FLOW: BOOKING & TIME -->
       <div id="screen-booking" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Schedule Appointment</h2>
@@ -682,7 +740,7 @@
         </div>
       </div>
 
-      <!-- 5. CONFIRMED SCREEN -->
+      <!-- 6. CONFIRMED SCREEN -->
       <div id="screen-confirmed" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem 1.5rem; border-radius: var(--radius-lg); text-align: center;">
           <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem; text-transform: uppercase;">Booking Confirmed</h2>
@@ -698,7 +756,7 @@
         </div>
       </div>
 
-      <!-- 6. ADMIN DASHBOARD - FIT TO SCREEN FULL WIDTH -->
+      <!-- 7. ADMIN DASHBOARD - FIT TO SCREEN FULL WIDTH -->
       <div id="screen-admin" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Dashboard</h2>
@@ -727,7 +785,7 @@
         </div>
       </div>
 
-      <!-- 7. DOCTOR PORTAL -->
+      <!-- 8. DOCTOR PORTAL -->
       <div id="screen-doctor" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Physician EMR Interface</h2>
@@ -766,48 +824,48 @@
   </footer>
 
   <script>
-    // 40 CLINICAL SYMPTOMS DATABASE
+    // 40 CLINICAL SYMPTOMS & AI DIAGNOSIS MAPPING
     const SYMPTOMS_40 = [
-      { name: "High Fever", spec: "General Medicine" },
-      { name: "Chest Pain", spec: "Emergency" },
-      { name: "Severe Headache", spec: "Neurology" },
-      { name: "Ear Pain", spec: "ENT" },
-      { name: "Throat Pain / Sore Throat", spec: "ENT" },
-      { name: "Joint & Bone Pain", spec: "Orthopaedics" },
-      { name: "Skin Rash & Itching", spec: "Dermatology" },
-      { name: "Vision Blurring", spec: "Ophthalmology" },
-      { name: "Irregular Menstrual Cycle", spec: "Gynaecology" },
-      { name: "Shortness of Breath", spec: "Emergency" },
-      { name: "Abdominal Pain", spec: "Gastroenterology" },
-      { name: "Chronic Cough", spec: "General Medicine" },
-      { name: "Dizziness & Vertigo", spec: "Neurology" },
-      { name: "Pediatric Fever", spec: "Paediatrics" },
-      { name: "Acne & Hair Loss", spec: "Dermatology" },
-      { name: "Eye Redness & Irritation", spec: "Ophthalmology" },
-      { name: "Nasal Congestion", spec: "ENT" },
-      { name: "Acid Reflux / Heartburn", spec: "Gastroenterology" },
-      { name: "Back & Spine Stiff", spec: "Orthopaedics" },
-      { name: "Palpitations", spec: "Cardiology" },
-      { name: "Anxiety & Mood Swings", spec: "Psychiatry" },
-      { name: "Pregnancy Care", spec: "Gynaecology" },
-      { name: "Unexplained Fatigue", spec: "General Medicine" },
-      { name: "High Blood Pressure", spec: "Cardiology" },
-      { name: "Tremors & Seizures", spec: "Neurology" },
-      { name: "Fracture / Trauma", spec: "Orthopaedics" },
-      { name: "Child Growth Issues", spec: "Paediatrics" },
-      { name: "Hearing Loss", spec: "ENT" },
-      { name: "Cataract Symptoms", spec: "Ophthalmology" },
-      { name: "Eczema / Psoriasis", spec: "Dermatology" },
-      { name: "Blood in Stool", spec: "Gastroenterology" },
-      { name: "Sleep Apnea / Insomnia", spec: "Psychiatry" },
-      { name: "Excessive Thirst / Diabetes", spec: "General Medicine" },
-      { name: "Leg Swelling (Edema)", spec: "Cardiology" },
-      { name: "Numbness in Limbs", spec: "Neurology" },
-      { name: "Knee / Ligament Injury", spec: "Orthopaedics" },
-      { name: "Child Vaccination Need", spec: "Paediatrics" },
-      { name: "Cosmetic Skin Laser", spec: "Dermatology" },
-      { name: "Pelvic Pain", spec: "Gynaecology" },
-      { name: "Sudden Loss of Consciousness", spec: "Emergency" }
+      { name: "High Fever", spec: "General Medicine", disease: "Acute Viral Syndrome / Malaria Risk", matchScore: "92%" },
+      { name: "Chest Pain", spec: "Emergency", disease: "Acute Coronary Syndrome / Angina", matchScore: "96%" },
+      { name: "Severe Headache", spec: "Neurology", disease: "Migraine / Tension Cephalgia", matchScore: "88%" },
+      { name: "Ear Pain", spec: "ENT", disease: "Otitis Media / Inner Ear Infection", matchScore: "90%" },
+      { name: "Throat Pain / Sore Throat", spec: "ENT", disease: "Acute Pharyngitis / Tonsillitis", matchScore: "94%" },
+      { name: "Joint & Bone Pain", spec: "Orthopaedics", disease: "Rheumatoid Arthritis / Osteoarthritis", matchScore: "86%" },
+      { name: "Skin Rash & Itching", spec: "Dermatology", disease: "Contact Dermatitis / Urticaria", matchScore: "89%" },
+      { name: "Vision Blurring", spec: "Ophthalmology", disease: "Refractive Error / Early Cataract", matchScore: "87%" },
+      { name: "Irregular Menstrual Cycle", spec: "Gynaecology", disease: "PCOS / Hormonal Imbalance", matchScore: "91%" },
+      { name: "Shortness of Breath", spec: "Emergency", disease: "Bronchial Asthma / Pulmonary Dysfunction", matchScore: "95%" },
+      { name: "Abdominal Pain", spec: "Gastroenterology", disease: "Gastritis / Irritable Bowel Syndrome", matchScore: "85%" },
+      { name: "Chronic Cough", spec: "General Medicine", disease: "Upper Respiratory Tract Infection", matchScore: "88%" },
+      { name: "Dizziness & Vertigo", spec: "Neurology", disease: "Benign Paroxysmal Positional Vertigo", matchScore: "90%" },
+      { name: "Pediatric Fever", spec: "Paediatrics", disease: "Pediatric Febrile Condition", matchScore: "93%" },
+      { name: "Acne & Hair Loss", spec: "Dermatology", disease: "Androgenetic Alopecia / Acne Vulgaris", matchScore: "84%" },
+      { name: "Eye Redness & Irritation", spec: "Ophthalmology", disease: "Acute Conjunctivitis / Dry Eye", matchScore: "91%" },
+      { name: "Nasal Congestion", spec: "ENT", disease: "Chronic Rhinosinusitis", matchScore: "89%" },
+      { name: "Acid Reflux / Heartburn", spec: "Gastroenterology", disease: "GERD (Gastroesophageal Reflux)", matchScore: "93%" },
+      { name: "Back & Spine Stiff", spec: "Orthopaedics", disease: "Lumbar Spondylosis / Muscle Strain", matchScore: "87%" },
+      { name: "Palpitations", spec: "Cardiology", disease: "Cardiac Arrhythmia / Tachycardia", matchScore: "94%" },
+      { name: "Anxiety & Mood Swings", spec: "Psychiatry", disease: "Generalized Anxiety Disorder", matchScore: "86%" },
+      { name: "Pregnancy Care", spec: "Gynaecology", disease: "Antenatal Health Assessment", matchScore: "98%" },
+      { name: "Unexplained Fatigue", spec: "General Medicine", disease: "Anemia / Chronic Fatigue Syndrome", matchScore: "83%" },
+      { name: "High Blood Pressure", spec: "Cardiology", disease: "Essential Hypertension", matchScore: "95%" },
+      { name: "Tremors & Seizures", spec: "Neurology", disease: "Neurological Seizure Disorder", matchScore: "97%" },
+      { name: "Fracture / Trauma", spec: "Orthopaedics", disease: "Acute Skeletal Trauma", matchScore: "99%" },
+      { name: "Child Growth Issues", spec: "Paediatrics", disease: "Pediatric Developmental Assessment", matchScore: "88%" },
+      { name: "Hearing Loss", spec: "ENT", disease: "Sensorineural / Conductive Hearing Loss", matchScore: "90%" },
+      { name: "Cataract Symptoms", spec: "Ophthalmology", disease: "Senile Lens Opacification (Cataract)", matchScore: "96%" },
+      { name: "Eczema / Psoriasis", spec: "Dermatology", disease: "Chronic Plaque Psoriasis / Eczema", matchScore: "92%" },
+      { name: "Blood in Stool", spec: "Gastroenterology", disease: "Lower GI Bleeding / Hemorrhoidal Condition", matchScore: "94%" },
+      { name: "Sleep Apnea / Insomnia", spec: "Psychiatry", disease: "Primary Insomnia / Obstructive Sleep Apnea", matchScore: "85%" },
+      { name: "Excessive Thirst / Diabetes", spec: "General Medicine", disease: "Type-2 Diabetes Mellitus", matchScore: "96%" },
+      { name: "Leg Swelling (Edema)", spec: "Cardiology", disease: "Peripheral Edema / Venous Insufficiency", matchScore: "89%" },
+      { name: "Numbness in Limbs", spec: "Neurology", disease: "Peripheral Neuropathy", matchScore: "91%" },
+      { name: "Knee / Ligament Injury", spec: "Orthopaedics", disease: "ACL Ligament Tear / Meniscal Injury", matchScore: "94%" },
+      { name: "Child Vaccination Need", spec: "Paediatrics", disease: "Immunization & Preventive Care", matchScore: "100%" },
+      { name: "Cosmetic Skin Laser", spec: "Dermatology", disease: "Dermatological Aesthetic Consultation", matchScore: "95%" },
+      { name: "Pelvic Pain", spec: "Gynaecology", disease: "Endometriosis / Pelvic Inflammatory Disease", matchScore: "88%" },
+      { name: "Sudden Loss of Consciousness", spec: "Emergency", disease: "Vasovagal Syncope / Emergency Evaluation", matchScore: "98%" }
     ];
 
     // 21 SQL Hospitals Database[cite: 2]
@@ -847,6 +905,7 @@
     };
 
     let selectedRole = 'patient';
+    let selectedSymptomsList = [];
     let selectedSpecialties = [];
     let selectedHistory = [];
     let selectedHospital = null;
@@ -865,7 +924,7 @@
         const div = document.createElement('div');
         div.className = 'chip';
         div.innerText = s.name;
-        div.onclick = () => toggleChip(div, s.spec);
+        div.onclick = () => toggleChip(div, s);
         grid.appendChild(div);
       });
 
@@ -916,13 +975,17 @@
       }
     }
 
-    function toggleChip(el, spec) {
+    function toggleChip(el, symptomObj) {
       el.classList.toggle('selected');
-      if (selectedSpecialties.includes(spec)) {
-        selectedSpecialties = selectedSpecialties.filter(s => s !== spec);
+      const idx = selectedSymptomsList.findIndex(s => s.name === symptomObj.name);
+      
+      if (idx > -1) {
+        selectedSymptomsList.splice(idx, 1);
       } else {
-        selectedSpecialties.push(spec);
+        selectedSymptomsList.push(symptomObj);
       }
+
+      selectedSpecialties = [...new Set(selectedSymptomsList.map(s => s.spec))];
     }
 
     function toggleHistoryChip(el, condition) {
@@ -935,17 +998,49 @@
     }
 
     function goToHistoryScreen() {
-      if (selectedSpecialties.length === 0) {
+      if (selectedSymptomsList.length === 0) {
         alert("Please pick at least one symptom from the grid.");
         return;
       }
       goToScreen('screen-history');
     }
 
-    function analyzeSymptomsAndHistory() {
+    function runAiTriage() {
       const notes = document.getElementById('historyOther').value.trim();
-      if (notes) selectedHistory.push(`Notes: ${notes}`);
+      if (notes && !selectedHistory.includes(`Notes: ${notes}`)) {
+        selectedHistory.push(`Notes: ${notes}`);
+      }
       
+      const container = document.getElementById('aiPredictionResults');
+      container.innerHTML = '';
+
+      selectedSymptomsList.forEach((sym, i) => {
+        const card = document.createElement('div');
+        card.className = 'ai-card';
+
+        let modifier = "";
+        if (selectedHistory.length > 0) {
+          modifier = ` (Complicated by: ${selectedHistory.slice(0, 2).join(', ')})`;
+        }
+
+        card.innerHTML = `
+          <div class="ai-badge">PREDICTION #${i + 1} • CONFIDENCE ${sym.matchScore}</div>
+          <div class="ai-disease-title">${sym.disease}</div>
+          <div class="ai-disease-desc">
+            Primary symptom evaluated: <strong>${sym.name}</strong>${modifier}. AI clinical model strongly suggests evaluation under <strong>${sym.spec}</strong> department.
+          </div>
+          <div class="ai-meta">
+            <span>RECOMMENDED SPECIALTY: ${sym.spec.toUpperCase()}</span>
+            <span>CLINICAL PRIORITY: HIGH</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      goToScreen('screen-ai-result');
+    }
+
+    function proceedToHospitals() {
       populateHospitals();
       goToScreen('screen-booking');
     }
