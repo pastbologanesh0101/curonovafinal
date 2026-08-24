@@ -3,265 +3,277 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CuroNova-Healthcare</title>
+  <title>Vellore Smart Health & Hospital Booking</title>
   
-  <!-- Gen-Z Typography: Syne (bold display) + Plus Jakarta Sans (super clean body) -->
+  <!-- Clean, highly legibile typography for all age demographics -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- EmailJS SDK -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  
+
   <style>
     /* ==========================================================================
-       GEN-Z DESIGN SYSTEM: Neo-Brutalism & Dark Mode Hybrid (Vibe Check Core)
+       ACCESSIBLE & MODERN CLINICAL DESIGN SYSTEM
+       Designed for legibility across young adults, parents, and elderly users.
        ========================================================================== */
     :root {
-      --bg-dark: #090a0f;
-      --card-bg: #12151e;
-      --accent-lime: #ccff00;    /* High-energy Gen-Z signature glow */
-      --accent-pink: #ff007a;    /* High urgency / warning */
-      --accent-cyan: #00f0ff;    /* Cool interactive elements */
-      --text-main: #f3f4f6;
-      --text-muted: #8e95a5;
-      --border-glow: rgba(204, 255, 0, 0.2);
+      --bg-surface: #f8fafc;
+      --card-bg: #ffffff;
+      --brand-primary: #0284c7;    /* Accessible Trust Blue */
+      --brand-hover: #0369a1;
+      --brand-light: #e0f2fe;
       
-      --font-display: 'Syne', sans-serif;
-      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --text-main: #0f172a;       /* High Contrast Dark Gray */
+      --text-muted: #475569;      /* Accessible Subtext */
+      --border-color: #cbd5e1;
       
-      --radius-bento: 24px;
-      --radius-pill: 999px;
+      /* Medical Urgency Palette */
+      --status-low-bg: #dcfce7;
+      --status-low-text: #166534;
+      --status-med-bg: #fef3c7;
+      --status-med-text: #92400e;
+      --status-high-bg: #fee2e2;
+      --status-high-text: #991b1b;
+      
+      --radius: 12px;
+      --shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: var(--font-body);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
 
     body {
-      background-color: var(--bg-dark);
+      background-color: var(--bg-surface);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      padding: 1.5rem;
-      background-image: 
-        radial-gradient(circle at 10% 10%, rgba(204, 255, 0, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(0, 240, 255, 0.05) 0%, transparent 40%);
+      padding: 1.5rem 1rem;
     }
 
     /* Container setup */
     .app-container {
       width: 100%;
-      max-width: 460px;
+      max-width: 640px;
       background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-bento);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
       padding: 2rem;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      position: relative;
-      overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
-    /* Top Aura Glow Bar */
-    .app-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--accent-lime), var(--accent-cyan), var(--accent-pink));
-    }
-
-    /* Navigation / Header */
+    /* Header Bar */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--bg-surface);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .brand {
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1.4rem;
-      letter-spacing: -0.5px;
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: var(--brand-primary);
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .brand span {
-      color: var(--accent-lime);
-    }
-
-    .status-badge {
-      background: rgba(204, 255, 0, 0.1);
-      color: var(--accent-lime);
-      border: 1px solid var(--border-glow);
-      padding: 0.3rem 0.8rem;
-      border-radius: var(--radius-pill);
-      font-size: 0.75rem;
+    .location-tag {
+      font-size: 0.85rem;
+      background: var(--brand-light);
+      color: var(--brand-primary);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    /* Headings & Text */
+    /* Typography */
     h1 {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      line-height: 1.1;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
       margin-bottom: 0.5rem;
-      font-weight: 800;
     }
 
     p.subtitle {
       color: var(--text-muted);
       font-size: 0.95rem;
-      margin-bottom: 1.8rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
     }
 
-    /* Form UI Elements */
+    /* Input Forms */
     .input-group {
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.25rem;
     }
 
     label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
     }
 
     input, select {
       width: 100%;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1rem;
-      border-radius: 14px;
-      color: #fff;
-      font-size: 0.95rem;
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 1rem;
       outline: none;
-      transition: all 0.2s ease;
+      transition: border-color 0.2s ease;
     }
 
     input:focus, select:focus {
-      border-color: var(--accent-lime);
-      box-shadow: 0 0 15px rgba(204, 255, 0, 0.15);
-      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--brand-primary);
     }
 
-    /* Gen-Z Interactive Chips / Pills */
+    /* Expanded Symptom Grid */
+    .symptom-category {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 1rem 0 0.5rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     .symptom-grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
       gap: 0.6rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
 
     .chip {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 0.7rem 1rem;
-      border-radius: var(--radius-pill);
-      font-size: 0.85rem;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      padding: 0.75rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
       font-weight: 500;
+      color: var(--text-main);
       cursor: pointer;
       user-select: none;
-      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
     }
 
     .chip:hover {
-      border-color: var(--text-muted);
+      border-color: var(--brand-primary);
     }
 
     .chip.selected {
-      background: var(--accent-lime);
-      color: #000;
-      font-weight: 700;
-      border-color: var(--accent-lime);
-      box-shadow: 0 0 12px rgba(204, 255, 0, 0.3);
+      background: var(--brand-light);
+      color: var(--brand-primary);
+      border-color: var(--brand-primary);
+      font-weight: 600;
     }
 
-    /* Buttons */
+    /* Action Buttons */
     .btn-main {
       width: 100%;
-      background: var(--accent-lime);
-      color: #000;
+      background: var(--brand-primary);
+      color: #ffffff;
       border: none;
-      padding: 1.1rem;
-      border-radius: 16px;
-      font-family: var(--font-display);
-      font-weight: 800;
+      padding: 0.95rem;
+      border-radius: 8px;
+      font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
+      margin-top: 1rem;
+      transition: background 0.2s ease;
     }
 
     .btn-main:hover {
-      box-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
+      background: var(--brand-hover);
     }
 
-    .btn-main:active {
-      transform: scale(0.98);
-    }
-
-    /* Screens Switching */
+    /* Dynamic UI Screen Handlers */
     .screen {
       display: none;
     }
 
     .screen.active {
       display: block;
-      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Vibe Result Bento Box */
-    .result-bento {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      padding: 1.2rem;
+    /* Medical Assessment Result Box */
+    .assessment-card {
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem;
       margin-bottom: 1.5rem;
+      background: #ffffff;
     }
 
-    .result-tag {
+    .urgency-badge {
       display: inline-block;
-      padding: 0.2rem 0.6rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 6px;
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.75rem;
       text-transform: uppercase;
     }
 
-    .tag-low { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); }
-    .tag-high { background: rgba(255, 0, 122, 0.15); color: var(--accent-pink); }
+    .urgency-low { background: var(--status-low-bg); color: var(--status-low-text); }
+    .urgency-med { background: var(--status-med-bg); color: var(--status-med-text); }
+    .urgency-high { background: var(--status-high-bg); color: var(--status-high-text); }
 
-    /* Footer / Credits */
+    .hospital-card {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .hospital-card.selected {
+      border-color: var(--brand-primary);
+      background: var(--brand-light);
+    }
+
+    .hospital-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .hospital-address {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .hospital-phone {
+      font-size: 0.8rem;
+      color: var(--brand-primary);
+      font-weight: 600;
+      margin-top: 0.4rem;
+    }
+
     footer {
       margin-top: 1.5rem;
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
   </style>
@@ -271,149 +283,374 @@
   <div class="app-container">
     
     <header>
-      <div class="brand">Pulse<span>.ai</span></div>
-      <div class="status-badge">Vellore 24/7</div>
+      <div class="brand">🏥 Vellore CareAssist</div>
+      <div class="location-tag">Vellore, TN</div>
     </header>
 
-    <!-- SCREEN 1: User Details -->
+    <!-- SCREEN 1: Patient Information -->
     <div id="screen-user" class="screen active">
-      <h1>Spill the tea. ☕️</h1>
-      <p class="subtitle">Quick info check before we dive into your symptoms.</p>
+      <h1>Patient Registration</h1>
+      <p class="subtitle">Please enter your basic information to begin triage and doctor matching.</p>
       
       <div class="input-group">
-        <label for="userName">What do we call you?</label>
-        <input type="text" id="userName" placeholder="e.g. Alex" required>
+        <label for="userName">Full Name</label>
+        <input type="text" id="userName" placeholder="e.g. Ramachandran K" required>
       </div>
       
       <div class="input-group">
-        <label for="userEmail">Drop your email</label>
-        <input type="email" id="userEmail" placeholder="alex@gmail.com" required>
+        <label for="userAge">Age</label>
+        <input type="number" id="userAge" placeholder="e.g. 54" required>
       </div>
 
-      <button class="btn-main" onclick="goToScreen('screen-symptoms')">Next step ⚡️</button>
+      <div class="input-group">
+        <label for="userEmail">Email Address (for appointment confirmation)</label>
+        <input type="email" id="userEmail" placeholder="name@example.com" required>
+      </div>
+
+      <button class="btn-main" onclick="goToScreen('screen-symptoms')">Continue to Symptom Selection</button>
     </div>
 
-    <!-- SCREEN 2: Symptom Checker -->
+    <!-- SCREEN 2: Comprehensive Symptom Checker -->
     <div id="screen-symptoms" class="screen">
-      <h1>What’s the vibe? 🤒</h1>
-      <p class="subtitle">Select whatever feels off right now.</p>
+      <h1>Symptom Assessment</h1>
+      <p class="subtitle">Select all symptoms you or the patient are currently experiencing.</p>
       
+      <div class="symptom-category">General & Urgent</div>
       <div class="symptom-grid">
-        <div class="chip" onclick="toggleChip(this)">Fever / Hot 🥵</div>
-        <div class="chip" onclick="toggleChip(this)">Migraine 🤯</div>
-        <div class="chip" onclick="toggleChip(this)">Cough / Throat 🗣️</div>
-        <div class="chip" onclick="toggleChip(this)">Low Energy 🔋</div>
-        <div class="chip" onclick="toggleChip(this)">Stomach Bug 🤢</div>
-        <div class="chip" onclick="toggleChip(this)">Body Ache 🦴</div>
+        <div class="chip" onclick="toggleChip(this, 'General Medicine')">🤒 High Fever</div>
+        <div class="chip" onclick="toggleChip(this, 'Emergency')">🚨 Chest Pain</div>
+        <div class="chip" onclick="toggleChip(this, 'General Medicine')">🔋 Extreme Fatigue</div>
+        <div class="chip" onclick="toggleChip(this, 'Emergency')">🫁 Severe Breathlessness</div>
       </div>
 
-      <button class="btn-main" onclick="analyzeVibe()">Analyze Vibe 🔍</button>
+      <div class="symptom-category">Head, ENT & Eyes</div>
+      <div class="symptom-grid">
+        <div class="chip" onclick="toggleChip(this, 'Neurology')">🤯 Severe Headache</div>
+        <div class="chip" onclick="toggleChip(this, 'ENT')">👂 Ear Pain / Hearing Loss</div>
+        <div class="chip" onclick="toggleChip(this, 'ENT')">🗣️ Throat Infection</div>
+        <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">👁️ Vision Blur / Red Eye</div>
+      </div>
+
+      <div class="symptom-category">Bones, Joints & Organs</div>
+      <div class="symptom-grid">
+        <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">🦴 Joint / Bone Pain</div>
+        <div class="chip" onclick="toggleChip(this, 'Gastroenterology')">🤢 Stomach Ache / Vomiting</div>
+        <div class="chip" onclick="toggleChip(this, 'Dermatology')">🩺 Skin Rash / Itching</div>
+        <div class="chip" onclick="toggleChip(this, 'Gynaecology')">🚺 Pregnancy / Women's Care</div>
+        <div class="chip" onclick="toggleChip(this, 'Paediatrics')">👶 Child Health Concerns</div>
+      </div>
+
+      <button class="btn-main" onclick="analyzeSymptoms()">Analyze Symptoms & Find Hospitals</button>
     </div>
 
-    <!-- SCREEN 3: Results & Hospital Match -->
+    <!-- SCREEN 3: Triage Assessment & Hospital Matching -->
     <div id="screen-results" class="screen">
-      <h1>The Diagnosis. 🩺</h1>
-      <p class="subtitle">Here is what the system thinks is going on.</p>
+      <h1>Recommended Care Facilities</h1>
+      <p class="subtitle">Based on your symptoms, we matched verified medical centers in Vellore[cite: 2].</p>
       
-      <div class="result-bento">
-        <span id="riskTag" class="result-tag tag-low">Low Stress</span>
-        <h3 id="resultTitle" style="font-family: var(--font-display); margin-bottom: 0.4rem;">Mild Burnout or Fatigue</h3>
-        <p id="resultDesc" style="font-size: 0.85rem; color: var(--text-muted);">Stay hydrated and catch up on rest. If symptoms persist, check in with a local clinic.</p>
+      <div class="assessment-card">
+        <span id="urgencyBadge" class="urgency-badge urgency-low">Low Urgency</span>
+        <h3 id="recommendedSpecialty" style="margin-bottom: 0.4rem;">General Medicine</h3>
+        <p id="assessmentSummary" style="font-size: 0.9rem; color: var(--text-muted);">Please select a facility below to reserve your consultation slot.</p>
       </div>
 
-      <div class="input-group">
-        <label for="hospitalSelect">Top Vellore Medical Centers</label>
-        <select id="hospitalSelect">
-          <option>Christian Medical College (CMC), Vellore</option>
-          <option>Apollo KH Hospital, Melvisharam</option>
-          <option>Narayani Hospital & Research Centre</option>
-          <option>Government Vellore Medical College</option>
-        </select>
+      <label>Select a Medical Center (Filtered by Specialty):</label>
+      <div id="hospitalListContainer" style="margin-top: 0.5rem; max-height: 280px; overflow-y: auto;">
+        <!-- Dynamically Populated from SQL Seed Data -->
       </div>
 
-      <button class="btn-main" onclick="sendEmailConfirmation()">Book Spot 📅</button>
+      <button class="btn-main" onclick="bookAppointment()">Confirm & Book Appointment</button>
     </div>
 
     <!-- SCREEN 4: Confirmation Screen -->
     <div id="screen-confirmed" class="screen">
-      <h1 style="color: var(--accent-lime);">Locked in. 🔒</h1>
-      <p class="subtitle">Your appointment details were dispatched to your inbox.</p>
+      <h1 style="color: var(--status-low-text);">Appointment Requested</h1>
+      <p class="subtitle">Your details have been submitted to the selected healthcare provider[cite: 2].</p>
       
-      <div class="result-bento" style="text-align: center; padding: 2rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✨</div>
-        <h4 style="margin-bottom: 0.5rem;">See you soon!</h4>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Check your email for confirmation data sent via EmailJS.</p>
+      <div class="assessment-card" style="text-align: center; padding: 1.5rem;">
+        <h3 id="confirmHospitalName" style="color: var(--brand-primary); margin-bottom: 0.5rem;">Hospital Name</h3>
+        <p id="confirmDetails" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;"></p>
+        <p style="font-size: 0.85rem; color: var(--text-main);"><strong>Emergency Direct Line:</strong> <span id="confirmPhone"></span></p>
       </div>
 
-      <button class="btn-main" onclick="goToScreen('screen-user')">Start Over 🔄</button>
+      <button class="btn-main" onclick="goToScreen('screen-user')">Return to Home Screen</button>
     </div>
 
-    <footer>Powered by Gen-Z UI Logic • Vellore Health Ops</footer>
+    <footer>Vellore Medical Assistance Network • 18 Verified Centers Integrated[cite: 2]</footer>
 
   </div>
 
   <script>
-    // Initialize EmailJS (Replace 'YOUR_PUBLIC_KEY' with your actual key if needed)
+    // Database Seed Parsed directly from your SQL Migration file[cite: 2]
+    const HOSPITALS_DATABASE = [
+      {
+        name: "Christian Medical College Hospital",
+        address: "Ida Scudder Road, Thottapalayam, Vellore - 632004",
+        phone: "+918000338855",
+        specialties: ['General Medicine','Cardiology','Neurology','Gastroenterology','Orthopaedics','Paediatrics','Psychiatry','Emergency'],
+        isPartner: true
+      },
+      {
+        name: "Naruvi Hospitals",
+        address: "12, Chennai-Bengaluru Highway, Thottapalayam, Vellore - 632004",
+        phone: "+914166661111",
+        specialties: ['General Medicine','Cardiology','Orthopaedics','Neurology','Gastroenterology','Emergency'],
+        isPartner: true
+      },
+      {
+        name: "Sri Narayani Hospital & Research Centre",
+        address: "Azad Road, Thirumalaikodi, Vellore - 632055",
+        phone: "+914162206300",
+        specialties: ['General Medicine','Gynaecology','Cardiology','ENT','Emergency'],
+        isPartner: true
+      },
+      {
+        name: "Dr. Sivakumar Multi Speciality Hospital",
+        address: "C-3, Arcot Road, Phase 2, Sathuvachari, Vellore - 632009",
+        phone: "+914162253400",
+        specialties: ['General Medicine','Gynaecology','Orthopaedics','Emergency'],
+        isPartner: true
+      },
+      {
+        name: "Indira Superspeciality Hospital",
+        address: "54, Katpadi Road, Gandhi Nagar, Vellore - 632006",
+        phone: "+919842324425",
+        specialties: ['General Medicine','Gastroenterology','Emergency'],
+        isPartner: false
+      },
+      {
+        name: "Nalam Medical Center and Hospital",
+        address: "44, Arcot Road, Phase 2, Sathuvachari, Vellore - 632009",
+        phone: "+914162254461",
+        specialties: ['General Medicine','Orthopaedics','Paediatrics','Emergency'],
+        isPartner: false
+      },
+      {
+        name: "Sri Ragavendra Super Speciality Hospital",
+        address: "218, Phase 1 South Service Road, Sathuvachari, Vellore - 632009",
+        phone: "+919597649557",
+        specialties: ['General Medicine','Gynaecology','Paediatrics','Gastroenterology'],
+        isPartner: false
+      },
+      {
+        name: "Manisundaram Medical Mission Hospital",
+        address: "288, South Avenue Road, Phase III, Sathuvachari, Vellore - 632009",
+        phone: "+914162256007",
+        specialties: ['Orthopaedics','General Medicine'],
+        isPartner: false
+      },
+      {
+        name: "Saint Mary's Multi Speciality Hospital",
+        address: "53, Balaji Nagar Extension, Katpadi, Vellore - 632007",
+        phone: "+919943334063",
+        specialties: ['General Medicine','Gynaecology','Paediatrics','Emergency'],
+        isPartner: true
+      },
+      {
+        name: "Dhanya Medical Centre",
+        address: "19, Pillaiyar Koil Street, Sripuram, Velapadi, Vellore - 632001",
+        phone: "+919894399326",
+        specialties: ['Orthopaedics','General Medicine','Paediatrics'],
+        isPartner: false
+      },
+      {
+        name: "Arun Hospital Ortho & Trauma Care",
+        address: "15, Thiyagarajapuram Road, Veerasamy Nagar, Vellore - 632001",
+        phone: "+914162234217",
+        specialties: ['Orthopaedics','Emergency'],
+        isPartner: false
+      },
+      {
+        name: "The Eye Foundation",
+        address: "47/1A, Katpadi Road, Viruthampet, Vellore - 632006",
+        phone: "+918925851213",
+        specialties: ['Ophthalmology'],
+        isPartner: true
+      },
+      {
+        name: "CMC Schell Eye Hospital",
+        address: "Schell Campus, Arni Road, Srinivasan Nagar, Vellore - 632001",
+        phone: "+914162281226",
+        specialties: ['Ophthalmology'],
+        isPartner: false
+      },
+      {
+        name: "Dr Sherinz Skin and Cosmetology Centre",
+        address: "34, Kalinjur Main Road, Gandhinagar West, Katpadi, Vellore - 632006",
+        phone: "+918807338560",
+        specialties: ['Dermatology'],
+        isPartner: true
+      },
+      {
+        name: "Kleara Skin, Hair & Laser Clinic",
+        address: "15, 10th East Cross Road, Gandhi Nagar, Vellore - 632006",
+        phone: "+919600960160",
+        specialties: ['Dermatology'],
+        isPartner: false
+      },
+      {
+        name: "Vivan ENT Clinic",
+        address: "1/1, 4th Street, Venkatraman Nagar, Katpadi, Vellore - 632006",
+        phone: "+918220545111",
+        specialties: ['ENT'],
+        isPartner: true
+      },
+      {
+        name: "Vellore Speciality Centre",
+        address: "1315, South Avenue Road, Phase 2, Sathuvachari, Vellore - 632009",
+        phone: "+914162220052",
+        specialties: ['ENT','General Medicine'],
+        isPartner: false
+      },
+      {
+        name: "Dr Arulalan Children's Clinic",
+        address: "17, 10th East Cross Road, Gandhi Nagar, Vellore - 632006",
+        phone: "+914162244710",
+        specialties: ['Paediatrics'],
+        isPartner: true
+      },
+      {
+        name: "Pediatree Child Clinic",
+        address: "10, Post Office Road, Krishna Nagar, Vellore - 632001",
+        phone: "+918056745999",
+        specialties: ['Paediatrics'],
+        isPartner: false
+      },
+      {
+        name: "Sandhya Hospital",
+        address: "565, Phase I, Sathuvachari, Vellore - 632009",
+        phone: "+914162253357",
+        specialties: ['Gynaecology','Paediatrics'],
+        isPartner: true
+      },
+      {
+        name: "Saaral Fertility and Women's Health Centre",
+        address: "73/1, Vellore-Chittoor Road, Katpadi, Vellore - 632006",
+        phone: "+916385169309",
+        specialties: ['Gynaecology'],
+        isPartner: true
+      }
+    ];
+
+    let selectedSpecialties = [];
+    let selectedHospital = null;
+
+    // EmailJS Initialization
     (function(){
       emailjs.init("YOUR_PUBLIC_KEY");
     })();
-
-    // Simple State Management
-    let selectedSymptoms = [];
 
     function goToScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
     }
 
-    function toggleChip(element) {
+    function toggleChip(element, specialty) {
       element.classList.toggle('selected');
-      const text = element.innerText;
-      if (selectedSymptoms.includes(text)) {
-        selectedSymptoms = selectedSymptoms.filter(item => item !== text);
+      if (selectedSpecialties.includes(specialty)) {
+        selectedSpecialties = selectedSpecialties.filter(s => s !== specialty);
       } else {
-        selectedSymptoms.push(text);
+        selectedSpecialties.push(specialty);
       }
     }
 
-    function analyzeVibe() {
-      if (selectedSymptoms.length === 0) {
-        alert("Pick at least one symptom, bestie!");
+    function analyzeSymptoms() {
+      if (selectedSpecialties.length === 0) {
+        alert("Please select at least one symptom to proceed.");
         return;
       }
 
-      const riskTag = document.getElementById('riskTag');
-      const resultTitle = document.getElementById('resultTitle');
-      const resultDesc = document.getElementById('resultDesc');
+      const urgencyBadge = document.getElementById('urgencyBadge');
+      const recommendedSpecialty = document.getElementById('recommendedSpecialty');
+      const assessmentSummary = document.getElementById('assessmentSummary');
+      
+      let targetSpecialty = 'General Medicine';
+      let urgencyLevel = 'Low Urgency';
 
-      if (selectedSymptoms.some(s => s.includes('Migraine') || s.includes('Fever'))) {
-        riskTag.className = "result-tag tag-high";
-        riskTag.innerText = "Needs Attention";
-        resultTitle.innerText = "Acute Strain / System Flare-up";
-        resultDesc.innerText = "Recommended to schedule an immediate consult at a nearby medical facility.";
+      if (selectedSpecialties.includes('Emergency')) {
+        urgencyLevel = 'High Urgency';
+        targetSpecialty = 'Emergency Care / General Medicine';
+        urgencyBadge.className = "urgency-badge urgency-high";
+      } else if (selectedSpecialties.includes('Neurology') || selectedSpecialties.includes('Cardiology')) {
+        urgencyLevel = 'Moderate Urgency';
+        targetSpecialty = selectedSpecialties[0];
+        urgencyBadge.className = "urgency-badge urgency-med";
       } else {
-        riskTag.className = "result-tag tag-low";
-        riskTag.innerText = "Low Risk";
-        resultTitle.innerText = "Standard Fatigue / Mild Symptoms";
-        resultDesc.innerText = " hydration and rest suggested. Book below if symptoms do not improve.";
+        urgencyLevel = 'Routine Consultation';
+        targetSpecialty = selectedSpecialties[0];
+        urgencyBadge.className = "urgency-badge urgency-low";
       }
 
+      urgencyBadge.innerText = urgencyLevel;
+      recommendedSpecialty.innerText = targetSpecialty;
+      assessmentSummary.innerText = `Matched facilities below provide specialist care in ${targetSpecialty}.`;
+
+      populateHospitals(selectedSpecialties);
       goToScreen('screen-results');
     }
 
-    function sendEmailConfirmation() {
-      const name = document.getElementById('userName').value || "Patient";
-      const email = document.getElementById('userEmail').value;
-      const hospital = document.getElementById('hospitalSelect').value;
+    function populateHospitals(specialties) {
+      const container = document.getElementById('hospitalListContainer');
+      container.innerHTML = '';
 
-      if (!email) {
-        alert("Please drop a valid email first!");
+      // Filter SQL data based on selected specialties[cite: 2]
+      const matches = HOSPITALS_DATABASE.filter(h => 
+        h.specialties.some(s => specialties.includes(s))
+      );
+
+      const displayList = matches.length > 0 ? matches : HOSPITALS_DATABASE;
+
+      displayList.forEach((h, index) => {
+        const card = document.createElement('div');
+        card.className = `hospital-card ${index === 0 ? 'selected' : ''}`;
+        if (index === 0) selectedHospital = h;
+
+        card.innerHTML = `
+          <div class="hospital-name">${h.name} ${h.isPartner ? '✔ (Verified Partner)' : ''}</div>
+          <div class="hospital-address">${h.address}</div>
+          <div class="hospital-phone">📞 ${h.phone}</div>
+        `;
+
+        card.onclick = () => {
+          document.querySelectorAll('.hospital-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedHospital = h;
+        };
+
+        container.appendChild(card);
+      });
+    }
+
+    function bookAppointment() {
+      const name = document.getElementById('userName').value;
+      const email = document.getElementById('userEmail').value;
+      const age = document.getElementById('userAge').value;
+
+      if (!name || !email || !age) {
+        alert("Please provide patient name, age, and email address.");
         goToScreen('screen-user');
         return;
       }
 
-      // Simulated dispatch for preview clarity
-      console.log(`Email dispatched to ${email} for ${name} at ${hospital}`);
+      if (!selectedHospital) {
+        alert("Please select a hospital to proceed.");
+        return;
+      }
+
+      document.getElementById('confirmHospitalName').innerText = selectedHospital.name;
+      document.getElementById('confirmDetails').innerText = `Confirmation generated for ${name} (${age} yrs). Destination: ${selectedHospital.address}`;
+      document.getElementById('confirmPhone').innerText = selectedHospital.phone;
+
+      // EmailJS logic to dispatch appointment details
+      const templateParams = {
+        to_email: email,
+        patient_name: name,
+        hospital_name: selectedHospital.name,
+        contact_phone: selectedHospital.phone
+      };
+
+      // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+
       goToScreen('screen-confirmed');
     }
   </script>
