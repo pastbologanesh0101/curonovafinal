@@ -44,6 +44,26 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow-x: hidden;
+      perspective: 1000px;
+      width: 100vw;
+    }
+
+    /* SPACE BACKGROUND CANVAS PATTERN */
+    .space-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #111111 0%, #000000 100%);
+      z-index: -1;
+      pointer-events: none;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .space-bg.warp {
+      transform: scale(1.6) rotate(3deg);
     }
 
     /* TOP TICKER TAPE */
@@ -59,6 +79,7 @@
       text-align: center;
       overflow: hidden;
       white-space: nowrap;
+      z-index: 10;
     }
 
     .ticker-content {
@@ -71,15 +92,15 @@
       100% { transform: translateX(-100%); }
     }
 
-    /* HEADER NAV */
+    /* HEADER NAV - FULL WIDTH */
     header {
       width: 100%;
-      max-width: 1240px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 1.5rem;
+      padding: 1.25rem 2rem;
       border-bottom: 1px solid var(--border-color);
+      z-index: 10;
     }
 
     .brand {
@@ -111,15 +132,20 @@
       text-transform: uppercase;
     }
 
-    /* HERO BANNER */
+    /* HERO BANNER - FULL WIDTH */
     .hero-banner {
       width: 100%;
-      max-width: 1240px;
+      padding: 0 2rem;
+      margin: 1.5rem 0 1rem 0;
+      z-index: 10;
+    }
+
+    .hero-banner-inner {
+      width: 100%;
       background: #ffffff;
       color: #000000;
       border-radius: var(--radius-lg);
-      padding: 2.5rem 2rem;
-      margin: 1.5rem 0;
+      padding: 2.25rem 2rem;
     }
 
     .hero-banner h1 {
@@ -130,15 +156,15 @@
       text-transform: uppercase;
     }
 
-    /* MAIN CONTENT VIEWPORT */
+    /* MAIN CONTENT VIEWPORT - FULL WIDTH GRID */
     .app-viewport {
       width: 100%;
-      max-width: 1240px;
       display: grid;
       grid-template-columns: 280px 1fr;
       gap: 1.5rem;
-      padding: 0 1.5rem 3rem 1.5rem;
+      padding: 0 2rem 3rem 2rem;
       flex-grow: 1;
+      z-index: 10;
     }
 
     /* SIDEBAR / CONTROL PANEL */
@@ -169,16 +195,50 @@
       text-decoration: underline;
     }
 
-    /* MAIN STAGE CARDS */
+    /* MAIN STAGE CARDS & SPACE ANIMATIONS */
     .main-stage {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
       min-width: 0;
+      position: relative;
     }
 
-    .screen { display: none; }
-    .screen.active { display: block; }
+    .screen { 
+      display: none; 
+      opacity: 0;
+      transform: translateZ(-200px) scale(0.85);
+      filter: blur(10px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .screen.active { 
+      display: block;
+      opacity: 1;
+      transform: translateZ(0deg) scale(1);
+      filter: blur(0px);
+      animation: spaceEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .screen.warp-exit {
+      display: block;
+      opacity: 0;
+      transform: translateZ(400px) scale(1.35);
+      filter: blur(15px);
+    }
+
+    @keyframes spaceEnter {
+      0% {
+        opacity: 0;
+        transform: translateZ(-300px) scale(0.8);
+        filter: blur(12px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateZ(0) scale(1);
+        filter: blur(0px);
+      }
+    }
 
     /* FORM COMPONENTS */
     .input-group {
@@ -245,30 +305,35 @@
       border-color: #ffffff;
     }
 
-    /* CHIPS / SYMPTOMS */
+    /* CHIPS / SYMPTOMS & MEDICAL HISTORY */
     .symptom-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.65rem;
       margin-bottom: 1.5rem;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
     }
 
     .chip {
       background: var(--bg-main);
       border: 1px solid var(--border-color);
-      padding: 0.85rem;
+      padding: 0.75rem;
       border-radius: var(--radius-sm);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
       text-align: center;
       transition: all 0.2s ease;
+      user-select: none;
     }
 
     .chip:hover {
       border-color: var(--text-bright);
       color: var(--text-bright);
+      transform: translateY(-2px);
     }
 
     .chip.selected {
@@ -288,7 +353,7 @@
       font-size: 0.85rem;
       letter-spacing: 0.5px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -298,6 +363,8 @@
 
     .btn-action:hover {
       background: #e5e5e5;
+      transform: scale(1.01);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
     }
 
     .btn-secondary {
@@ -309,6 +376,7 @@
     .btn-secondary:hover {
       border-color: var(--text-bright);
       background: transparent;
+      box-shadow: none;
     }
 
     /* HOSPITAL CARD */
@@ -322,11 +390,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: border-color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .hospital-card:hover {
       border-color: var(--text-bright);
+      transform: translateX(4px);
     }
 
     .hospital-card.selected {
@@ -350,26 +419,27 @@
       font-size: 1rem;
     }
 
-    /* DATA TABLE & MOBILE SCROLL WRAPPER */
+    /* DATA TABLE - RESPONSIVE NO SCROLLBAR FIT */
     .table-container {
       background: var(--bg-main);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      width: 100%;
     }
 
     .data-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
-      white-space: nowrap;
+      table-layout: fixed;
     }
 
     .data-table th, .data-table td {
-      padding: 0.85rem 1rem;
+      padding: 0.9rem 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border-color);
+      word-wrap: break-word;
+      white-space: normal;
     }
 
     .data-table th {
@@ -381,6 +451,11 @@
       font-size: 0.7rem;
     }
 
+    .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 28%; }
+    .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 32%; }
+    .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 22%; }
+    .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 18%; }
+
     /* FOOTER */
     footer {
       width: 100%;
@@ -391,18 +466,22 @@
       font-size: 0.75rem;
       letter-spacing: 1px;
       margin-top: auto;
+      z-index: 10;
     }
 
     /* MOBILE RESPONSIVE MEDIA QUERIES */
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       header {
         padding: 1rem;
       }
       
       .hero-banner {
+        padding: 0 1rem;
         margin: 1rem 0;
+      }
+      
+      .hero-banner-inner {
         padding: 1.5rem 1rem;
-        border-radius: 0;
       }
 
       .hero-banner h1 {
@@ -438,9 +517,10 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .screen > div {
-        padding: 1.25rem !important;
-      }
+      .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 30%; }
+      .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 30%; }
+      .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 22%; }
+      .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 18%; }
 
       .grid-2col-mobile {
         grid-template-columns: 1fr !important;
@@ -449,6 +529,9 @@
   </style>
 </head>
 <body>
+
+  <!-- BACKGROUND DYNAMIC WARP EFFECT -->
+  <div class="space-bg" id="spaceBg"></div>
 
   <!-- TICKER TOP BAR -->
   <div class="ticker-bar">
@@ -467,7 +550,9 @@
 
   <!-- HERO BANNER -->
   <div class="hero-banner">
-    <h1 id="heroTitle">PATIENT PORTAL</h1>
+    <div class="hero-banner-inner">
+      <h1 id="heroTitle">PATIENT PORTAL</h1>
+    </div>
   </div>
 
   <!-- MAIN APP VIEWPORT -->
@@ -528,34 +613,52 @@
         </div>
       </div>
 
-      <!-- 2. PATIENT FLOW: SYMPTOM ASSESSMENT -->
+      <!-- 2. PATIENT FLOW: 40+ SYMPTOMS ASSESSMENT -->
       <div id="screen-symptoms" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Symptom Triage</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select your health indicators to filter appropriate hospitals across Vellore[cite: 2].</p>
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Symptom Triage (40 Indicators)</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select all relevant health indicators to match top specialists across Vellore[cite: 2].</p>
           
-          <div class="symptom-grid">
-            <div class="chip" onclick="toggleChip(this, 'General Medicine')">High Fever</div>
-            <div class="chip" onclick="toggleChip(this, 'Emergency')">Chest Pain</div>
-            <div class="chip" onclick="toggleChip(this, 'Neurology')">Severe Headache</div>
-            <div class="chip" onclick="toggleChip(this, 'ENT')">Ear / Throat Pain</div>
-            <div class="chip" onclick="toggleChip(this, 'Orthopaedics')">Joint / Bone Pain</div>
-            <div class="chip" onclick="toggleChip(this, 'Dermatology')">Skin Rash</div>
-            <div class="chip" onclick="toggleChip(this, 'Ophthalmology')">Vision Issue</div>
-            <div class="chip" onclick="toggleChip(this, 'Gynaecology')">Women's Health</div>
-          </div>
+          <div class="symptom-grid" id="symptomGrid"></div>
 
-          <button class="btn-action" onclick="analyzeSymptoms()">RECOMMEND HOSPITALS --></button>
+          <button class="btn-action" onclick="goToHistoryScreen()">NEXT: PREVIOUS MEDICAL HISTORY --></button>
         </div>
       </div>
 
-      <!-- 3. PATIENT FLOW: BOOKING & TIME -->
+      <!-- 3. PATIENT FLOW: MEDICAL HISTORY & PREVIOUS CONDITIONS -->
+      <div id="screen-history" class="screen">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Previous Medical History</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Log past conditions and chronic illnesses for physician review.</p>
+          
+          <label style="margin-bottom: 0.5rem;">CHRONIC CONDITIONS / DIAGNOSES</label>
+          <div class="symptom-grid" style="max-height: 200px; margin-bottom: 1.25rem;">
+            <div class="chip" onclick="toggleHistoryChip(this, 'Diabetes Mellitus')">Diabetes Mellitus</div>
+            <div class="chip" onclick="toggleHistoryChip(this, 'Hypertension (High BP)')">Hypertension (High BP)</div>
+            <div class="chip" onclick="toggleHistoryChip(this, 'Asthma / COPD')">Asthma / COPD</div>
+            <div class="chip" onclick="toggleHistoryChip(this, 'Thyroid Disorder')">Thyroid Disorder</div>
+            <div class="chip" onclick="toggleHistoryChip(this, 'Coronary Artery Disease')">Heart Disease</div>
+            <div class="chip" onclick="toggleHistoryChip(this, 'Chronic Kidney Disease')">Kidney Disease</div>
+            <div class="chip" onclick="toggleHistoryChip(this, 'Previous Surgery')">Previous Surgeries</div>
+            <div class="chip" onclick="toggleHistoryChip(this, 'Drug / Food Allergies')">Drug Allergies</div>
+          </div>
+
+          <div class="input-group">
+            <label for="historyOther">OTHER MEDICAL DETAILS & CURRENT MEDICATIONS</label>
+            <textarea id="historyOther" rows="3" placeholder="e.g. Metformin 500mg daily, appendectomy in 2021, severe penicillin allergy..."></textarea>
+          </div>
+
+          <button class="btn-action" onclick="analyzeSymptomsAndHistory()">PROCEED TO HOSPITAL SELECTION --></button>
+        </div>
+      </div>
+
+      <!-- 4. PATIENT FLOW: BOOKING & TIME -->
       <div id="screen-booking" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Schedule Appointment</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select a verified hospital and confirm your preferred slot.</p>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select a hospital and confirm your preferred slot.</p>
           
-          <label style="margin-bottom: 0.5rem;">AVAILABLE NETWORK HOSPITALS</label>
+          <label style="margin-bottom: 0.5rem;">RECOMMENDED NETWORK HOSPITALS</label>
           <div id="hospitalListContainer" style="max-height: 240px; overflow-y: auto; margin-bottom: 1.25rem;"></div>
 
           <div class="grid-2col-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
@@ -579,11 +682,11 @@
         </div>
       </div>
 
-      <!-- 4. CONFIRMED SCREEN -->
+      <!-- 5. CONFIRMED SCREEN -->
       <div id="screen-confirmed" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2rem 1.5rem; border-radius: var(--radius-lg); text-align: center;">
           <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem; text-transform: uppercase;">Booking Confirmed</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Details dispatched via EmailJS.</p>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Appointment details synced to network EMR.</p>
           
           <div style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; text-align: left;">
             <h3 id="resHospital" style="font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">Hospital Name</h3>
@@ -595,7 +698,7 @@
         </div>
       </div>
 
-      <!-- 5. ADMIN DASHBOARD -->
+      <!-- 6. ADMIN DASHBOARD - FIT TO SCREEN FULL WIDTH -->
       <div id="screen-admin" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Dashboard</h2>
@@ -624,11 +727,11 @@
         </div>
       </div>
 
-      <!-- 6. DOCTOR PORTAL -->
+      <!-- 7. DOCTOR PORTAL -->
       <div id="screen-doctor" class="screen">
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.75rem; border-radius: var(--radius-lg);">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase;">Physician EMR Interface</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Review records and publish digital prescriptions.</p>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Review records, past history, and publish prescriptions.</p>
 
           <div class="input-group">
             <label for="docPatientSelect">SELECT PATIENT PROFILE</label>
@@ -637,8 +740,8 @@
             </select>
           </div>
 
-          <label style="margin-top: 1rem;">PATIENT HISTORY RECORDS</label>
-          <div id="docHistoryBox" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.8rem; margin-bottom: 1.25rem; margin-top: 0.5rem;"></div>
+          <label style="margin-top: 1rem;">PATIENT MEDICAL & SYMPTOM HISTORY</label>
+          <div id="docHistoryBox" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.8rem; margin-bottom: 1.25rem; margin-top: 0.5rem; max-height: 200px; overflow-y: auto;"></div>
 
           <div class="input-group">
             <label for="docDiagnosis">DIAGNOSIS</label>
@@ -663,6 +766,50 @@
   </footer>
 
   <script>
+    // 40 CLINICAL SYMPTOMS DATABASE
+    const SYMPTOMS_40 = [
+      { name: "High Fever", spec: "General Medicine" },
+      { name: "Chest Pain", spec: "Emergency" },
+      { name: "Severe Headache", spec: "Neurology" },
+      { name: "Ear Pain", spec: "ENT" },
+      { name: "Throat Pain / Sore Throat", spec: "ENT" },
+      { name: "Joint & Bone Pain", spec: "Orthopaedics" },
+      { name: "Skin Rash & Itching", spec: "Dermatology" },
+      { name: "Vision Blurring", spec: "Ophthalmology" },
+      { name: "Irregular Menstrual Cycle", spec: "Gynaecology" },
+      { name: "Shortness of Breath", spec: "Emergency" },
+      { name: "Abdominal Pain", spec: "Gastroenterology" },
+      { name: "Chronic Cough", spec: "General Medicine" },
+      { name: "Dizziness & Vertigo", spec: "Neurology" },
+      { name: "Pediatric Fever", spec: "Paediatrics" },
+      { name: "Acne & Hair Loss", spec: "Dermatology" },
+      { name: "Eye Redness & Irritation", spec: "Ophthalmology" },
+      { name: "Nasal Congestion", spec: "ENT" },
+      { name: "Acid Reflux / Heartburn", spec: "Gastroenterology" },
+      { name: "Back & Spine Stiff", spec: "Orthopaedics" },
+      { name: "Palpitations", spec: "Cardiology" },
+      { name: "Anxiety & Mood Swings", spec: "Psychiatry" },
+      { name: "Pregnancy Care", spec: "Gynaecology" },
+      { name: "Unexplained Fatigue", spec: "General Medicine" },
+      { name: "High Blood Pressure", spec: "Cardiology" },
+      { name: "Tremors & Seizures", spec: "Neurology" },
+      { name: "Fracture / Trauma", spec: "Orthopaedics" },
+      { name: "Child Growth Issues", spec: "Paediatrics" },
+      { name: "Hearing Loss", spec: "ENT" },
+      { name: "Cataract Symptoms", spec: "Ophthalmology" },
+      { name: "Eczema / Psoriasis", spec: "Dermatology" },
+      { name: "Blood in Stool", spec: "Gastroenterology" },
+      { name: "Sleep Apnea / Insomnia", spec: "Psychiatry" },
+      { name: "Excessive Thirst / Diabetes", spec: "General Medicine" },
+      { name: "Leg Swelling (Edema)", spec: "Cardiology" },
+      { name: "Numbness in Limbs", spec: "Neurology" },
+      { name: "Knee / Ligament Injury", spec: "Orthopaedics" },
+      { name: "Child Vaccination Need", spec: "Paediatrics" },
+      { name: "Cosmetic Skin Laser", spec: "Dermatology" },
+      { name: "Pelvic Pain", spec: "Gynaecology" },
+      { name: "Sudden Loss of Consciousness", spec: "Emergency" }
+    ];
+
     // 21 SQL Hospitals Database[cite: 2]
     const HOSPITALS_DATABASE = [
       { name: "Christian Medical College Hospital", address: "Thottapalayam, Vellore", phone: "+918000338855", specialties: ['General Medicine','Cardiology','Neurology','Gastroenterology','Orthopaedics','Paediatrics','Psychiatry','Emergency'] },
@@ -689,7 +836,8 @@
     ];
 
     let globalAppointments = [
-      { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Christian Medical College Hospital", dateTime: "2026-08-26 | 10:30 AM", specialty: "General Medicine" }
+      { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Christian Medical College Hospital", dateTime: "2026-08-26 | 10:30 AM", specialty: "General Medicine" },
+      { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Sri Ragavendra Super Speciality Hospital", dateTime: "2026-08-25 | 09:00 AM", specialty: "Dermatology" }
     ];
 
     let globalPrescriptions = {
@@ -700,7 +848,9 @@
 
     let selectedRole = 'patient';
     let selectedSpecialties = [];
+    let selectedHistory = [];
     let selectedHospital = null;
+    let currentScreenId = 'screen-login';
 
     (function(){
       emailjs.init("YOUR_PUBLIC_KEY");
@@ -708,6 +858,16 @@
       const today = new Date();
       today.setDate(today.getDate() + 1);
       document.getElementById('bookingDate').value = today.toISOString().split('T')[0];
+
+      // Render 40 symptoms dynamically
+      const grid = document.getElementById('symptomGrid');
+      SYMPTOMS_40.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'chip';
+        div.innerText = s.name;
+        div.onclick = () => toggleChip(div, s.spec);
+        grid.appendChild(div);
+      });
 
       const adminSelect = document.getElementById('adminFilterHospital');
       HOSPITALS_DATABASE.forEach(h => {
@@ -765,11 +925,27 @@
       }
     }
 
-    function analyzeSymptoms() {
+    function toggleHistoryChip(el, condition) {
+      el.classList.toggle('selected');
+      if (selectedHistory.includes(condition)) {
+        selectedHistory = selectedHistory.filter(h => h !== condition);
+      } else {
+        selectedHistory.push(condition);
+      }
+    }
+
+    function goToHistoryScreen() {
       if (selectedSpecialties.length === 0) {
-        alert("Please pick at least one symptom.");
+        alert("Please pick at least one symptom from the grid.");
         return;
       }
+      goToScreen('screen-history');
+    }
+
+    function analyzeSymptomsAndHistory() {
+      const notes = document.getElementById('historyOther').value.trim();
+      if (notes) selectedHistory.push(`Notes: ${notes}`);
+      
       populateHospitals();
       goToScreen('screen-booking');
     }
@@ -815,7 +991,7 @@
         patient: "Vishwa K (vishwa@gmail.com)",
         hospital: selectedHospital.name,
         dateTime: `${date} | ${time}`,
-        specialty: selectedSpecialties[0] || 'General'
+        specialty: selectedSpecialties[0] || 'General Medicine'
       });
 
       document.getElementById('resHospital').innerText = selectedHospital.name;
@@ -844,18 +1020,21 @@
       const container = document.getElementById('docHistoryBox');
       const records = globalPrescriptions[patientEmail] || [];
 
+      let historyHtml = `<strong>LOGGED PAST CONDITIONS:</strong> ${selectedHistory.length > 0 ? selectedHistory.join(', ') : 'None specified.'}<br><br>`;
+      
       if (records.length === 0) {
-        container.innerHTML = "<em>No medical history logged for this patient.</em>";
-        return;
+        historyHtml += "<em>No previous doctor prescriptions logged.</em>";
+      } else {
+        historyHtml += records.map(r => `
+          <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+            <strong>DATE:</strong> ${r.date} | <strong>DOCTOR:</strong> ${r.doctor}<br>
+            <strong>DIAGNOSIS:</strong> ${r.diagnosis}<br>
+            <strong>PRESCRIPTION:</strong> ${r.rx}
+          </div>
+        `).join('');
       }
 
-      container.innerHTML = records.map(r => `
-        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
-          <strong>DATE:</strong> ${r.date} | <strong>DOCTOR:</strong> ${r.doctor}<br>
-          <strong>DIAGNOSIS:</strong> ${r.diagnosis}<br>
-          <strong>PRESCRIPTION:</strong> ${r.rx}
-        </div>
-      `).join('');
+      container.innerHTML = historyHtml;
     }
 
     function savePrescription() {
@@ -883,9 +1062,31 @@
       loadPatientHistoryForDoctor();
     }
 
-    function goToScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+    // SPACE WARP TRANSITION CONTROLLER
+    function goToScreen(targetId) {
+      if (targetId === currentScreenId) return;
+
+      const currentScreen = document.getElementById(currentScreenId);
+      const targetScreen = document.getElementById(targetId);
+      const spaceBg = document.getElementById('spaceBg');
+
+      spaceBg.classList.add('warp');
+
+      currentScreen.classList.remove('active');
+      currentScreen.classList.add('warp-exit');
+
+      setTimeout(() => {
+        currentScreen.classList.remove('warp-exit');
+        currentScreen.style.display = 'none';
+
+        spaceBg.classList.remove('warp');
+        targetScreen.style.display = 'block';
+        
+        void targetScreen.offsetWidth;
+
+        targetScreen.classList.add('active');
+        currentScreenId = targetId;
+      }, 350);
     }
 
     function logout() {
