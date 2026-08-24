@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MediSense AI — India's Health Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:#f4f7f8;color:#0f172a;font-family:'Sora',sans-serif;overflow-x:hidden}
+:root{--gold:#0d9488;--gold2:#0f766e;--gold-dim:rgba(13,148,136,.12);--blue:#3b82f6;--green:#16a34a;--red:#dc2626;--amber:#d97706;--purple:#7c3aed;--surface:#ffffff;--border:rgba(15,23,42,.09);--text:rgba(15,23,42,.52)}
+
+/* ── LAYOUT ── */
+#app{min-height:100vh;position:relative}
+.bg-grid{position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(13,148,136,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(13,148,136,.022) 1px,transparent 1px);background-size:55px 55px;z-index:0}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.orb1{width:550px;height:550px;top:-150px;right:-150px;background:var(--gold);opacity:.08}
+.orb2{width:400px;height:400px;bottom:0;left:-120px;background:var(--blue);opacity:.09}
+
+/* ── TOPBAR ── */
+#topbar{position:relative;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--border);backdrop-filter:blur(10px);background:rgba(244,247,248,.8)}
+.logo{display:flex;align-items:center;gap:11px}
+.logo-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#0f766e);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 18px rgba(13,148,136,.25)}
+.logo-name{font-size:17px;font-weight:700;letter-spacing:.3px}
+.logo-sub{font-family:'Inter',sans-serif;font-size:9px;color:rgba(15,23,42,.3);letter-spacing:2px;text-transform:uppercase}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.city-badge{font-family:'Inter',sans-serif;font-size:12px;background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);color:var(--gold);padding:4px 12px;border-radius:50px}
+.progress-dots{display:flex;gap:5px;align-items:center}
+.pdot{height:5px;border-radius:3px;background:rgba(15,23,42,.12);transition:all .35s;width:8px}
+.pdot.done{background:rgba(13,148,136,.5)}
+.pdot.active{background:var(--gold);box-shadow:0 0 8px rgba(13,148,136,.5);width:22px}
+.user-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(15,23,42,.05);border:1px solid var(--border);border-radius:50px;padding:5px 14px 5px 5px;cursor:pointer;transition:background .2s}
+.user-pill:hover{background:rgba(15,23,42,.08)}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#0f766e);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#ffffff;font-family:'Inter',sans-serif}
+.user-avatar.admin{background:linear-gradient(135deg,var(--blue),#1d4ed8)}
+.user-avatar.doctor{background:linear-gradient(135deg,#7c3aed,#6d28d9)}
+.user-name{font-family:'Inter',sans-serif;font-size:12px;color:rgba(15,23,42,.6)}
+.user-logout{font-family:'Inter',sans-serif;font-size:11px;color:rgba(15,23,42,.3)}
+.admin-badge{font-family:'Inter',sans-serif;font-size:12px;background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.3);color:#1d4ed8;padding:4px 12px;border-radius:50px}
+
+/* ── PAGE WRAPPER ── */
+#page{position:relative;z-index:10;padding:50px 32px 90px;width:100%;min-height:calc(100vh - 66px)}
+
+/* ── SCREEN MANAGEMENT ── */
+.screen{display:none;animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TYPOGRAPHY ── */
+.dm{font-family:'Inter',sans-serif}
+.eyebrow{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+.eyebrow-blue{color:#1d4ed8}
+.title{font-size:clamp(28px,4.5vw,50px);font-weight:900;line-height:1.15;margin-bottom:14px}
+.accent{color:var(--gold);font-style:italic}
+.accent-blue{color:#1d4ed8;font-style:italic}
+.subtitle{font-family:'Inter',sans-serif;font-size:15px;color:var(--text);line-height:1.85}
+.aline{width:48px;height:3px;background:linear-gradient(90deg,var(--gold),#0f766e);border-radius:2px;margin-bottom:22px}
+.aline-blue{width:48px;height:3px;background:linear-gradient(90deg,var(--blue),#1d4ed8);border-radius:2px;margin-bottom:22px}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 3px rgba(15,23,42,.04),0 1px 2px rgba(15,23,42,.03)}
+.card-pad{padding:22px}
+.card-hover{transition:all .25s;cursor:pointer}
+.card-hover:hover{border-color:rgba(13,148,136,.35);box-shadow:0 12px 28px rgba(15,23,42,.09);transform:translateY(-2px)}
+
+/* ── BUTTONS ── */
+.btn{background:linear-gradient(135deg,var(--gold),#0f766e);color:#ffffff;border:none;padding:13px 36px;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;border-radius:6px;cursor:pointer;transition:all .25s}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 28px rgba(13,148,136,.3)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-full{width:100%;padding:14px;font-size:15px}
+.btn-blue{background:linear-gradient(135deg,var(--blue),#1d4ed8);color:#fff}
+.btn-outline{background:transparent;color:var(--gold);border:1.5px solid rgba(13,148,136,.5);padding:11px 28px;font-family:'Inter',sans-serif;font-size:14px;border-radius:6px;cursor:pointer;transition:all .2s}
+.btn-outline:hover{background:rgba(13,148,136,.1)}
+.btn-sm{padding:6px 14px;font-family:'Inter',sans-serif;font-size:12px;border-radius:5px;cursor:pointer;border:1px solid;transition:all .2s}
+.btn-map{display:inline-flex;align-items:center;gap:5px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);color:#1d4ed8;padding:6px 13px;border-radius:5px;font-family:'Inter',sans-serif;font-size:12px;text-decoration:none;transition:all .2s}
+.btn-map:hover{background:rgba(96,165,250,.2)}
+
+/* ── INPUTS ── */
+input,textarea,select{background:rgba(15,23,42,.05);border:1px solid rgba(15,23,42,.12);color:#0f172a;padding:11px 15px;border-radius:6px;font-family:'Inter',sans-serif;font-size:14px;width:100%;outline:none;transition:border-color .2s;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{border-color:rgba(13,148,136,.55);box-shadow:0 0 0 3px rgba(13,148,136,.07)}
+input::placeholder,textarea::placeholder{color:rgba(15,23,42,.28)}
+input.err{border-color:rgba(239,68,68,.5)!important}
+.err-txt{font-family:'Inter',sans-serif;font-size:12px;color:#dc2626;margin-top:5px}
+select option{background:#ffffff}
+.label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:1.5px;color:rgba(15,23,42,.4);margin-bottom:8px;text-transform:uppercase}
+
+/* ── PILLS / CHIPS ── */
+.chip{cursor:pointer;padding:9px 18px;border-radius:50px;border:1.5px solid rgba(13,148,136,.28);background:rgba(13,148,136,.04);color:#0f766e;font-family:'Inter',sans-serif;font-size:13px;transition:all .2s;user-select:none;display:inline-block}
+.chip:hover{border-color:rgba(13,148,136,.55);background:rgba(13,148,136,.1)}
+.chip.on{background:rgba(13,148,136,.18);border-color:var(--gold);color:var(--gold2)}
+.city-chip{cursor:pointer;padding:7px 14px;border-radius:50px;border:1px solid rgba(15,23,42,.1);background:rgba(15,23,42,.03);color:rgba(15,23,42,.55);font-family:'Inter',sans-serif;font-size:12px;transition:all .2s;user-select:none;white-space:nowrap;display:inline-block}
+.city-chip:hover{border-color:rgba(13,148,136,.45);background:rgba(13,148,136,.08);color:var(--gold)}
+.sex-pill{cursor:pointer;padding:10px 0;border-radius:6px;text-align:center;border:1.5px solid rgba(15,23,42,.1);background:rgba(15,23,42,.03);color:rgba(15,23,42,.48);font-family:'Inter',sans-serif;font-size:13px;transition:all .2s;user-select:none;flex:1}
+.sex-pill:hover{border-color:rgba(13,148,136,.38)}
+.sex-pill.on{border-color:var(--gold);background:rgba(13,148,136,.14);color:var(--gold2)}
+.tag-h{background:rgba(96,165,250,.1);color:#1d4ed8;border:1px solid rgba(96,165,250,.25);padding:3px 10px;border-radius:50px;font-size:11px;font-family:'Inter',sans-serif}
+.tag-d{background:rgba(13,148,136,.1);color:var(--gold);border:1px solid rgba(13,148,136,.25);padding:3px 10px;border-radius:50px;font-size:11px;font-family:'Inter',sans-serif}
+.tag-ok{background:rgba(34,197,94,.09);color:var(--green);border:1px solid rgba(34,197,94,.25);padding:3px 10px;border-radius:50px;font-size:11px;font-family:'Inter',sans-serif}
+
+/* ── ROLE TABS ── */
+.role-tabs{display:flex;gap:8px;margin-bottom:28px;background:rgba(15,23,42,.03);padding:6px;border-radius:10px;border:1px solid rgba(15,23,42,.07)}
+.role-tab{flex:1;padding:12px;text-align:center;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border-radius:7px;transition:all .25s;user-select:none;color:rgba(15,23,42,.45);border:1.5px solid transparent}
+.role-tab:hover{color:rgba(15,23,42,.7)}
+.role-tab.user-active{background:rgba(13,148,136,.15);border-color:rgba(13,148,136,.4);color:var(--gold2)}
+.role-tab.admin-active{background:rgba(96,165,250,.12);border-color:rgba(96,165,250,.4);color:#1d4ed8}
+.role-tab.doctor-active{background:rgba(167,139,250,.14);border-color:rgba(167,139,250,.4);color:#6d28d9}
+.doctor-badge{font-family:'Inter',sans-serif;font-size:12px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);color:#6d28d9;padding:4px 12px;border-radius:50px}
+.record-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;border-left:3px solid #7c3aed}
+.med-pill{display:inline-block;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);color:#6d28d9;padding:4px 11px;border-radius:50px;font-size:12px;font-family:'Inter',sans-serif;margin:3px 4px 3px 0}
+.patient-row{cursor:pointer;transition:background .2s}
+.patient-row:hover td{background:rgba(167,139,250,.05)!important}
+
+/* ── ADMIN TABS ── */
+.admin-tab{padding:9px 20px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;border-radius:6px;border:1px solid transparent;color:rgba(15,23,42,.45);transition:all .2s}
+.admin-tab:hover{color:rgba(15,23,42,.75)}
+.admin-tab.on{background:rgba(96,165,250,.12);border-color:rgba(96,165,250,.3);color:#1d4ed8}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif}
+.tbl th{font-size:11px;letter-spacing:1.5px;color:rgba(15,23,42,.38);text-transform:uppercase;padding:10px 12px;text-align:left;border-bottom:1px solid rgba(15,23,42,.07)}
+.tbl td{font-size:13px;color:rgba(15,23,42,.8);padding:12px;border-bottom:1px solid rgba(15,23,42,.05);vertical-align:middle}
+.tbl tr:hover td{background:rgba(15,23,42,.02)}
+.status-c{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3);padding:3px 10px;border-radius:50px;font-size:11px}
+.status-p{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.3);padding:3px 10px;border-radius:50px;font-size:11px}
+
+/* ── TOASTS ── */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast-item{background:rgba(20,28,45,.95);border-radius:10px;padding:14px 18px;max-width:340px;backdrop-filter:blur(10px);display:flex;gap:10px;align-items:flex-start;animation:slideUp .3s ease;border:1px solid}
+.toast-item.success{border-color:rgba(34,197,94,.3)}
+.toast-item.error{border-color:rgba(239,68,68,.3)}
+.toast-item.info{border-color:rgba(13,148,136,.3)}
+.toast-msg{font-family:'Inter',sans-serif;font-size:13px;color:#f1f5f9;line-height:1.6;flex:1}
+.toast-close{cursor:pointer;color:rgba(241,245,249,.55);font-size:18px;line-height:1}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PROGRESS BAR ── */
+.prog-bar-bg{background:rgba(15,23,42,.07);border-radius:4px;height:6px;overflow:hidden;margin-bottom:9px}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:4px;transition:width .1s ease}
+
+/* ── MISC ── */
+.chip-wrap{display:flex;flex-wrap:wrap;gap:9px;max-height:280px;overflow-y:auto;padding-right:4px}
+.chip-wrap::-webkit-scrollbar{width:4px}
+.chip-wrap::-webkit-scrollbar-thumb{background:rgba(13,148,136,.3);border-radius:2px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.flex{display:flex}
+.flex-center{display:flex;align-items:center}
+.gap-8{gap:8px}
+.gap-10{gap:10px}
+.gap-12{gap:12px}
+.mb-8{margin-bottom:8px}
+.mb-12{margin-bottom:12px}
+.mb-16{margin-bottom:16px}
+.mb-20{margin-bottom:20px}
+.mb-24{margin-bottom:24px}
+.mb-28{margin-bottom:28px}
+.mb-32{margin-bottom:32px}
+.text-center{text-align:center}
+.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── LOGIN SCREEN ── */
+#screen-login{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;min-height:78vh}
+.login-features{display:flex;flex-direction:column;gap:0}
+.feat-item{display:flex;gap:13px;align-items:flex-start;margin-bottom:14px}
+.feat-icon{width:36px;height:36px;border-radius:8px;background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.18);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.login-card{padding:32px 28px;border-color:rgba(13,148,136,.1)}
+
+/* ── BOOKING SCREEN ── */
+#screen-booking .book-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:26px;align-items:start}
+
+/* ── CONFIRMED ── */
+.confirm-circle{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--green),#16a34a);display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 22px;box-shadow:0 8px 32px rgba(34,197,94,.22)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="bg-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <div class="logo">
+      <div class="logo-icon">⚕</div>
+      <div>
+        <div class="logo-name">MediSense AI</div>
+        <div class="logo-sub">Vellore, Tamil Nadu · 21 Verified Hospitals & Clinics</div>
+      </div>
+    </div>
+    <div class="topbar-right" id="topbar-right"></div>
+  </div>
+
+  <!-- PAGE -->
+  <div id="page">
+
+    <!-- ══ LOGIN ══ -->
+    <div class="screen active" id="screen-login">
+      <div class="login-features">
+        <div class="aline"></div>
+        <div class="eyebrow">Welcome to</div>
+        <h1 class="title">Your Personal<br><span class="accent">Health Assistant</span></h1>
+        <p class="subtitle mb-32">AI-powered symptom analysis connected to <strong style="color:rgba(15,23,42,.72)">21 real hospitals &amp; clinics in Vellore</strong>, verified against Google Maps.</p>
+        <div class="login-features">
+          <div class="feat-item"><div class="feat-icon">🔬</div><div><div class="dm" style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:2px">AI Symptom Analysis</div><div class="dm" style="font-size:12px;color:var(--text)">Smart matching across 10 conditions</div></div></div>
+          <div class="feat-item"><div class="feat-icon">🌏</div><div><div class="dm" style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:2px">Vellore Coverage</div><div class="dm" style="font-size:12px;color:var(--text)">21 verified hospitals & clinics</div></div></div>
+          <div class="feat-item"><div class="feat-icon">📧</div><div><div class="dm" style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:2px">Email Notifications</div><div class="dm" style="font-size:12px;color:var(--text)">Booking receipt to your Gmail instantly</div></div></div>
+          <div class="feat-item"><div class="feat-icon">🛡</div><div><div class="dm" style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:2px">Admin Dashboard</div><div class="dm" style="font-size:12px;color:var(--text)">Manage all bookings &amp; stats</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="card login-card">
+          <div class="role-tabs">
+            <div class="role-tab user-active" id="tab-user" onclick="switchRole('user')">👤 User</div>
+            <div class="role-tab" id="tab-doctor" onclick="switchRole('doctor')">🩺 Doctor</div>
+            <div class="role-tab" id="tab-admin" onclick="switchRole('admin')">🛡 Admin</div>
+          </div>
+          <!-- User form -->
+          <div id="form-user">
+            <div style="font-size:21px;font-weight:700;margin-bottom:5px">Create your profile</div>
+            <div class="dm mb-20" style="font-size:13px;color:var(--text);line-height:1.6">Your info helps personalise recommendations and notifies the admin.</div>
+            <div class="mb-16">
+              <div class="label">Full Name</div>
+              <input id="inp-name" placeholder="e.g. Ravi Kumar" onkeydown="if(event.key==='Enter')doLogin()"/>
+              <div class="err-txt" id="err-name" style="display:none"></div>
+            </div>
+            <div class="mb-16">
+              <div class="label">Mobile Number</div>
+              <div style="position:relative">
+                <span class="dm" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:13px;color:rgba(15,23,42,.4);pointer-events:none">+91</span>
+                <input id="inp-mobile" style="padding-left:42px" placeholder="9XXXXXXXXX" maxlength="10" oninput="this.value=this.value.replace(/\D/,'')" onkeydown="if(event.key==='Enter')doLogin()"/>
+              </div>
+              <div class="err-txt" id="err-mobile" style="display:none"></div>
+            </div>
+            <div class="grid-2 mb-20">
+              <div>
+                <div class="label">Age</div>
+                <input id="inp-age" type="number" min="1" max="120" placeholder="e.g. 28"/>
+                <div class="err-txt" id="err-age" style="display:none"></div>
+              </div>
+              <div>
+                <div class="label">Sex</div>
+                <div style="display:flex;gap:6px" id="sex-btns">
+                  <div class="sex-pill" onclick="selectSex('Male')">♂<br><span style="font-size:11px">Male</span></div>
+                  <div class="sex-pill" onclick="selectSex('Female')">♀<br><span style="font-size:11px">Female</span></div>
+                  <div class="sex-pill" onclick="selectSex('Other')">⚧<br><span style="font-size:11px">Other</span></div>
+                </div>
+                <div class="err-txt" id="err-sex" style="display:none"></div>
+              </div>
+            </div>
+            <button class="btn btn-full" onclick="doLogin()">Get Started →</button>
+            <div style="background:rgba(13,148,136,.07);border:1px solid rgba(13,148,136,.2);border-radius:8px;padding:12px 16px;margin-top:12px;display:flex;align-items:center;gap:8px">
+              <span style="font-size:16px">📧</span>
+              <div class="dm" style="font-size:12px;color:var(--text);line-height:1.6">A booking receipt will be emailed to <strong style="color:var(--gold)">pranav27062007@gmail.com</strong> once you confirm an appointment.</div>
+            </div>
+          </div>
+          <!-- Admin form -->
+          <div id="form-admin" style="display:none">
+            <div style="text-align:center;margin-bottom:24px">
+              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(29,78,216,.3));border:1.5px solid rgba(96,165,250,.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px">🛡</div>
+              <div style="font-size:21px;font-weight:700;margin-bottom:4px">Admin Access</div>
+              <div class="dm" style="font-size:13px;color:var(--text);line-height:1.6">Restricted to authorised personnel only.</div>
+            </div>
+            <div class="mb-16">
+              <div class="label">Admin Mobile Number</div>
+              <div style="position:relative">
+                <span class="dm" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:13px;color:rgba(15,23,42,.4);pointer-events:none">+91</span>
+                <input id="inp-admin-mob" style="padding-left:42px" placeholder="Enter authorised number" maxlength="10" type="tel" oninput="this.value=this.value.replace(/\D/,'')" onkeydown="if(event.key==='Enter')doAdminLogin()"/>
+              </div>
+              <div id="err-admin" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:6px;padding:10px 14px;margin-top:10px">
+                <span>🔒</span> <span class="dm" style="font-size:12px;color:#dc2626"></span>
+              </div>
+            </div>
+            <button class="btn btn-full btn-blue" onclick="doAdminLogin()">Access Admin Panel →</button>
+          </div>
+          <!-- Doctor form -->
+          <div id="form-doctor" style="display:none">
+            <div style="text-align:center;margin-bottom:24px">
+              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(109,40,217,.3));border:1.5px solid rgba(167,139,250,.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px">🩺</div>
+              <div style="font-size:21px;font-weight:700;margin-bottom:4px">Doctor Portal</div>
+              <div class="dm" style="font-size:13px;color:var(--text);line-height:1.6">Sign in to view your patient records.</div>
+            </div>
+            <div class="mb-16">
+              <div class="label">Registered Mobile Number</div>
+              <div style="position:relative">
+                <span class="dm" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:13px;color:rgba(15,23,42,.4);pointer-events:none">+91</span>
+                <input id="inp-doctor-mob" style="padding-left:42px" placeholder="Enter your registered number" maxlength="10" type="tel" oninput="this.value=this.value.replace(/\D/,'')" onkeydown="if(event.key==='Enter')doDoctorLogin()"/>
+              </div>
+              <div id="err-doctor" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:6px;padding:10px 14px;margin-top:10px">
+                <span>🔒</span> <span class="dm" style="font-size:12px;color:#dc2626"></span>
+              </div>
+            </div>
+            <button class="btn btn-full" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff" onclick="doDoctorLogin()">Access Doctor Portal →</button>
+            <div style="background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);border-radius:8px;padding:12px 16px;margin-top:12px">
+              <div class="dm" style="font-size:11px;color:rgba(15,23,42,.4);letter-spacing:1px;margin-bottom:6px">DEMO ACCOUNTS — TRY ANY</div>
+              <div class="dm" style="font-size:12px;color:#6d28d9;line-height:1.9" id="doctor-demo-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SYMPTOMS ══ -->
+    <div class="screen" id="screen-symptoms">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;flex-wrap:wrap">
+        <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);border-radius:50px;padding:5px 14px">
+          <span style="font-size:12px">📍</span><span class="dm" style="font-size:12px;color:var(--gold)" id="sym-city"></span>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(15,23,42,.04);border:1px solid var(--border);border-radius:50px;padding:5px 14px">
+          <span class="dm" style="font-size:12px;color:rgba(15,23,42,.52)" id="sym-profile"></span>
+        </div>
+      </div>
+      <div class="mb-28">
+        <div class="eyebrow">Step 01 / Symptoms</div>
+        <h1 class="title">What are you<br><span class="accent">experiencing</span> today?</h1>
+        <p class="subtitle" style="max-width:520px">Select all symptoms. We'll show the best doctors in <strong style="color:rgba(15,23,42,.7)" id="sym-city2"></strong>.</p>
+      </div>
+      <div class="chip-wrap mb-28" id="symptom-chips"></div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <button class="btn" id="btn-analyze" onclick="analyze()" disabled>Find Doctors →</button>
+        <span class="dm" style="font-size:13px;color:rgba(15,23,42,.36)" id="sym-count">Select at least one symptom</span>
+      </div>
+    </div>
+
+    <!-- ══ ANALYZING ══ -->
+    <div class="screen" id="screen-analyzing" style="text-align:center;padding-top:56px">
+      <div style="font-size:68px;margin-bottom:20px" class="pulse">🔬</div>
+      <h2 style="font-size:30px;margin-bottom:12px">Analyzing symptoms</h2>
+      <p class="dm" style="color:var(--text);margin-bottom:40px;font-size:15px">Matching symptoms · Locating doctors in <strong style="color:var(--gold)" id="ana-city"></strong></p>
+      <div style="max-width:360px;margin:0 auto">
+        <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="dm" style="font-size:12px;color:rgba(15,23,42,.35)" id="prog-pct">0%</div>
+      </div>
+      <div style="margin-top:32px;display:flex;gap:24px;justify-content:center;flex-wrap:wrap" id="ana-steps"></div>
+    </div>
+
+    <!-- ══ RESULT ══ -->
+    <div class="screen" id="screen-result">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+        <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);border-radius:50px;padding:5px 14px">
+          <span style="font-size:12px">📍</span><span class="dm" style="font-size:12px;color:var(--gold)" id="res-city"></span>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(15,23,42,.04);border:1px solid var(--border);border-radius:50px;padding:5px 14px">
+          <span class="dm" style="font-size:12px;color:rgba(15,23,42,.5)" id="res-profile"></span>
+        </div>
+      </div>
+      <div class="eyebrow mb-16">Step 02 / Diagnosis &amp; Providers</div>
+      <div class="card card-pad mb-24" id="dx-card" style="border-color:rgba(13,148,136,.16)"></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:6px;align-items:center">
+        <div class="dm" style="font-size:11px;letter-spacing:2px;color:rgba(15,23,42,.3)" id="prov-count"></div>
+        <div class="dm" style="font-size:12px;color:rgba(15,23,42,.4)" id="prov-city-label"></div>
+      </div>
+      <div class="grid-auto mb-28" id="provider-cards"></div>
+      <button class="btn-outline" onclick="goBack('symptoms')">← Change Symptoms</button>
+      <div class="card" style="padding:11px 15px;margin-top:14px;border-color:rgba(239,68,68,.14);background:rgba(239,68,68,.04)">
+        <p class="dm" style="font-size:12px;color:rgba(15,23,42,.38);line-height:1.6">⚠️ <strong style="color:rgba(15,23,42,.58)">Disclaimer:</strong> AI guidance only, not a medical diagnosis. Always call the provider to confirm availability before visiting.</p>
+      </div>
+    </div>
+
+    <!-- ══ BOOKING ══ -->
+    <div class="screen" id="screen-booking">
+      <div class="eyebrow mb-16">Step 03 / Book Appointment</div>
+      <div class="book-grid">
+        <div>
+          <h2 style="font-size:26px;margin-bottom:6px">Confirm your<br><span class="accent">appointment</span></h2>
+          <p class="dm mb-20" style="color:var(--text);font-size:14px;line-height:1.75">Your profile details are pre-filled. Choose a date and time.</p>
+          <div class="card mb-16" style="padding:15px" id="book-prov-card"></div>
+          <div class="card mb-16" style="padding:13px 15px;background:rgba(13,148,136,.03);border-color:rgba(13,148,136,.14)">
+            <div class="label mb-8" style="color:rgba(13,148,136,.65)">Patient Info (Pre-filled)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px" id="book-patient-info"></div>
+          </div>
+          <div class="grid-2 mb-12">
+            <div><div class="label">Preferred Date</div><input type="date" id="inp-date"/></div>
+            <div>
+              <div class="label">Preferred Time</div>
+              <select id="inp-time">
+                <option value="">Select time</option>
+                <option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+                <option>12:00 PM</option><option>2:00 PM</option><option>3:00 PM</option>
+                <option>4:00 PM</option><option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-16"><div class="label">Notes for Doctor (optional)</div><textarea id="inp-note" rows="3" placeholder="Medications, allergies, or anything the doctor should know…" style="resize:none"></textarea></div>
+          <div style="display:flex;gap:11px">
+            <button class="btn" id="btn-confirm-book" onclick="confirmBooking()">Confirm Booking</button>
+            <button class="btn-outline" onclick="goBack('result')">← Back</button>
+          </div>
+        </div>
+        <div>
+          <div class="card mb-12" style="padding:18px" id="book-summary"></div>
+          <div class="card" style="padding:13px;background:rgba(34,197,94,.03);border-color:rgba(34,197,94,.12)">
+            <p class="dm" style="font-size:12px;color:rgba(15,23,42,.42);line-height:1.75">📞 <strong style="color:rgba(15,23,42,.6)">Tip:</strong> Call ahead to confirm your slot — walk-in availability varies.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CONFIRMED ══ -->
+    <div class="screen" id="screen-confirmed" style="text-align:center;padding-top:28px">
+      <div class="confirm-circle">✓</div>
+      <h2 style="font-size:34px;margin-bottom:9px">Appointment Requested!</h2>
+      <p class="dm" style="color:var(--text);font-size:15px;line-height:1.85;max-width:450px;margin:0 auto 32px">Request sent for <strong style="color:#0f172a" id="conf-prov"></strong>.<br>Please call ahead to confirm your slot.</p>
+      <div class="card" style="display:inline-block;padding:24px 34px;margin-bottom:28px;text-align:left;min-width:320px;border-color:rgba(13,148,136,.14)">
+        <div class="eyebrow mb-12">Booking Receipt</div>
+        <div id="conf-receipt"></div>
+      </div>
+      <div style="display:flex;gap:11px;justify-content:center;flex-wrap:wrap">
+        <a id="conf-map-link" href="#" target="_blank" class="btn-map" style="padding:12px 22px;font-size:14px">🗺 Get Directions</a>
+        <button class="btn" onclick="resetAll()">Start a New Check</button>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN ══ -->
+    <div class="screen" id="screen-admin">
+      <div class="mb-32">
+        <div class="aline-blue"></div>
+        <div class="eyebrow eyebrow-blue">Admin Panel</div>
+        <h1 class="title">Welcome back, <span class="accent-blue">Pranav</span></h1>
+        <div class="dm" style="font-size:14px;color:var(--text)">All bookings &amp; statistics for MediSense India.</div>
+      </div>
+      <div class="grid-4 mb-28" id="admin-stats"></div>
+      <div style="display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid rgba(15,23,42,.07);padding-bottom:16px">
+        <div class="admin-tab on" id="atab-bookings" onclick="switchAdminTab('bookings')">📋 Bookings</div>
+        <div class="admin-tab" id="atab-stats" onclick="switchAdminTab('stats')">📊 Stats</div>
+      </div>
+      <div id="admin-bookings-view"></div>
+      <div id="admin-stats-view" style="display:none"></div>
+    </div>
+
+    <!-- ══ DOCTOR: PATIENT LIST ══ -->
+    <div class="screen" id="screen-doctor">
+      <div class="mb-32">
+        <div style="width:48px;height:3px;background:linear-gradient(90deg,#7c3aed,#6d28d9);border-radius:2px;margin-bottom:22px"></div>
+        <div class="eyebrow" style="color:#7c3aed">Doctor Portal</div>
+        <h1 class="title">Welcome, <span style="color:#6d28d9;font-style:italic" id="doc-welcome-name"></span></h1>
+        <div class="dm" style="font-size:14px;color:var(--text)" id="doc-welcome-sub"></div>
+      </div>
+      <div class="grid-4 mb-28" id="doctor-stats"></div>
+      <div class="dm mb-16" style="font-size:11px;letter-spacing:2px;color:rgba(15,23,42,.3)">YOUR PATIENTS</div>
+      <div id="doctor-patient-list"></div>
+    </div>
+
+    <!-- ══ DOCTOR: PATIENT RECORD ══ -->
+    <div class="screen" id="screen-patient-record">
+      <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:50px;padding:5px 14px;cursor:pointer;margin-bottom:24px" onclick="showScreen('doctor')">
+        <span style="font-size:12px">←</span><span class="dm" style="font-size:12px;color:#6d28d9">Back to Patient List</span>
+      </div>
+      <div class="card card-pad mb-24" style="border-color:rgba(167,139,250,.18)" id="patient-header-card"></div>
+      <div class="dm mb-16" style="font-size:11px;letter-spacing:2px;color:rgba(15,23,42,.3)">MEDICAL HISTORY</div>
+      <div id="patient-history-list"></div>
+    </div>
+
+  </div><!-- /page -->
+</div><!-- /app -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════════════════
+const ADMIN_MOBILE = "8050200772";
+const EJ_SERVICE   = "medisense_service";
+const EJ_TEMPLATE  = "template_r1m4qeg";
+const EJ_KEY       = "lyRiGlr-Vn3_pxHjE";
+
+const CITY = "Vellore";
+
+const DISEASE_MAP = [
+  { disease:"Cold, Flu & Fever",       icon:"\ud83e\udd27", severity:"mild",     specialty:"General Medicine", symptoms:["Fever","Cough","Sore Throat","Headache","Fatigue","Runny Nose"],                     description:"Common viral infections of the upper respiratory tract — the everyday walk-in reason to see a doctor." },
+  { disease:"Cardiac Symptoms",        icon:"\u2764\ufe0f", severity:"severe",   specialty:"Cardiology",       symptoms:["Chest Pain","Shortness of Breath","Dizziness","Palpitations","Fatigue"],             description:"Chest discomfort, breathlessness or a racing heart — needs prompt cardiology evaluation." },
+  { disease:"Skin & Allergic Reaction", icon:"\ud83c\udf38", severity:"mild",    specialty:"Dermatology",      symptoms:["Skin Rash","Itching","Skin Redness","Skin Dryness"],                                 description:"Rashes, itching or irritation of the skin, hair or scalp." },
+  { disease:"Child Illness",           icon:"\ud83e\uddd2", severity:"moderate", specialty:"Paediatrics",      symptoms:["Fever in Child","Vomiting in Child","Irritability","Loss of Appetite"],              description:"Fever, vomiting or feeding trouble in an infant or young child." },
+  { disease:"Joint, Bone & Injury",    icon:"\ud83e\uddb4", severity:"moderate", specialty:"Orthopaedics",     symptoms:["Joint Pain","Back Pain","Swelling","Difficulty Moving","Bone Pain"],                 description:"Joint pain, fractures, sprains or mobility trouble affecting bones and muscles." },
+  { disease:"Ear, Nose & Throat",      icon:"\ud83d\udc42", severity:"mild",     specialty:"ENT",              symptoms:["Ear Pain","Sinus Congestion","Hearing Loss","Nasal Blockage","Sore Throat"],         description:"Infections or blockages of the ear, nose, sinuses or throat." },
+  { disease:"Women's Health",          icon:"\ud83e\udd30", severity:"moderate", specialty:"Gynaecology",      symptoms:["Pelvic Pain","Irregular Periods","Pregnancy Concern","Abdominal Pain"],               description:"Menstrual, pregnancy-related or reproductive-health concerns." },
+  { disease:"Headache & Neuro",        icon:"\ud83e\udde0", severity:"moderate", specialty:"Neurology",        symptoms:["Headache","Dizziness","Numbness","Vision Changes","Seizure"],                        description:"Recurring headaches, migraines, numbness or other neurological symptoms." },
+  { disease:"Digestive Issue",         icon:"\ud83e\udd22", severity:"moderate", specialty:"Gastroenterology", symptoms:["Abdominal Pain","Nausea","Vomiting","Diarrhea","Acidity"],                           description:"Stomach pain, acidity, vomiting or bowel-related complaints." },
+  { disease:"Stress, Sleep & Mood",    icon:"\ud83e\udde9", severity:"moderate", specialty:"Psychiatry",       symptoms:["Anxiety","Low Mood","Sleep Disturbance","Loss of Interest","Stress"],                description:"Anxiety, low mood, sleep trouble or ongoing stress affecting daily life." },
+  { disease:"Eye Concern",             icon:"\ud83d\udc41\ufe0f", severity:"mild", specialty:"Ophthalmology", symptoms:["Eye Redness","Blurred Vision","Eye Pain","Watering Eyes"],                          description:"Vision changes, eye redness, pain or irritation." },
+  { disease:"Emergency / Trauma",      icon:"\ud83d\udea8", severity:"severe",   specialty:"Emergency",        symptoms:["Severe Bleeding","Unconsciousness","Severe Injury","Severe Chest Pain","Difficulty Breathing"], description:"Serious injury or acute symptoms requiring immediate emergency care." },
+];
+
+const SYMPTOMS = ["Fever","Cough","Sore Throat","Headache","Fatigue","Runny Nose","Chest Pain","Shortness of Breath","Dizziness","Palpitations","Skin Rash","Itching","Skin Redness","Skin Dryness","Fever in Child","Vomiting in Child","Irritability","Loss of Appetite","Joint Pain","Back Pain","Swelling","Difficulty Moving","Bone Pain","Ear Pain","Sinus Congestion","Hearing Loss","Nasal Blockage","Pelvic Pain","Irregular Periods","Pregnancy Concern","Abdominal Pain","Numbness","Vision Changes","Seizure","Nausea","Vomiting","Diarrhea","Acidity","Anxiety","Low Mood","Sleep Disturbance","Loss of Interest","Stress","Eye Redness","Blurred Vision","Eye Pain","Watering Eyes","Severe Bleeding","Unconsciousness","Severe Injury","Difficulty Breathing"];
+
+const SEV_COLOR = { mild:"#22c55e", moderate:"#f59e0b", severe:"#ef4444", chronic:"#a78bfa" };
+
+// ---- Hospitals seeded from 002_seed_hospitals.sql (Vellore, Tamil Nadu) ----
+const HOSPITALS = [
+  { name:"Christian Medical College Hospital", address:"Ida Scudder Road, Thottapalayam, Vellore, Tamil Nadu 632004", phone:"+918000338855", about:"Teaching hospital and tertiary referral centre serving Vellore since 1900. Full range of specialty departments with 24x7 emergency services.", specialties:["General Medicine","Cardiology","Neurology","Gastroenterology","Orthopaedics","Paediatrics","Psychiatry","Emergency"], place_id:"ChIJWw576N84rTsRETcIvW0w4Wc", is_partner:true },
+  { name:"Naruvi Hospitals", address:"12, Chennai-Bengaluru Highway, Collector's Office Road, Thottapalayam, Vellore, Tamil Nadu 632004", phone:"+914166661111", about:"Multi-speciality hospital with round-the-clock emergency care, surgical services and inpatient facilities.", specialties:["General Medicine","Cardiology","Orthopaedics","Neurology","Gastroenterology","Emergency"], place_id:"ChIJmfyqepA4rTsRKO_mVGzn9IU", is_partner:true },
+  { name:"Sri Narayani Hospital & Research Centre", address:"Azad Road, Thirumalaikodi, Vellore, Tamil Nadu 632055", phone:"+914162206300", about:"Multi-speciality hospital with 24x7 services, obstetrics and gynaecology departments and head-and-neck surgery.", specialties:["General Medicine","Gynaecology","Cardiology","ENT","Emergency"], place_id:"ChIJYT0-fb4-rTsRO0NgD5nDDxc", is_partner:true },
+  { name:"Dr. Sivakumar Multi Speciality Hospital", address:"C-3, Arcot Road, opposite Collector Office, Phase 2, Sathuvachari, Vellore, Tamil Nadu 632009", phone:"+914162253400", about:"24x7 emergency multi-speciality hospital with obstetrics, gynaecology and general surgical services.", specialties:["General Medicine","Gynaecology","Orthopaedics","Emergency"], place_id:"ChIJ7xaG9IlHrTsR-epw9obVIq0", is_partner:true },
+  { name:"Indira Superspeciality Hospital", address:"54, Katpadi Road, Suthanthira Ponvizha Nagar, Gandhi Nagar, Vellore, Tamil Nadu 632006", phone:"+919842324425", about:"Superspeciality hospital offering laparoscopic and laser surgical procedures with 24x7 inpatient care.", specialties:["General Medicine","Gastroenterology","Emergency"], place_id:"ChIJEcO5WxhHrTsRKPE7VE16KIY", is_partner:false },
+  { name:"Nalam Medical Center and Hospital", address:"44, Arcot Road, Phase 2, Sathuvachari, Vellore, Tamil Nadu 632009", phone:"+914162254461", about:"Multi-speciality hospital with orthopaedic surgery, paediatric care and 24-hour emergency services.", specialties:["General Medicine","Orthopaedics","Paediatrics","Emergency"], place_id:"ChIJu7IA3PU5rTsR38fL-A-u9eE", is_partner:false },
+  { name:"Sri Ragavendra Super Speciality Hospital", address:"218, Phase 1 South Service Road, Sathuvachari, Vellore, Tamil Nadu 632009", phone:"+919597649557", about:"Superspeciality hospital with surgical gastroenterology, gynaecology and paediatric surgery departments.", specialties:["General Medicine","Gynaecology","Paediatrics","Gastroenterology"], place_id:"ChIJM3GVRp05rTsRTu0Gh2NU-BE", is_partner:false },
+  { name:"Manisundaram Medical Mission Hospital", address:"288, South Avenue Road, Phase III, Sathuvachari, Vellore, Tamil Nadu 632009", phone:"+914162256007", about:"Orthopaedic-focused mission hospital offering joint replacement, spine care and physiotherapy.", specialties:["Orthopaedics","General Medicine"], place_id:"ChIJA8zLInA4rTsR_IyCh2IlXAg", is_partner:false },
+  { name:"Saint Mary's Multi Speciality Hospital", address:"53, Plot 52, Balaji Nagar Extension Main Road, Katpadi, Vellore, Tamil Nadu 632007", phone:"+919943334063", about:"Multi-speciality hospital in Katpadi with maternity services, general medicine and emergency care.", specialties:["General Medicine","Gynaecology","Paediatrics","Emergency"], place_id:"ChIJ0b99VABHrTsRcNuw5xN3lok", is_partner:true },
+  { name:"Dhanya Medical Centre", address:"19, Pillaiyar Koil Street, Sripuram, Velapadi, Vellore, Tamil Nadu 632001", phone:"+919894399326", about:"Medical centre with orthopaedic surgery including joint replacement, plus general and paediatric care.", specialties:["Orthopaedics","General Medicine","Paediatrics"], place_id:"ChIJkQLfOKo5rTsRx6MhWAO9Cqw", is_partner:false },
+  { name:"Arun Hospital Ortho & Trauma Care", address:"15, Thiyagarajapuram Road, Veerasamy Nagar, Vellore, Tamil Nadu 632001", phone:"+914162234217", about:"Dedicated orthopaedic and trauma care hospital with 24-hour admission.", specialties:["Orthopaedics","Emergency"], place_id:"ChIJ33gMYeA4rTsRFbqf4dUkzII", is_partner:false },
+  { name:"The Eye Foundation", address:"47/1A, Katpadi Road, near Palar Bridge, Viruthampet, Vellore, Tamil Nadu 632006", phone:"+918925851213", about:"Specialist eye hospital offering cataract surgery, retina care and routine ophthalmic consultation.", specialties:["Ophthalmology"], place_id:"ChIJ4XnKEfxHrTsReLpd_niZzwY", is_partner:true },
+  { name:"CMC Schell Eye Hospital", address:"Schell Campus, Arni Road, Srinivasan Nagar, Vellore, Tamil Nadu 632001", phone:"+914162281226", about:"Ophthalmology department of Christian Medical College, offering comprehensive eye care and surgery.", specialties:["Ophthalmology"], place_id:"ChIJpQn_b805rTsRNoFuJi9Z0fY", is_partner:false },
+  { name:"Dr Sherinz Skin and Cosmetology Centre", address:"34, Kalinjur Main Road, Gandhinagar West, Katpadi, Vellore, Tamil Nadu 632006", phone:"+918807338560", about:"Dermatology and cosmetology clinic treating chronic skin conditions, hair loss and cosmetic concerns.", specialties:["Dermatology"], place_id:"ChIJ6X0tUEtHrTsRDPxDs41R3DQ", is_partner:true },
+  { name:"Kleara Skin, Hair & Laser Clinic", address:"15, 10th East Cross Road, Suthanthira Ponvizha Nagar, Gandhi Nagar, Vellore, Tamil Nadu 632006", phone:"+919600960160", about:"Dermatology clinic specialising in skin, hair and laser treatments.", specialties:["Dermatology"], place_id:"ChIJ59Oj6PhHrTsRpctkdHkbmbw", is_partner:false },
+  { name:"Vivan ENT Clinic", address:"1/1, 4th Street, Suthanthira Ponvizha Nagar, Venkatraman Nagar, Katpadi, Vellore, Tamil Nadu 632006", phone:"+918220545111", about:"ENT clinic handling ear, nose and throat consultation and minor procedures.", specialties:["ENT"], place_id:"ChIJQZAzcAFHrTsR0hlNTsqF400", is_partner:true },
+  { name:"Vellore Speciality Centre", address:"1315, South Avenue Road, Phase 2, Sathuvachari, Vellore, Tamil Nadu 632009", phone:"+914162220052", about:"ENT and allergy centre offering endoscopy, allergy testing and immunotherapy.", specialties:["ENT","General Medicine"], place_id:"ChIJIccUX4A5rTsRI5XxSuYqAjw", is_partner:false },
+  { name:"Dr Arulalan Children's Clinic", address:"17, 10th East Cross Road, Suthanthira Ponvizha Nagar, Gandhi Nagar, Vellore, Tamil Nadu 632006", phone:"+914162244710", about:"Paediatric clinic for routine child health, vaccinations and developmental consultation.", specialties:["Paediatrics"], place_id:"ChIJYd3qPGRHrTsR7wPVHfaz9BM", is_partner:true },
+  { name:"Pediatree Child Clinic", address:"10, Post Office Road, near Venus Theatre, Krishna Nagar, Vellore, Tamil Nadu 632001", phone:"+918056745999", about:"Paediatric clinic offering outpatient child care and follow-up consultation.", specialties:["Paediatrics"], place_id:"ChIJq2nKk0w5rTsRblhYofjcy_g", is_partner:false },
+  { name:"Sandhya Hospital", address:"565, Phase I, Sathuvachari, Vellore, Tamil Nadu 632009", phone:"+914162253357", about:"Maternity and women's health hospital with obstetrics, delivery and postnatal care.", specialties:["Gynaecology","Paediatrics"], place_id:"ChIJgwqvUHA4rTsRFS2wdhErDR8", is_partner:true },
+  { name:"Saaral Fertility and Women's Health Centre", address:"73/1, Vellore-Chittoor Road, Venkatraman Nagar, Katpadi, Vellore, Tamil Nadu 632006", phone:"+916385169309", about:"Fertility and women's health centre providing infertility treatment and gynaecological care.", specialties:["Gynaecology"], place_id:"ChIJ2wwl56hHrTsRdC5Mn1OK6MY", is_partner:true },
+];
+
+// PROVIDERS[specialty] -> hospitals offering that specialty, built from HOSPITALS
+const PROVIDERS = {};
+HOSPITALS.forEach(h => {
+  h.specialties.forEach(spec => {
+    if (!PROVIDERS[spec]) PROVIDERS[spec] = [];
+    PROVIDERS[spec].push(h);
+  });
+});
+
+function mapLinkFor(h) {
+  return h.place_id
+    ? `https://www.google.com/maps/place/?q=place_id:${h.place_id}`
+    : `https://maps.google.com/?q=${encodeURIComponent(h.name + ' Vellore')}`;
+}
+
+let BOOKINGS = [
+  {id:"BK001",name:"Ananya Krishnan",mobile:"9876543210",age:34,sex:"Female",condition:"Cold, Flu & Fever",provider:"Christian Medical College Hospital",date:"2026-02-22",time:"10:00 AM",status:"confirmed",city:CITY},
+  {id:"BK002",name:"Ravi Subramaniam",mobile:"9123456780",age:52,sex:"Male",condition:"Cardiac Symptoms",provider:"Christian Medical College Hospital",date:"2026-02-23",time:"9:00 AM",status:"confirmed",city:CITY},
+  {id:"BK003",name:"Priya Menon",mobile:"8765432190",age:27,sex:"Female",condition:"Headache & Neuro",provider:"Naruvi Hospitals",date:"2026-02-24",time:"11:00 AM",status:"pending",city:CITY},
+  {id:"BK004",name:"Karthik Rajesh",mobile:"7654321890",age:8,sex:"Male",condition:"Child Illness",provider:"Dr Arulalan Children's Clinic",date:"2026-02-25",time:"3:00 PM",status:"confirmed",city:CITY},
+  {id:"BK005",name:"Deepa Natarajan",mobile:"9988776655",age:45,sex:"Female",condition:"Joint, Bone & Injury",provider:"Manisundaram Medical Mission Hospital",date:"2026-02-26",time:"2:00 PM",status:"pending",city:CITY},
+];
+
+// ─── Doctor accounts ─────────────────────────────────────────────────────
+// A doctor logs in with their mobile number and sees every patient whose
+// booking "provider" field contains their hospital/clinic name.
+const DOCTORS = [
+  { mobile:"9000011111", name:"Dr. Vasanth Raj",   specialty:"General Medicine", hospitalMatch:"Christian Medical College Hospital" },
+  { mobile:"9000022222", name:"Dr. Meera Krishnan", specialty:"Cardiology",      hospitalMatch:"Christian Medical College Hospital" },
+  { mobile:"9000033333", name:"Dr. Sangeetha J",   specialty:"Orthopaedics",    hospitalMatch:"Naruvi Hospitals" },
+  { mobile:"9000044444", name:"Dr. Arjun Reddy",   specialty:"Paediatrics",     hospitalMatch:"Dr Arulalan Children's Clinic" },
+  { mobile:"9000055555", name:"Dr. Kavita Iyer",   specialty:"Orthopaedics",    hospitalMatch:"Manisundaram Medical Mission Hospital" },
+];
+
+// ─── Medical records ─────────────────────────────────────────────────────
+// Keyed by patient mobile number. Each entry is one past visit/encounter.
+const MEDICAL_RECORDS = {
+  "9876543210": [ // Ananya Krishnan
+    { date:"2025-11-03", hospital:"Christian Medical College Hospital", doctor:"Dr. Vasanth Raj", diagnosis:"Common Cold", notes:"Mild viral URI. Advised rest, fluids, steam inhalation.", medicines:[{name:"Paracetamol 500mg",dosage:"1 tab, twice daily",duration:"5 days"},{name:"Cetirizine 10mg",dosage:"1 tab at night",duration:"5 days"}] },
+    { date:"2025-06-14", hospital:"Christian Medical College Hospital", doctor:"Dr. Vasanth Raj", diagnosis:"Seasonal Allergy", notes:"Recurrent sneezing & watery eyes during pollen season. No wheeze.", medicines:[{name:"Montelukast 10mg",dosage:"1 tab at night",duration:"14 days"},{name:"Fluticasone Nasal Spray",dosage:"2 sprays/nostril daily",duration:"14 days"}] },
+    { date:"2024-09-02", hospital:"Christian Medical College Hospital", doctor:"Dr. Vasanth Raj", diagnosis:"Iron Deficiency Anemia", notes:"Hb 9.8 g/dL on routine bloodwork. Dietary counselling given.", medicines:[{name:"Ferrous Sulphate 325mg",dosage:"1 tab daily",duration:"3 months"},{name:"Vitamin C 500mg",dosage:"1 tab daily",duration:"3 months"}] },
+  ],
+  "9123456780": [ // Ravi Subramaniam
+    { date:"2025-12-01", hospital:"Christian Medical College Hospital", doctor:"Dr. Meera Krishnan", diagnosis:"Cardiac Issue — Angina", notes:"Exertional chest discomfort, ECG shows mild ST changes. Started on medical management, stress test scheduled.", medicines:[{name:"Aspirin 75mg",dosage:"1 tab daily",duration:"Ongoing"},{name:"Atorvastatin 20mg",dosage:"1 tab at night",duration:"Ongoing"},{name:"Metoprolol 25mg",dosage:"1 tab twice daily",duration:"Ongoing"}] },
+    { date:"2025-03-19", hospital:"Christian Medical College Hospital", doctor:"Dr. Meera Krishnan", diagnosis:"Hypertension", notes:"BP 152/96 on 2 readings. Lifestyle modification + medication started.", medicines:[{name:"Amlodipine 5mg",dosage:"1 tab daily",duration:"Ongoing"}] },
+    { date:"2023-08-11", hospital:"Christian Medical College Hospital", doctor:"Dr. Meera Krishnan", diagnosis:"Type 2 Diabetes Mellitus", notes:"HbA1c 7.4%. Started on oral hypoglycemic, dietician referral given.", medicines:[{name:"Metformin 500mg",dosage:"1 tab twice daily",duration:"Ongoing"}] },
+  ],
+  "8765432190": [ // Priya Menon
+    { date:"2025-10-22", hospital:"Naruvi Hospitals", doctor:"Dr. Sangeetha J", diagnosis:"Migraine without Aura", notes:"Recurrent throbbing headaches, 2-3 episodes/month, photophobia present. MRI brain normal.", medicines:[{name:"Sumatriptan 50mg",dosage:"1 tab at onset (max 2/day)",duration:"As needed"},{name:"Propranolol 40mg",dosage:"1 tab twice daily",duration:"3 months (prophylaxis)"}] },
+    { date:"2024-12-05", hospital:"Naruvi Hospitals", doctor:"Dr. Sangeetha J", diagnosis:"Tension Headache", notes:"Stress-related, associated with poor sleep. Advised sleep hygiene & counselling.", medicines:[{name:"Ibuprofen 400mg",dosage:"1 tab as needed",duration:"7 days"}] },
+  ],
+  "7654321890": [ // Karthik Rajesh
+    { date:"2025-09-28", hospital:"Dr Arulalan Children's Clinic", doctor:"Dr. Arjun Reddy", diagnosis:"Viral Fever", notes:"High fever with mild dehydration. Advised fluids, monitored for 3 days.", medicines:[{name:"Paracetamol Syrup",dosage:"5ml every 6 hrs (fever)",duration:"4 days"},{name:"ORS Solution",dosage:"As needed for hydration",duration:"4 days"}] },
+    { date:"2023-07-15", hospital:"Dr Arulalan Children's Clinic", doctor:"Dr. Arjun Reddy", diagnosis:"Routine Vaccination", notes:"Scheduled immunisation, no adverse reaction observed.", medicines:[] },
+  ],
+  "9988776655": [ // Deepa Natarajan
+    { date:"2025-11-30", hospital:"Manisundaram Medical Mission Hospital", doctor:"Dr. Kavita Iyer", diagnosis:"Rheumatoid Arthritis", notes:"Symmetric joint pain in hands & wrists, morning stiffness >1hr. RF & anti-CCP positive. Started on DMARDs.", medicines:[{name:"Methotrexate 15mg",dosage:"Once weekly",duration:"Ongoing"},{name:"Folic Acid 5mg",dosage:"Once weekly (non-MTX day)",duration:"Ongoing"},{name:"Naproxen 250mg",dosage:"1 tab twice daily",duration:"As needed for flares"}] },
+    { date:"2025-01-08", hospital:"Manisundaram Medical Mission Hospital", doctor:"Dr. Kavita Iyer", diagnosis:"Osteoarthritis — Knee", notes:"Bilateral knee pain, worse with activity. X-ray shows mild joint space narrowing.", medicines:[{name:"Glucosamine + Chondroitin",dosage:"1 tab daily",duration:"3 months"},{name:"Diclofenac Gel",dosage:"Apply twice daily",duration:"2 weeks"}] },
+  ],
+};
+
+// ══════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════
+let state = {
+  screen: 'login', role: 'user',
+  profile: {name:'',mobile:'',age:'',sex:''},
+  city: CITY, selectedSymptoms: [], diagnosis: null, providers: [], selectedProvider: null,
+  currentDoctor: null, selectedPatientMobile: null,
+};
+
+// ══════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  state.screen = id;
+  renderTopbar();
+}
+
+function goBack(to) { showScreen(to); }
+
+// ══════════════════════════════════════════════════════════════════════════
+// TOPBAR
+// ══════════════════════════════════════════════════════════════════════════
+const STEPS = ['symptoms','result','booking','confirmed'];
+const DOCTOR_SCREENS = ['doctor','patient-record'];
+function renderTopbar() {
+  const r = document.getElementById('topbar-right');
+  let html = '';
+  if (state.city && !['login','admin',...DOCTOR_SCREENS].includes(state.screen))
+    html += `<div class="city-badge">📍 ${state.city}</div>`;
+  if (!['login','admin',...DOCTOR_SCREENS].includes(state.screen)) {
+    const ci = STEPS.indexOf(state.screen === 'analyzing' ? 'symptoms' : state.screen);
+    html += `<div class="progress-dots">${STEPS.map((s,i) => `<div class="pdot ${i<ci?'done':i===ci?'active':''}"></div>`).join('')}</div>`;
+  }
+  if (state.screen === 'admin')
+    html += `<div class="admin-badge">🛡 Admin Panel</div>`;
+  if (DOCTOR_SCREENS.includes(state.screen))
+    html += `<div class="doctor-badge">🩺 Doctor Portal</div>`;
+  if (state.profile.name || state.screen === 'admin' || DOCTOR_SCREENS.includes(state.screen)) {
+    const isAdmin = state.screen === 'admin';
+    const isDoc = DOCTOR_SCREENS.includes(state.screen);
+    const label = isAdmin ? 'Admin' : isDoc ? state.currentDoctor.name.replace('Dr. ','Dr. ') : state.profile.name.split(' ')[0];
+    const initial = isAdmin ? 'A' : isDoc ? '🩺' : state.profile.name.charAt(0).toUpperCase();
+    const avClass = isAdmin ? 'admin' : isDoc ? 'doctor' : '';
+    html += `<div class="user-pill" onclick="resetAll()">
+      <div class="user-avatar ${avClass}">${initial}</div>
+      <span class="user-name">${label}</span>
+      <span class="user-logout">· Logout</span>
+    </div>`;
+  }
+  r.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// EMAIL
+// ══════════════════════════════════════════════════════════════════════════
+function initEJ() {
+  try { emailjs.init(EJ_KEY); } catch(e) {}
+}
+
+async function sendEmail(params) {
+  try {
+    await emailjs.send(EJ_SERVICE, EJ_TEMPLATE, params);
+    return true;
+  } catch(e) {
+    console.error('EmailJS error:', e);
+    return false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════════════════════════════════
+function switchRole(role) {
+  state.role = role;
+  document.getElementById('form-user').style.display = role === 'user' ? 'block' : 'none';
+  document.getElementById('form-admin').style.display = role === 'admin' ? 'block' : 'none';
+  document.getElementById('form-doctor').style.display = role === 'doctor' ? 'block' : 'none';
+  document.getElementById('tab-user').className = 'role-tab' + (role==='user'?' user-active':'');
+  document.getElementById('tab-admin').className = 'role-tab' + (role==='admin'?' admin-active':'');
+  document.getElementById('tab-doctor').className = 'role-tab' + (role==='doctor'?' doctor-active':'');
+  if (role === 'doctor') renderDoctorDemoList();
+}
+
+function renderDoctorDemoList() {
+  document.getElementById('doctor-demo-list').innerHTML = DOCTORS.map(d =>
+    `${d.name} (${d.specialty}) — <strong>${d.mobile}</strong>`
+  ).join('<br>');
+}
+
+function selectSex(s) {
+  state.profile.sex = s;
+  document.querySelectorAll('.sex-pill').forEach((el,i) => {
+    el.classList.toggle('on', ['Male','Female','Other'][i] === s);
+  });
+  document.getElementById('err-sex').style.display = 'none';
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = '⚠ ' + msg;
+  el.style.display = 'block';
+  document.getElementById(id.replace('err-','inp-'))?.classList.add('err');
+}
+function clearErr(id) {
+  document.getElementById(id).style.display = 'none';
+  document.getElementById(id.replace('err-','inp-'))?.classList.remove('err');
+}
+
+function doLogin() {
+  const name = document.getElementById('inp-name').value.trim();
+  const mobile = document.getElementById('inp-mobile').value.trim();
+  const age = document.getElementById('inp-age').value;
+  const sex = state.profile.sex;
+  let valid = true;
+  ['err-name','err-mobile','err-age','err-sex'].forEach(clearErr);
+  if (!name) { showErr('err-name','Please enter your full name.'); valid=false; }
+  if (!/^[6-9]\d{9}$/.test(mobile)) { showErr('err-mobile','Enter a valid 10-digit Indian mobile number.'); valid=false; }
+  if (!age || age<1 || age>120) { showErr('err-age','Enter a valid age (1–120).'); valid=false; }
+  if (!sex) { showErr('err-sex','Please select your sex.'); valid=false; }
+  if (!valid) return;
+  state.profile = {name, mobile, age, sex};
+  showToast(`Welcome ${name.split(' ')[0]}!`, 'success');
+  showScreen('symptoms');
+  renderSymptoms();
+}
+
+function doAdminLogin() {
+  const mob = document.getElementById('inp-admin-mob').value.trim();
+  const errEl = document.getElementById('err-admin');
+  if (mob === ADMIN_MOBILE) {
+    errEl.style.display = 'none';
+    renderAdmin();
+    showScreen('admin');
+  } else {
+    errEl.style.display = 'block';
+    errEl.querySelector('span:last-child').textContent = 'Access denied. This mobile number is not authorised as admin.';
+  }
+}
+
+function doDoctorLogin() {
+  const mob = document.getElementById('inp-doctor-mob').value.trim();
+  const errEl = document.getElementById('err-doctor');
+  const doc = DOCTORS.find(d => d.mobile === mob);
+  if (doc) {
+    errEl.style.display = 'none';
+    state.currentDoctor = doc;
+    renderDoctorDashboard();
+    showScreen('doctor');
+  } else {
+    errEl.style.display = 'block';
+    errEl.querySelector('span:last-child').textContent = 'Mobile number not recognised. Try one of the demo accounts below.';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// SYMPTOMS
+// ══════════════════════════════════════════════════════════════════════════
+function renderSymptoms() {
+  document.getElementById('sym-city').textContent = state.city;
+  document.getElementById('sym-city2').textContent = state.city;
+  document.getElementById('sym-profile').textContent = `👤 ${state.profile.name} · ${state.profile.age}y · ${state.profile.sex}`;
+  document.getElementById('symptom-chips').innerHTML = SYMPTOMS.map(s =>
+    `<div class="chip ${state.selectedSymptoms.includes(s)?'on':''}" onclick="toggleSym('${s}')">${state.selectedSymptoms.includes(s)?'✓ ':''}${s}</div>`
+  ).join('');
+  updateSymCount();
+}
+
+function toggleSym(s) {
+  if (state.selectedSymptoms.includes(s))
+    state.selectedSymptoms = state.selectedSymptoms.filter(x => x !== s);
+  else
+    state.selectedSymptoms.push(s);
+  renderSymptoms();
+}
+
+function updateSymCount() {
+  const n = state.selectedSymptoms.length;
+  document.getElementById('sym-count').textContent = n === 0 ? 'Select at least one symptom' : `${n} symptom${n>1?'s':''} selected`;
+  document.getElementById('btn-analyze').disabled = n === 0;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// ANALYZE
+// ══════════════════════════════════════════════════════════════════════════
+function lookupProviders(specialty) {
+  return PROVIDERS[specialty] || PROVIDERS['General Medicine'] || [];
+}
+
+function analyze() {
+  if (!state.selectedSymptoms.length) return;
+  showScreen('analyzing');
+  document.getElementById('ana-city').textContent = state.city;
+  const steps = ['Pattern Recognition','Diagnosing Condition','Loading Providers'];
+  document.getElementById('ana-steps').innerHTML = steps.map(t =>
+    `<div class="dm" style="font-size:12px;color:rgba(15,23,42,.2);display:flex;align-items:center;gap:5px;transition:color .4s" id="astep-${t.replace(/ /g,'')}">${t}</div>`
+  ).join('');
+  let p = 0;
+  const iv = setInterval(() => {
+    p += Math.random()*14+5;
+    if (p >= 100) {
+      p = 100; clearInterval(iv);
+      const scored = DISEASE_MAP.map(d => ({
+        ...d, score: d.symptoms.filter(s => state.selectedSymptoms.includes(s)).length / Math.max(d.symptoms.length, state.selectedSymptoms.length)
+      })).sort((a,b) => b.score - a.score);
+      state.diagnosis = scored[0];
+      state.providers = lookupProviders(state.diagnosis.specialty);
+      setTimeout(() => { renderResult(); showScreen('result'); }, 400);
+    }
+    document.getElementById('prog-fill').style.width = Math.min(p,100)+'%';
+    document.getElementById('prog-pct').textContent = Math.round(Math.min(p,100))+'%';
+    steps.forEach((t,i) => {
+      const el = document.getElementById('astep-'+t.replace(/ /g,''));
+      if (el) el.style.color = p > i*33 ? '#0d9488' : 'rgba(15,23,42,.2)';
+      if (el) el.textContent = (p > i*33 ? '✓ ' : '○ ') + t;
+    });
+  }, 100);
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// RESULT
+// ══════════════════════════════════════════════════════════════════════════
+function renderResult() {
+  const d = state.diagnosis;
+  document.getElementById('res-city').textContent = CITY;
+  document.getElementById('res-profile').textContent = `\ud83d\udc64 ${state.profile.name} \u00b7 ${state.profile.age}y \u00b7 ${state.profile.sex}`;
+  document.getElementById('prov-count').textContent = `${state.providers.length} HOSPITALS / CLINICS FOUND`;
+  document.getElementById('prov-city-label').textContent = `\ud83d\udccd In & around ${CITY}`;
+  document.getElementById('dx-card').innerHTML = `
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <div style="font-size:50px">${d.icon}</div>
+      <div style="flex:1;min-width:180px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap">
+          <h2 style="font-size:24px;font-weight:900">${d.disease}</h2>
+          <span class="dm" style="font-size:10px;padding:3px 10px;border-radius:50px;border:1px solid ${SEV_COLOR[d.severity]};color:${SEV_COLOR[d.severity]};letter-spacing:1px">${d.severity.toUpperCase()}</span>
+        </div>
+        <p class="dm" style="color:var(--text);font-size:14px;margin-bottom:9px;line-height:1.7">${d.description}</p>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div class="dm" style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px;margin-bottom:3px">SPECIALIST NEEDED</div><div class="dm" style="color:var(--gold);font-size:13px">\ud83c\udfe5 ${d.specialty}</div></div>
+          <div><div class="dm" style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px;margin-bottom:3px">YOUR SYMPTOMS</div><div class="dm" style="color:#f2f4f3;font-size:13px">${d.symptoms.filter(s => state.selectedSymptoms.includes(s)).join(', ')||'General match'}</div></div>
+        </div>
+      </div>
+    </div>`;
+  if (state.providers.length === 0) {
+    document.getElementById('provider-cards').innerHTML = `<div class="card card-pad text-center dm" style="color:var(--text)">No ${d.specialty} providers on file in Vellore yet.</div>`;
+    return;
+  }
+  document.getElementById('provider-cards').innerHTML = state.providers.map((p,i) => `
+    <div class="card ${p.is_partner?'card-hover':''}" style="padding:18px" ${p.is_partner?`onclick="selectProvider(${i})"`:''}>
+      <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
+        <span class="${p.is_partner?'tag-ok':'tag-d'}">${p.is_partner?'\u2713 Bookable Online':'\ud83d\udcde Call to Book'}</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3">${p.name}</div>
+      <div class="dm" style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:7px;line-height:1.6">${p.about}</div>
+      <div class="dm" style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:3px">\ud83d\udccd ${p.address}</div>
+      <div class="dm" style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px">\ud83d\udcde ${p.phone}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">${p.specialties.map(s=>`<span class="tag-h" style="font-size:10px">${s}</span>`).join('')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:9px;border-top:1px solid rgba(255,255,255,.08)">
+        <a href="${mapLinkFor(p)}" target="_blank" class="btn-map" onclick="event.stopPropagation()">\ud83d\uddfa Map</a>
+        ${p.is_partner
+          ? `<span class="dm" style="font-size:12px;color:var(--gold)">Book \u2192</span>`
+          : `<a href="tel:${p.phone}" class="btn-map" onclick="event.stopPropagation()">\ud83d\udcde Call</a>`}
+      </div>
+    </div>`).join('');
+}
+
+function selectProvider(i) {
+  const p = state.providers[i];
+  if (!p.is_partner) return;
+  state.selectedProvider = p;
+  renderBooking();
+  showScreen('booking');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// BOOKING
+// ══════════════════════════════════════════════════════════════════════════
+function renderBooking() {
+  const p = state.selectedProvider;
+  const d = state.diagnosis;
+  document.getElementById('book-prov-card').innerHTML = `
+    <div style="display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap;align-items:center">
+      <span class="tag-ok">\u2713 Bookable Online</span>
+    </div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:3px">${p.name}</div>
+    <div class="dm" style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:7px;line-height:1.6">${p.about}</div>
+    <div class="dm" style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:3px">\ud83d\udccd ${p.address}</div>
+    <div class="dm" style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:11px">\ud83d\udcde ${p.phone}</div>
+    <a href="${mapLinkFor(p)}" target="_blank" class="btn-map">\ud83d\uddfa Open in Google Maps</a>`;
+  document.getElementById('book-patient-info').innerHTML = [
+    ['Name',state.profile.name],['Mobile','+91 '+state.profile.mobile],['Age / Sex',`${state.profile.age}y \u00b7 ${state.profile.sex}`]
+  ].map(([l,v]) => `<div><div class="label">${l}</div><div class="dm" style="font-size:13px;color:#f2f4f3">${v}</div></div>`).join('');
+  document.getElementById('book-summary').innerHTML = `
+    <div class="label mb-12">Appointment Summary</div>
+    ${[['Patient',state.profile.name],['Mobile','+91 '+state.profile.mobile],['Age/Sex',`${state.profile.age}y \u00b7 ${state.profile.sex}`],['City',CITY],['Condition',d?.disease||''],['Specialist',d?.specialty||''],['Provider',p.name],['Address',p.address],['Phone',p.phone]]
+      .map(([l,v]) => `<div style="display:flex;justify-content:space-between;padding-bottom:7px;margin-bottom:7px;border-bottom:1px solid rgba(255,255,255,.06)"><span class="dm" style="font-size:12px;color:rgba(255,255,255,.4);flex-shrink:0;margin-right:8px">${l}</span><span class="dm" style="font-size:12px;color:#f2f4f3;text-align:right">${v}</span></div>`).join('')}`;
+  document.getElementById('inp-date').value = '';
+  document.getElementById('inp-time').value = '';
+  document.getElementById('inp-note').value = '';
+  document.getElementById('btn-confirm-book').disabled = true;
+  ['inp-date','inp-time'].forEach(id => document.getElementById(id).addEventListener('change', checkBookReady));
+}
+
+function checkBookReady() {
+  const d = document.getElementById('inp-date').value;
+  const t = document.getElementById('inp-time').value;
+  document.getElementById('btn-confirm-book').disabled = !d || !t;
+}
+
+async function confirmBooking() {
+  const date = document.getElementById('inp-date').value;
+  const time = document.getElementById('inp-time').value;
+  if (!date || !time) return;
+  const p = state.selectedProvider;
+  const bk = {
+    id: 'BK'+String(BOOKINGS.length+1).padStart(3,'0'),
+    name: state.profile.name, mobile: state.profile.mobile,
+    age: state.profile.age, sex: state.profile.sex,
+    condition: state.diagnosis?.disease||'', provider: p.name,
+    date, time, status:'pending', city: CITY,
+  };
+  BOOKINGS.unshift(bk);
+  showToast('Booking saved! Sending confirmation email\u2026','info');
+  const ok = await sendEmail({
+    patient: state.profile.name,
+    mobile: '+91 ' + state.profile.mobile,
+    age_sex: state.profile.age + 'y \u00b7 ' + state.profile.sex,
+    city: CITY, date, time,
+    provider: p.name, address: p.address,
+  });
+  if (ok) showToast('\ud83d\udce7 Booking receipt sent to pranav27062007@gmail.com!','success');
+  else showToast('Booking confirmed! (Email may be delayed)','info');
+  renderConfirmed(p, date, time);
+  showScreen('confirmed');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// CONFIRMED
+// ══════════════════════════════════════════════════════════════════════════
+function renderConfirmed(p, date, time) {
+  document.getElementById('conf-prov').textContent = p.name;
+  document.getElementById('conf-map-link').href = mapLinkFor(p);
+  document.getElementById('conf-receipt').innerHTML = [
+    ['\ud83d\udc64 Patient',state.profile.name],['\ud83d\udcde Mobile','+91 '+state.profile.mobile],
+    ['\ud83c\udf82 Age/Sex',`${state.profile.age}y \u00b7 ${state.profile.sex}`],['\ud83c\udf0f City',CITY],
+    ['\ud83d\uddd3 Date',date],['\ud83d\udd50 Time',time],['\ud83c\udfe5 Provider',p.name],['\ud83d\udccd Address',p.address],
+  ].map(([l,v]) => `<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><span class="dm" style="font-size:12px;color:rgba(255,255,255,.4);min-width:94px;flex-shrink:0">${l}</span><span class="dm" style="font-size:13px;color:#f2f4f3;line-height:1.5">${v}</span></div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════════════════════════════
+function renderAdmin() {
+  renderAdminStats(); renderAdminBookings(); renderAdminCharts();
+}
+
+function renderAdminStats() {
+  const confirmed = BOOKINGS.filter(b=>b.status==='confirmed').length;
+  const pending = BOOKINGS.filter(b=>b.status==='pending').length;
+  const partners = HOSPITALS.filter(h=>h.is_partner).length;
+  document.getElementById('admin-stats').innerHTML = [
+    {l:'Total Bookings',v:BOOKINGS.length,c:'var(--gold)',i:'📅'},
+    {l:'Confirmed',v:confirmed,c:'var(--green)',i:'✅'},
+    {l:'Pending',v:pending,c:'var(--amber)',i:'⏳'},
+    {l:'Partner Hospitals',v:`${partners}/${HOSPITALS.length}`,c:'var(--blue)',i:'🏥'},
+  ].map(s => `<div class="card card-pad" style="text-align:center">
+    <div style="font-size:28px;margin-bottom:6px">${s.i}</div>
+    <div style="font-size:28px;font-weight:900;color:${s.c};margin-bottom:4px;font-family:'Sora',serif">${s.v}</div>
+    <div class="dm" style="font-size:12px;color:rgba(15,23,42,.42)">${s.l}</div>
+  </div>`).join('');
+}
+
+function renderAdminBookings() {
+  document.getElementById('admin-bookings-view').innerHTML = `<div style="overflow-x:auto"><table class="tbl">
+    <thead><tr><th>ID</th><th>Patient</th><th>Mobile</th><th>Age/Sex</th><th>City</th><th>Condition</th><th>Provider</th><th>Date & Time</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>${BOOKINGS.map(b => {
+      const icon = DISEASE_MAP.find(d=>d.disease===b.condition)?.icon||'🔬';
+      return `<tr>
+        <td><span class="dm" style="font-size:11px;color:var(--gold)">${b.id}</span></td>
+        <td>${b.name}</td><td>${b.mobile}</td>
+        <td>${b.age}y · ${b.sex}</td>
+        <td><span style="color:#1d4ed8;font-size:12px">📍 ${b.city||'—'}</span></td>
+        <td><span style="font-size:12px">${icon} ${b.condition}</span></td>
+        <td><span style="font-size:12px;color:rgba(15,23,42,.65)">${b.provider}</span></td>
+        <td><span style="font-size:12px">${b.date}<br><span style="color:rgba(15,23,42,.45)">${b.time}</span></span></td>
+        <td><span class="${b.status==='confirmed'?'status-c':'status-p'}">${b.status}</span></td>
+        <td><button class="btn-sm" style="color:${b.status==='confirmed'?'#f59e0b':'#22c55e'};border-color:${b.status==='confirmed'?'rgba(245,158,11,.35)':'rgba(34,197,94,.35)'};background:${b.status==='confirmed'?'rgba(245,158,11,.07)':'rgba(34,197,94,.07)'}" onclick="toggleStatus('${b.id}')">${b.status==='confirmed'?'→ Pending':'→ Confirm'}</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+function renderAdminCharts() {
+  const byCondition = DISEASE_MAP.map(d => {
+    const c = BOOKINGS.filter(b=>b.condition===d.disease).length;
+    const p = BOOKINGS.length ? Math.round(c/BOOKINGS.length*100) : 0;
+    return `<div style="margin-bottom:13px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span class="dm" style="font-size:13px;color:rgba(15,23,42,.7)">${d.icon} ${d.disease}</span>
+        <span class="dm" style="font-size:12px;color:rgba(15,23,42,.45)">${c} (${p}%)</span>
+      </div>
+      <div style="background:rgba(15,23,42,.07);border-radius:3px;height:5px;overflow:hidden">
+        <div style="height:100%;width:${p}%;background:linear-gradient(90deg,${SEV_COLOR[d.severity]},${SEV_COLOR[d.severity]}88);border-radius:3px;transition:width .5s"></div>
+      </div></div>`;
+  }).join('');
+  const providers = [...new Set(BOOKINGS.map(b=>b.provider).filter(Boolean))];
+  const byHospital = providers.map(pr => {
+    const cnt = BOOKINGS.filter(b=>b.provider===pr).length;
+    const p = BOOKINGS.length ? Math.round(cnt/BOOKINGS.length*100) : 0;
+    return `<div style="margin-bottom:13px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span class="dm" style="font-size:13px;color:rgba(15,23,42,.7)">🏥 ${pr}</span>
+        <span class="dm" style="font-size:12px;color:rgba(15,23,42,.45)">${cnt}</span>
+      </div>
+      <div style="background:rgba(15,23,42,.07);border-radius:3px;height:5px;overflow:hidden">
+        <div style="height:100%;width:${p}%;background:linear-gradient(90deg,#1d4ed8,#3b82f6);border-radius:3px;transition:width .5s"></div>
+      </div></div>`;
+  }).join('');
+  document.getElementById('admin-stats-view').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card card-pad"><div class="label mb-16">Bookings by Condition</div>${byCondition}</div>
+      <div class="card card-pad"><div class="label mb-16">Bookings by Hospital</div>${byHospital}</div>
+    </div>`;
+}
+
+function toggleStatus(id) {
+  const b = BOOKINGS.find(x=>x.id===id);
+  if (b) { b.status = b.status==='confirmed'?'pending':'confirmed'; renderAdminBookings(); renderAdminStats(); }
+}
+
+function switchAdminTab(tab) {
+  document.getElementById('admin-bookings-view').style.display = tab==='bookings'?'block':'none';
+  document.getElementById('admin-stats-view').style.display = tab==='stats'?'block':'none';
+  document.getElementById('atab-bookings').className = 'admin-tab'+(tab==='bookings'?' on':'');
+  document.getElementById('atab-stats').className = 'admin-tab'+(tab==='stats'?' on':'');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// DOCTOR PORTAL
+// ══════════════════════════════════════════════════════════════════════════
+
+// Every unique patient across bookings + medical records, so a doctor sees
+// patients even if they only have history and no active booking (or vice versa).
+function getAllPatients() {
+  const byMobile = {};
+  BOOKINGS.forEach(b => {
+    if (!byMobile[b.mobile]) byMobile[b.mobile] = { name:b.name, mobile:b.mobile, age:b.age, sex:b.sex, city:b.city, providers:new Set() };
+    byMobile[b.mobile].providers.add(b.provider);
+  });
+  Object.keys(MEDICAL_RECORDS).forEach(mobile => {
+    if (byMobile[mobile]) MEDICAL_RECORDS[mobile].forEach(r => byMobile[mobile].providers.add(r.hospital));
+  });
+  return byMobile;
+}
+
+// Patients relevant to the logged-in doctor: their booking provider OR
+// medical-record hospital contains the doctor's hospitalMatch string.
+function getDoctorPatients(doctor) {
+  const all = getAllPatients();
+  return Object.values(all).filter(p => [...p.providers].some(prov => prov.includes(doctor.hospitalMatch)));
+}
+
+function renderDoctorDashboard() {
+  const doc = state.currentDoctor;
+  document.getElementById('doc-welcome-name').textContent = doc.name;
+  document.getElementById('doc-welcome-sub').textContent = `${doc.specialty} · ${doc.hospitalMatch}`;
+
+  const patients = getDoctorPatients(doc);
+  const totalVisits = patients.reduce((sum,p) => sum + (MEDICAL_RECORDS[p.mobile]?.length || 0), 0);
+  const activeBookings = BOOKINGS.filter(b => patients.some(p=>p.mobile===b.mobile) && b.status !== 'confirmed').length;
+
+  document.getElementById('doctor-stats').innerHTML = [
+    {l:'Total Patients',v:patients.length,c:'#7c3aed',i:'🧑‍🤝‍🧑'},
+    {l:'Recorded Visits',v:totalVisits,c:'var(--gold)',i:'📋'},
+    {l:'Pending Bookings',v:activeBookings,c:'var(--amber)',i:'⏳'},
+    {l:'Specialty',v:doc.specialty,c:'#1d4ed8',i:'🩺',small:true},
+  ].map(s => `<div class="card card-pad" style="text-align:center">
+    <div style="font-size:28px;margin-bottom:6px">${s.i}</div>
+    <div style="font-size:${s.small?'16px':'28px'};font-weight:900;color:${s.c};margin-bottom:4px;font-family:'Sora',serif">${s.v}</div>
+    <div class="dm" style="font-size:12px;color:rgba(15,23,42,.42)">${s.l}</div>
+  </div>`).join('');
+
+  if (patients.length === 0) {
+    document.getElementById('doctor-patient-list').innerHTML = `<div class="card card-pad text-center dm" style="color:var(--text)">No patients found for ${doc.hospitalMatch} yet. Once patients book appointments here, they'll appear in your list.</div>`;
+    return;
+  }
+
+  document.getElementById('doctor-patient-list').innerHTML = `<div style="overflow-x:auto"><table class="tbl">
+    <thead><tr><th>Patient</th><th>Age/Sex</th><th>City</th><th>Last Diagnosis</th><th>Visits on File</th><th>Latest Booking Status</th><th></th></tr></thead>
+    <tbody>${patients.map(p => {
+      const records = (MEDICAL_RECORDS[p.mobile]||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+      const latest = records[0];
+      const lastBooking = BOOKINGS.filter(b=>b.mobile===p.mobile).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+      return `<tr class="patient-row" onclick="openPatientRecord('${p.mobile}')">
+        <td><strong style="color:#0f172a">${p.name}</strong></td>
+        <td>${p.age}y · ${p.sex}</td>
+        <td><span style="color:#1d4ed8;font-size:12px">📍 ${p.city||'—'}</span></td>
+        <td>${latest ? `<span class="med-pill" style="margin:0">${latest.diagnosis}</span>` : '<span class="dm" style="color:rgba(15,23,42,.3);font-size:12px">No records yet</span>'}</td>
+        <td><span class="dm" style="color:rgba(15,23,42,.6)">${records.length}</span></td>
+        <td>${lastBooking ? `<span class="${lastBooking.status==='confirmed'?'status-c':'status-p'}">${lastBooking.status}</span>` : '<span class="dm" style="color:rgba(15,23,42,.3);font-size:12px">—</span>'}</td>
+        <td><span class="dm" style="font-size:12px;color:#6d28d9">View Record →</span></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+function openPatientRecord(mobile) {
+  state.selectedPatientMobile = mobile;
+  renderPatientRecord(mobile);
+  showScreen('patient-record');
+}
+
+function renderPatientRecord(mobile) {
+  const all = getAllPatients();
+  const p = all[mobile];
+  const records = (MEDICAL_RECORDS[mobile]||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  document.getElementById('patient-header-card').innerHTML = `
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;font-family:'Inter',sans-serif;flex-shrink:0">${p.name.charAt(0).toUpperCase()}</div>
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:22px;font-weight:900;margin-bottom:4px">${p.name}</div>
+        <div class="dm" style="font-size:13px;color:var(--text)">${p.age}y · ${p.sex} · 📱 ${p.mobile} · 📍 ${p.city||'—'}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="dm" style="font-size:11px;color:rgba(15,23,42,.3);letter-spacing:1px;margin-bottom:3px">TOTAL VISITS ON FILE</div>
+        <div style="font-size:26px;font-weight:900;color:#7c3aed;font-family:'Sora',serif">${records.length}</div>
+      </div>
+    </div>`;
+
+  if (records.length === 0) {
+    document.getElementById('patient-history-list').innerHTML = `<div class="card card-pad text-center dm" style="color:var(--text)">No medical history on file for this patient yet.</div>`;
+    return;
+  }
+
+  document.getElementById('patient-history-list').innerHTML = records.map(r => `
+    <div class="record-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div>
+          <div style="font-size:17px;font-weight:700;color:#0f172a;margin-bottom:3px">${r.diagnosis}</div>
+          <div class="dm" style="font-size:12px;color:rgba(15,23,42,.45)">🏥 ${r.hospital} · 👨‍⚕️ ${r.doctor}</div>
+        </div>
+        <div class="dm" style="font-size:12px;color:#7c3aed;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);padding:4px 12px;border-radius:50px;white-space:nowrap">📅 ${r.date}</div>
+      </div>
+      <p class="dm" style="font-size:13px;color:rgba(15,23,42,.6);line-height:1.7;margin-bottom:12px">${r.notes}</p>
+      <div class="dm" style="font-size:10px;letter-spacing:1.5px;color:rgba(15,23,42,.32);margin-bottom:8px;text-transform:uppercase">Prescribed Medicines</div>
+      <div>${r.medicines.map(m => `<span class="med-pill">💊 ${m.name} — ${m.dosage} <em style="opacity:.7">(${m.duration})</em></span>`).join('')}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════════════
+function showToast(msg, type='info') {
+  const icons = {success:'✅',error:'⚠️',info:'📧'};
+  const el = document.createElement('div');
+  el.className = `toast-item ${type}`;
+  el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><div class="toast-msg">${msg}</div><div class="toast-close" onclick="this.parentElement.remove()">×</div>`;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(() => el.remove(), 5000);
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════════════════════════════════
+function resetAll() {
+  state = {screen:'login',role:'user',profile:{name:'',mobile:'',age:'',sex:''},city:CITY,selectedSymptoms:[],diagnosis:null,providers:[],selectedProvider:null,currentDoctor:null,selectedPatientMobile:null};
+  document.getElementById('inp-name').value='';
+  document.getElementById('inp-mobile').value='';
+  document.getElementById('inp-age').value='';
+  document.getElementById('inp-admin-mob').value='';
+  document.getElementById('inp-doctor-mob').value='';
+  selectSex('');
+  switchRole('user');
+  ['err-name','err-mobile','err-age','err-sex','err-admin','err-doctor'].forEach(id => { document.getElementById(id).style.display='none'; });
+  showScreen('login');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════
+initEJ();
+renderTopbar();
+</script>
+</body>
+</html>
