@@ -16,7 +16,7 @@
       /* MODERN WHITE & BLUE PALETTE */
       --bg-main: #F4F7FC;
       --bg-surface: #FFFFFF;
-      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-bg: rgba(255, 255, 255, 0.9);
       
       --accent-primary: #0052CC;
       --accent-hover: #003D99;
@@ -160,12 +160,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      animation: floatHero 4s ease-in-out infinite alternate;
+      transform-style: preserve-3d;
+      transition: transform 0.15s cubic-bezier(0.1, 1, 0.1, 1), box-shadow 0.3s ease;
+      cursor: pointer;
     }
 
-    @keyframes floatHero {
-      0% { transform: translateY(0px); }
-      100% { transform: translateY(-4px); }
+    .hero-banner-inner:hover {
+      box-shadow: 0 25px 50px rgba(0, 82, 204, 0.4);
     }
 
     .hero-banner h1 {
@@ -196,6 +197,12 @@
       height: fit-content;
       backdrop-filter: blur(16px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      transform-style: preserve-3d;
+      transition: transform 0.15s cubic-bezier(0.1, 1, 0.1, 1), box-shadow 0.3s ease;
+    }
+
+    .sidebar-panel:hover {
+      box-shadow: 0 20px 40px rgba(0, 82, 204, 0.12);
     }
 
     .sidebar-title {
@@ -247,8 +254,9 @@
     .role-btn:hover {
       border-color: var(--border-focus);
       color: var(--accent-primary);
-      transform: translateX(4px);
+      transform: translateX(6px) scale(1.02);
       background: var(--accent-soft);
+      box-shadow: 0 6px 16px rgba(0, 82, 204, 0.15);
     }
 
     .role-btn.active {
@@ -315,6 +323,13 @@
       }
     }
 
+    /* 3D FLOATING TILT CARD ENGINE */
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform 0.15s cubic-bezier(0.1, 1, 0.1, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      will-change: transform;
+    }
+
     .screen-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -323,11 +338,11 @@
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 50px rgba(0, 82, 204, 0.08), 0 1px 3px rgba(0,0,0,0.02);
       position: relative;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .screen-card:hover {
-      box-shadow: 0 25px 60px rgba(0, 82, 204, 0.12);
+      box-shadow: 0 35px 70px rgba(0, 82, 204, 0.18);
+      border-color: rgba(37, 99, 235, 0.3);
     }
 
     /* FORM COMPONENTS */
@@ -371,7 +386,7 @@
       margin-bottom: 1.25rem;
       max-height: 340px;
       overflow-y: auto;
-      padding-right: 0.4rem;
+      padding: 0.4rem;
     }
 
     .chip {
@@ -384,7 +399,7 @@
       color: var(--text-muted);
       cursor: pointer;
       text-align: center;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
 
@@ -392,7 +407,8 @@
       border-color: var(--accent-primary);
       color: var(--accent-primary);
       background: var(--accent-soft);
-      transform: translateY(-2px) scale(1.02);
+      transform: translateY(-5px) translateZ(20px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 82, 204, 0.18);
     }
 
     .chip.selected {
@@ -400,8 +416,8 @@
       color: #FFFFFF;
       border-color: transparent;
       font-weight: 700;
-      box-shadow: 0 4px 14px rgba(0, 82, 204, 0.35);
-      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0, 82, 204, 0.4);
+      transform: translateY(-4px) scale(1.03);
     }
 
     /* AI DIAGNOSIS CARDS */
@@ -411,14 +427,12 @@
       border-radius: var(--radius-md);
       padding: 1.25rem 1.5rem;
       margin-bottom: 0.85rem;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
     }
 
     .ai-card:hover {
       border-color: var(--border-focus);
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 12px 30px rgba(0, 82, 204, 0.12);
+      box-shadow: 0 20px 40px rgba(0, 82, 204, 0.16);
     }
 
     .ai-badge {
@@ -490,13 +504,13 @@
     }
 
     .btn-action:hover {
-      transform: translateY(-3px) scale(1.02);
+      transform: translateY(-4px) translateZ(15px) scale(1.03);
       background: var(--accent-hover);
-      box-shadow: 0 8px 25px rgba(0, 82, 204, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 82, 204, 0.45);
     }
 
     .btn-action:active {
-      transform: translateY(-1px);
+      transform: translateY(-1px) scale(0.98);
     }
 
     .btn-secondary {
@@ -510,7 +524,7 @@
       border-color: var(--text-bright);
       color: var(--accent-primary);
       background: var(--accent-soft);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     }
 
     /* HOSPITAL CARD */
@@ -524,19 +538,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .hospital-card:hover {
       border-color: var(--border-focus);
       background: var(--accent-soft);
-      transform: translateX(4px);
+      box-shadow: 0 14px 30px rgba(0, 82, 204, 0.15);
     }
 
     .hospital-card.selected {
       border-color: var(--accent-primary);
       background: var(--accent-soft);
-      box-shadow: 0 0 20px rgba(0, 82, 204, 0.15);
+      box-shadow: 0 8px 25px rgba(0, 82, 204, 0.2);
     }
 
     .hospital-info h3 {
@@ -571,6 +584,7 @@
       padding: 0.85rem 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border-color);
+      transition: background 0.2s ease, transform 0.2s ease;
     }
 
     .data-table th {
@@ -582,7 +596,7 @@
       font-size: 0.68rem;
     }
 
-    .data-table tr:hover {
+    .data-table tr:hover td {
       background: var(--accent-soft);
     }
 
@@ -645,7 +659,7 @@
 
   <!-- HERO BANNER -->
   <div class="hero-banner">
-    <div class="hero-banner-inner">
+    <div class="hero-banner-inner tilt-card">
       <h1 id="heroTitle">PATIENT PORTAL</h1>
     </div>
   </div>
@@ -654,7 +668,7 @@
   <div class="app-viewport">
     
     <!-- LEFT SIDEBAR FILTER / NAVIGATION -->
-    <div class="sidebar-panel">
+    <div class="sidebar-panel tilt-card">
       <div class="sidebar-title">
         <span>PORTAL CONTROLS</span>
         <span class="reset-link" onclick="logout()">LOGOUT</span>
@@ -688,7 +702,7 @@
       
       <!-- 1. LOGIN SCREEN -->
       <div id="screen-login" class="screen active">
-        <div class="screen-card">
+        <div class="screen-card tilt-card">
           <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Authentication</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.25rem;">Sign in to access your designated healthcare dashboard.</p>
           
@@ -712,7 +726,7 @@
 
       <!-- 2. PATIENT FLOW: 40+ SYMPTOMS ASSESSMENT -->
       <div id="screen-symptoms" class="screen">
-        <div class="screen-card">
+        <div class="screen-card tilt-card">
           <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem; text-transform: uppercase;">Symptom Triage (40 Indicators)</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.25rem;">Select all relevant health indicators to match top specialists across Vellore.</p>
           
@@ -726,7 +740,7 @@
 
       <!-- 3. PATIENT FLOW: MEDICAL HISTORY & PREVIOUS CONDITIONS -->
       <div id="screen-history" class="screen">
-        <div class="screen-card">
+        <div class="screen-card tilt-card">
           <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem; text-transform: uppercase;">Previous Medical History</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.25rem;">Log past conditions and chronic illnesses for physician review.</p>
           
@@ -756,7 +770,7 @@
 
       <!-- 4. PATIENT FLOW: AI PREDICTED DISEASE & CLINICAL ANALYSIS -->
       <div id="screen-ai-result" class="screen">
-        <div class="screen-card">
+        <div class="screen-card tilt-card">
           <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem; text-transform: uppercase;">AI Disease Prediction</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.25rem;">Clinical triage algorithm output based on selected symptoms and past medical history.</p>
           
@@ -771,12 +785,12 @@
 
       <!-- 5. PATIENT FLOW: BOOKING & TIME -->
       <div id="screen-booking" class="screen">
-        <div class="screen-card">
+        <div class="screen-card tilt-card">
           <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem; text-transform: uppercase;">Schedule Appointment</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.25rem;">Select a hospital and confirm your preferred slot.</p>
           
           <label style="margin-bottom: 0.4rem;">RECOMMENDED NETWORK HOSPITALS</label>
-          <div id="hospitalListContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 1.25rem;"></div>
+          <div id="hospitalListContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 1.25rem; padding-right: 0.2rem;"></div>
 
           <div class="grid-2col-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="input-group" style="margin-bottom: 0;">
@@ -804,11 +818,11 @@
 
       <!-- 6. CONFIRMED SCREEN -->
       <div id="screen-confirmed" class="screen">
-        <div class="screen-card" style="text-align: center; padding: 2.5rem 2rem;">
+        <div class="screen-card tilt-card" style="text-align: center; padding: 2.5rem 2rem;">
           <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Booking Confirmed</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem;">Appointment details synced to network EMR.</p>
           
-          <div style="background: #F8FAFC; border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; text-align: left;">
+          <div class="tilt-card" style="background: #F8FAFC; border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; text-align: left;">
             <h3 id="resHospital" style="font-size: 1.05rem; margin-bottom: 0.4rem; text-transform: uppercase; color: var(--accent-primary);">Hospital Name</h3>
             <p id="resDate" style="font-size: 0.82rem; color: var(--text-bright);"></p>
             <p id="resTime" style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;"></p>
@@ -822,7 +836,7 @@
 
       <!-- 7. ADMIN DASHBOARD -->
       <div id="screen-admin" class="screen">
-        <div class="screen-card">
+        <div class="screen-card tilt-card">
           <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem; text-transform: uppercase;">System Dashboard</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.25rem;">Hospital operations and record logs across 21 network entries.</p>
           
@@ -851,7 +865,7 @@
 
       <!-- 8. DOCTOR PORTAL -->
       <div id="screen-doctor" class="screen">
-        <div class="screen-card">
+        <div class="screen-card tilt-card">
           <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem; text-transform: uppercase;">Physician EMR Interface</h2>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.25rem;">Review records, past history, and publish prescriptions.</p>
 
@@ -944,6 +958,32 @@
       requestAnimationFrame(renderCanvas);
     }
     renderCanvas();
+
+    /* DYNAMIC INTERACTIVE 3D POP-OUT & TILT ENGINE */
+    function initTiltCards() {
+      document.querySelectorAll('.tilt-card').forEach(card => {
+        if (card.dataset.tiltInitialized) return;
+        card.dataset.tiltInitialized = "true";
+
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = ((y - centerY) / centerY) * -12; // Max tilt X angle
+          const rotateY = ((x - centerX) / centerX) * 12;  // Max tilt Y angle
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(25px) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale3d(1, 1, 1)`;
+        });
+      });
+    }
 
     /* 40 CLINICAL SYMPTOMS DATA */
     const SYMPTOMS_40 = [
@@ -1055,6 +1095,8 @@
         opt.innerText = h.name;
         adminSelect.appendChild(opt);
       });
+
+      initTiltCards();
     })();
 
     function setRole(role) {
@@ -1136,7 +1178,7 @@
 
       selectedSymptomsList.forEach((sym, i) => {
         const card = document.createElement('div');
-        card.className = 'ai-card';
+        card.className = 'ai-card tilt-card';
 
         let modifier = "";
         if (selectedHistory.length > 0) {
@@ -1157,6 +1199,7 @@
         container.appendChild(card);
       });
 
+      initTiltCards();
       goToScreen('screen-ai-result');
     }
 
@@ -1174,7 +1217,7 @@
 
       list.forEach((h, idx) => {
         const div = document.createElement('div');
-        div.className = `hospital-card ${idx === 0 ? 'selected' : ''}`;
+        div.className = `hospital-card tilt-card ${idx === 0 ? 'selected' : ''}`;
         if (idx === 0) selectedHospital = h;
         
         div.innerHTML = `
@@ -1191,6 +1234,8 @@
         };
         container.appendChild(div);
       });
+
+      initTiltCards();
     }
 
     function confirmBooking() {
@@ -1298,6 +1343,7 @@
 
         targetScreen.classList.add('active');
         currentScreenId = targetId;
+        initTiltCards();
 
         setTimeout(() => {
           speedMult = 1;
