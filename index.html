@@ -42,7 +42,7 @@
       --particle-color: rgba(0, 82, 204, 0.35);
     }
 
-    /* DARK MODE: Pitch Black & High-Contrast Fluorescent Green/Cyan */
+    /* DARK MODE: Pitch Black & High-Contrast Fluorescent Green */
     [data-theme="dark"] {
       --bg-main: #050505;
       --bg-surface: rgba(15, 15, 15, 0.95);
@@ -50,7 +50,7 @@
       --ticker-bg: #00FF66;
       --ticker-text: #000000;
       
-      --accent-primary: #00FF66; /* Fluorescent Neon Green */
+      --accent-primary: #00FF66;
       --accent-hover: #00CC52;
       --accent-soft: rgba(0, 255, 102, 0.12);
       --accent-glow: rgba(0, 255, 102, 0.4);
@@ -328,7 +328,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ACCESSIBLE STABLE ZOOM/LIFT CARDS */
     .zoom-card {
       background: var(--card-bg);
       border: 2px solid var(--border-color);
@@ -341,7 +340,7 @@
     }
 
     .zoom-card:hover {
-      transform: scale(1.025) translateY(-4px);
+      transform: scale(1.01);
       box-shadow: 0 20px 45px var(--accent-glow);
       border-color: var(--accent-primary);
     }
@@ -384,7 +383,7 @@
       box-shadow: 0 0 0 4px var(--accent-soft);
     }
 
-    /* SYMPTOMS & CHIPS WITH ACCESSIBLE HOVER ZOOM */
+    /* SYMPTOMS & CHIPS */
     .symptom-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -413,8 +412,7 @@
       border-color: var(--accent-primary);
       color: var(--accent-primary);
       background: var(--accent-soft);
-      transform: scale(1.06);
-      box-shadow: 0 6px 16px var(--accent-glow);
+      transform: scale(1.04);
     }
 
     .chip.selected {
@@ -423,7 +421,6 @@
       border-color: transparent;
       font-weight: 800;
       box-shadow: 0 6px 18px var(--accent-glow);
-      transform: scale(1.04);
     }
 
     /* AI DIAGNOSIS CARDS */
@@ -433,13 +430,6 @@
       border-radius: var(--radius-md);
       padding: 1.25rem 1.5rem;
       margin-bottom: 0.85rem;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .ai-card:hover {
-      transform: scale(1.02);
-      border-color: var(--accent-primary);
-      box-shadow: 0 12px 30px var(--accent-glow);
     }
 
     .ai-badge {
@@ -543,10 +533,9 @@
     }
 
     .hospital-card:hover {
-      transform: scale(1.02);
+      transform: scale(1.01);
       border-color: var(--border-focus);
       background: var(--accent-soft);
-      box-shadow: 0 8px 20px var(--accent-glow);
     }
 
     .hospital-card.selected {
@@ -565,6 +554,49 @@
     .hospital-info p {
       font-size: 0.78rem;
       color: var(--text-muted);
+    }
+
+    /* PREVIEW DASHBOARD CARD (INSPIRED BY IMAGE 3) */
+    .preview-card {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.65rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .preview-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .preview-item label {
+      font-size: 0.68rem;
+      color: var(--text-sub);
+      margin-bottom: 0.2rem;
+    }
+
+    .preview-item p {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-bright);
     }
 
     /* DATA TABLE */
@@ -595,10 +627,6 @@
       text-transform: uppercase;
       letter-spacing: 0.8px;
       font-size: 0.7rem;
-    }
-
-    .data-table tr:hover td {
-      background: var(--accent-soft);
     }
 
     /* FOOTER */
@@ -632,7 +660,7 @@
       .role-btn { flex: 1; justify-content: center; padding: 0.5rem; font-size: 0.75rem; }
       .role-btn span:last-child { display: none; }
       .symptom-grid { grid-template-columns: repeat(2, 1fr); }
-      .grid-2col-mobile, .grid-2col { grid-template-columns: 1fr !important; }
+      .grid-2col { grid-template-columns: 1fr !important; }
       .card-action-bar { flex-direction: column-reverse; }
       .btn-action { width: 100%; }
     }
@@ -710,11 +738,11 @@
     <!-- RIGHT STAGE CONTENT WRAPPER -->
     <div class="main-stage">
       
-      <!-- 1. PATIENT REGISTRATION / AUTHENTICATION SCREEN -->
+      <!-- 1. PATIENT REGISTRATION / AUTHENTICATION SCREEN (IMAGE 1 INSPIRED) -->
       <div id="screen-login" class="screen active">
         <div class="zoom-card">
-          <h2 id="loginHeading" style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Patient Information & Authentication</h2>
-          <p id="loginSubtext" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Provide your details to initiate your medical consultation.</p>
+          <h2 id="loginHeading" style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Create Patient Account</h2>
+          <p id="loginSubtext" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Sign up and improve your health today.</p>
           
           <div id="patientDetailsFields">
             <div class="input-group">
@@ -723,7 +751,7 @@
             </div>
 
             <div class="input-group">
-              <label for="loginEmail">EMAIL ADDRESS</label>
+              <label for="loginEmail">EMAIL ADDRESS (ANY GMAIL / EMAIL ACCESSIBLE)</label>
               <input type="email" id="loginEmail" placeholder="e.g. user@gmail.com">
             </div>
 
@@ -775,16 +803,16 @@
         </div>
       </div>
 
-      <!-- 2. PATIENT FLOW: SYMPTOMS ASSESSMENT -->
+      <!-- 2. PATIENT FLOW: SYMPTOMS ASSESSMENT (IMAGE 2 INSPIRED CONSULTATION) -->
       <div id="screen-symptoms" class="screen">
         <div class="zoom-card">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Symptom Triage (40 Indicators)</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select all relevant health indicators to match top specialists across Vellore.</p>
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Book A Free Consultation</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Select your health symptoms below to match with our medical specialists across Vellore.</p>
           
           <div class="symptom-grid" id="symptomGrid"></div>
 
           <div class="card-action-bar">
-            <button class="btn-action" onclick="goToHistoryScreen()">NEXT: PREVIOUS MEDICAL HISTORY →</button>
+            <button class="btn-action" onclick="goToHistoryScreen()">NEXT: MEDICAL HISTORY →</button>
           </div>
         </div>
       </div>
@@ -834,7 +862,7 @@
         </div>
       </div>
 
-      <!-- 5. PATIENT FLOW: BOOKING & TIME -->
+      <!-- 5. PATIENT FLOW: BOOKING & TIME SELECTION -->
       <div id="screen-booking" class="screen">
         <div class="zoom-card">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Schedule Appointment</h2>
@@ -843,7 +871,7 @@
           <label style="margin-bottom: 0.4rem;">RECOMMENDED NETWORK HOSPITALS</label>
           <div id="hospitalListContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 1.25rem; padding-right: 0.2rem;"></div>
 
-          <div class="grid-2col-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="grid-2col" style="margin-bottom: 0;">
             <div class="input-group" style="margin-bottom: 0;">
               <label for="bookingDate">APPOINTMENT DATE</label>
               <input type="date" id="bookingDate">
@@ -862,12 +890,75 @@
 
           <div class="card-action-bar">
             <button class="btn-action btn-secondary" onclick="goToScreen('screen-ai-result')">← BACK</button>
-            <button class="btn-action" onclick="confirmBooking()">CONFIRM APPOINTMENT →</button>
+            <button class="btn-action" onclick="generatePreview()">PREVIEW APPOINTMENT →</button>
           </div>
         </div>
       </div>
 
-      <!-- 6. CONFIRMED SCREEN -->
+      <!-- 6. NEW PREVIEW SCREEN (IMAGE 3 INSPIRED: PRE-SUBMISSION VIEW) -->
+      <div id="screen-preview" class="screen">
+        <div class="zoom-card">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Review & Preview Booking</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Verify your information and appointment parameters before final submission.</p>
+
+          <!-- SECTION 1: PATIENT DEMOGRAPHICS -->
+          <div class="preview-card">
+            <div class="preview-header">
+              <span class="preview-title">Patient Profile</span>
+              <span class="reset-link" onclick="goToScreen('screen-login')">Edit Profile ✎</span>
+            </div>
+            <div class="preview-grid">
+              <div class="preview-item"><label>FULL NAME</label><p id="prevName">-</p></div>
+              <div class="preview-item"><label>EMAIL</label><p id="prevEmail">-</p></div>
+              <div class="preview-item"><label>AGE / GENDER</label><p id="prevAgeGender">-</p></div>
+              <div class="preview-item"><label>DOB</label><p id="prevDob">-</p></div>
+              <div class="preview-item"><label>PHONE</label><p id="prevPhone">-</p></div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: MEDICAL ASSESSMENT SUMMARY -->
+          <div class="preview-card">
+            <div class="preview-header">
+              <span class="preview-title">Medical Triage & Symptoms</span>
+              <span class="reset-link" onclick="goToScreen('screen-symptoms')">Edit Symptoms ✎</span>
+            </div>
+            <div class="preview-grid">
+              <div class="preview-item" style="grid-column: 1 / -1;">
+                <label>SELECTED SYMPTOMS</label>
+                <p id="prevSymptoms">-</p>
+              </div>
+              <div class="preview-item" style="grid-column: 1 / -1;">
+                <label>PAST MEDICAL HISTORY</label>
+                <p id="prevHistory">-</p>
+              </div>
+              <div class="preview-item" style="grid-column: 1 / -1;">
+                <label>AI PREDICTED DIAGNOSIS & DEPT</label>
+                <p id="prevAiDiagnosis" style="color: var(--accent-primary);">-</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: HOSPITAL & TIME SLOT -->
+          <div class="preview-card">
+            <div class="preview-header">
+              <span class="preview-title">Facility & Slot Details</span>
+              <span class="reset-link" onclick="goToScreen('screen-booking')">Edit Slot ✎</span>
+            </div>
+            <div class="preview-grid">
+              <div class="preview-item"><label>SELECTED HOSPITAL</label><p id="prevHospital">-</p></div>
+              <div class="preview-item"><label>DATE</label><p id="prevDate">-</p></div>
+              <div class="preview-item"><label>TIME SLOT</label><p id="prevTime">-</p></div>
+            </div>
+          </div>
+
+          <div class="card-action-bar">
+            <button class="btn-action btn-secondary" onclick="goToScreen('screen-booking')">← BACK TO EDIT</button>
+            <button class="btn-action" onclick="confirmBooking()">CONFIRM & SUBMIT APPOINTMENT →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. CONFIRMED SCREEN -->
       <div id="screen-confirmed" class="screen">
         <div class="zoom-card" style="text-align: center; padding: 2.5rem 2rem;">
           <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Booking Confirmed</h2>
@@ -886,7 +977,7 @@
         </div>
       </div>
 
-      <!-- 7. ADMIN DASHBOARD -->
+      <!-- 8. ADMIN DASHBOARD -->
       <div id="screen-admin" class="screen">
         <div class="zoom-card">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">System Dashboard</h2>
@@ -915,7 +1006,7 @@
         </div>
       </div>
 
-      <!-- 8. DOCTOR PORTAL -->
+      <!-- 9. DOCTOR PORTAL -->
       <div id="screen-doctor" class="screen">
         <div class="zoom-card">
           <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Physician EMR Interface</h2>
@@ -954,7 +1045,7 @@
   </footer>
 
   <script>
-    /* PARTICLES CANVAS SYSTEM (ADAPTS TO DARK/LIGHT THEMES) */
+    /* PARTICLES CANVAS SYSTEM */
     const canvas = document.getElementById('spaceCanvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
@@ -1009,7 +1100,7 @@
     }
     renderCanvas();
 
-    /* THEME SWITCHER FUNCTIONALITY */
+    /* THEME SWITCHER */
     function toggleTheme() {
       const body = document.body;
       const btn = document.getElementById('themeBtn');
@@ -1074,23 +1165,7 @@
       { name: "Apollo KH Hospital", address: "Ranipet-Vellore Bypass, Melvisharam", phone: "+914172269580", specialties: ['General Medicine','Cardiology','Orthopaedics','Neurology','Gastroenterology','Emergency'] },
       { name: "Naruvi Hospitals", address: "Collector Office Road, Vellore", phone: "+914166661111", specialties: ['General Medicine','Cardiology','Orthopaedics','Neurology','Gastroenterology','Emergency'] },
       { name: "Sri Narayani Hospital & Research Centre", address: "Thirumalaikodi, Vellore", phone: "+914162206300", specialties: ['General Medicine','Gynaecology','Cardiology','ENT','Emergency'] },
-      { name: "Government Vellore Medical College", address: "Adukkamparai, Vellore", phone: "+914162260900", specialties: ['General Medicine','Gynaecology','Orthopaedics','Emergency'] },
-      { name: "Fortis Health Clinic", address: "Katpadi Main Road, Vellore", phone: "+919842324425", specialties: ['General Medicine','Orthopaedics','Emergency'] },
-      { name: "Dr. Agarwal's Eye Hospital", address: "Officer's Line, Vellore", phone: "+914162254461", specialties: ['Ophthalmology'] },
-      { name: "Shri Skin & Cosmetic Care", address: "Sathuvachari, Vellore", phone: "+919597649557", specialties: ['Dermatology'] },
-      { name: "Vellore ENT & Head-Neck Centre", address: "Gandhinagar, Katpadi", phone: "+914162256007", specialties: ['ENT'] },
-      { name: "Lotus Gastro & Endoscopy Center", address: "Green Circle, Vellore", phone: "+919943334063", specialties: ['Gastroenterology'] },
-      { name: "KHM Hospital", address: "Arcot Road, Ranipet", phone: "+919894399326", specialties: ['Paediatrics','General Medicine'] },
-      { name: "Care & Cure Neuro Psychiatric Centre", address: "Sathuvachari, Vellore", phone: "+914162234217", specialties: ['Psychiatry','Neurology'] },
-      { name: "Vellore Kidney & Urology Care", address: "Phase 2, Sathuvachari", phone: "+918925851213", specialties: ['Urology'] },
-      { name: "ThyroCare Endocrinology Hub", address: "Silk Mill, Vellore", phone: "+914162281226", specialties: ['Endocrinology'] },
-      { name: "Arai Trauma & Joint Replacement Centre", address: "Chittoor Bus Stand Road, Vellore", phone: "+918807338560", specialties: ['Orthopaedics','Emergency'] },
-      { name: "Vellore Chest & Asthma Speciality Hospital", address: "Katpadi Road, Vellore", phone: "+919600960160", specialties: ['Emergency','General Medicine'] },
-      { name: "Subam Multi-Speciality Clinic", address: "Bagayam, Vellore", phone: "+918220545111", specialties: ['General Medicine'] },
-      { name: "Santhosh Child & Maternity Hospital", address: "Kosapet, Vellore", phone: "+914162220052", specialties: ['Paediatrics','Gynaecology'] },
-      { name: "Vellore Heart & Vascular Institute", address: "Green Circle, Vellore", phone: "+914162244710", specialties: ['Cardiology'] },
-      { name: "Gems Skin & Hair Transplant Laser Center", address: "Gandhinagar, Vellore", phone: "+918056745999", specialties: ['Dermatology'] },
-      { name: "Kauvery Speciality Outpost", address: "Bypass Road, Vellore", phone: "+914162253357", specialties: ['General Medicine','Cardiology'] }
+      { name: "Government Vellore Medical College", address: "Adukkamparai, Vellore", phone: "+914162260900", specialties: ['General Medicine','Gynaecology','Orthopaedics','Emergency'] }
     ];
 
     let registeredPatients = [
@@ -1172,8 +1247,8 @@
       if (role === 'patient') {
         patientFields.style.display = 'block';
         staffFields.style.display = 'none';
-        heading.innerText = 'Patient Information & Authentication';
-        subtext.innerText = 'Provide your details to initiate your medical consultation.';
+        heading.innerText = 'Create Patient Account';
+        subtext.innerText = 'Sign up and improve your health today.';
       } else {
         patientFields.style.display = 'none';
         staffFields.style.display = 'block';
@@ -1334,14 +1409,43 @@
       });
     }
 
-    function confirmBooking() {
+    /* PREVIEW GENERATOR BEFORE FINAL SUBMISSION */
+    function generatePreview() {
       const date = document.getElementById('bookingDate').value;
       const time = document.getElementById('bookingTime').value;
 
       if (!date) {
-        alert("Pick a booking date.");
+        alert("Please pick a booking date.");
         return;
       }
+      if (!selectedHospital) {
+        alert("Please select a hospital.");
+        return;
+      }
+
+      // Populate preview details
+      document.getElementById('prevName').innerText = currentPatient.name || 'N/A';
+      document.getElementById('prevEmail').innerText = currentPatient.email || 'N/A';
+      document.getElementById('prevAgeGender').innerText = `${currentPatient.age} Yrs / ${currentPatient.gender}`;
+      document.getElementById('prevDob').innerText = currentPatient.dob || 'N/A';
+      document.getElementById('prevPhone').innerText = currentPatient.phone || 'N/A';
+
+      document.getElementById('prevSymptoms').innerText = selectedSymptomsList.map(s => s.name).join(', ') || 'None selected';
+      document.getElementById('prevHistory').innerText = selectedHistory.length > 0 ? selectedHistory.join(', ') : 'No prior history specified';
+      
+      const aiDiseases = selectedSymptomsList.map(s => `${s.disease} (${s.spec})`).join(' | ');
+      document.getElementById('prevAiDiagnosis').innerText = aiDiseases || 'General Medical Evaluation';
+
+      document.getElementById('prevHospital').innerText = selectedHospital.name;
+      document.getElementById('prevDate').innerText = date;
+      document.getElementById('prevTime').innerText = time;
+
+      goToScreen('screen-preview');
+    }
+
+    function confirmBooking() {
+      const date = document.getElementById('bookingDate').value;
+      const time = document.getElementById('bookingTime').value;
 
       const patientStr = currentPatient 
         ? `${currentPatient.name} (${currentPatient.email})` 
