@@ -340,7 +340,6 @@
       will-change: transform;
     }
 
-    /* Controlled steady zoom on hover - No aggressive 3D tilting */
     .zoom-card:hover {
       transform: scale(1.025) translateY(-4px);
       box-shadow: 0 20px 45px var(--accent-glow);
@@ -350,6 +349,12 @@
     /* FORM COMPONENTS */
     .input-group {
       margin-bottom: 1rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
     }
 
     label {
@@ -404,7 +409,6 @@
       user-select: none;
     }
 
-    /* Steady Zoom for Chips */
     .chip:hover {
       border-color: var(--accent-primary);
       color: var(--accent-primary);
@@ -628,7 +632,7 @@
       .role-btn { flex: 1; justify-content: center; padding: 0.5rem; font-size: 0.75rem; }
       .role-btn span:last-child { display: none; }
       .symptom-grid { grid-template-columns: repeat(2, 1fr); }
-      .grid-2col-mobile { grid-template-columns: 1fr !important; }
+      .grid-2col-mobile, .grid-2col { grid-template-columns: 1fr !important; }
       .card-action-bar { flex-direction: column-reverse; }
       .btn-action { width: 100%; }
     }
@@ -706,23 +710,64 @@
     <!-- RIGHT STAGE CONTENT WRAPPER -->
     <div class="main-stage">
       
-      <!-- 1. LOGIN SCREEN -->
+      <!-- 1. PATIENT REGISTRATION / AUTHENTICATION SCREEN -->
       <div id="screen-login" class="screen active">
         <div class="zoom-card">
-          <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">System Authentication</h2>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Sign in to access your designated healthcare dashboard.</p>
+          <h2 id="loginHeading" style="font-size: 1.25rem; margin-bottom: 0.25rem; text-transform: uppercase; color: var(--accent-primary);">Patient Information & Authentication</h2>
+          <p id="loginSubtext" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Provide your details to initiate your medical consultation.</p>
           
-          <div class="input-group">
-            <label for="loginEmail">EMAIL IDENTIFIER</label>
-            <input type="email" id="loginEmail" value="vishwa@gmail.com">
-          </div>
-          
-          <div class="input-group">
-            <label for="loginPass">SECURITY KEY</label>
-            <input type="password" id="loginPass" value="1234">
+          <div id="patientDetailsFields">
+            <div class="input-group">
+              <label for="loginName">FULL NAME</label>
+              <input type="text" id="loginName" placeholder="e.g. John Doe">
+            </div>
+
+            <div class="input-group">
+              <label for="loginEmail">EMAIL ADDRESS</label>
+              <input type="email" id="loginEmail" placeholder="e.g. user@gmail.com">
+            </div>
+
+            <div class="grid-2col">
+              <div class="input-group">
+                <label for="loginAge">AGE</label>
+                <input type="number" id="loginAge" placeholder="e.g. 28" min="1" max="120">
+              </div>
+              <div class="input-group">
+                <label for="loginGender">GENDER</label>
+                <select id="loginGender">
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2col">
+              <div class="input-group">
+                <label for="loginDob">DATE OF BIRTH (DOB)</label>
+                <input type="date" id="loginDob">
+              </div>
+              <div class="input-group">
+                <label for="loginPhone">PHONE NUMBER</label>
+                <input type="tel" id="loginPhone" placeholder="e.g. +91 9876543210">
+              </div>
+            </div>
           </div>
 
-          <p id="loginError" style="color: #DC2626; background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.8rem; display: none; margin-bottom: 1rem;">Restricted: Patient login is locked to vishwa@gmail.com</p>
+          <div id="staffAuthFields" style="display: none;">
+            <div class="input-group">
+              <label for="staffEmail">STAFF EMAIL IDENTIFIER</label>
+              <input type="email" id="staffEmail" value="doctor@curonova.org">
+            </div>
+            <div class="input-group">
+              <label for="loginPass">SECURITY KEY</label>
+              <input type="password" id="loginPass" value="1234">
+            </div>
+          </div>
+
+          <p id="loginError" style="color: #DC2626; background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.8rem; display: none; margin-bottom: 1rem;"></p>
 
           <div class="card-action-bar">
             <button class="btn-action" onclick="handleLogin()">ENTER PORTAL →</button>
@@ -830,12 +875,13 @@
           
           <div style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; text-align: left;">
             <h3 id="resHospital" style="font-size: 1.05rem; margin-bottom: 0.4rem; text-transform: uppercase; color: var(--accent-primary);">Hospital Name</h3>
+            <p id="resPatient" style="font-size: 0.85rem; color: var(--text-bright); margin-bottom: 0.2rem;"></p>
             <p id="resDate" style="font-size: 0.85rem; color: var(--text-bright);"></p>
             <p id="resTime" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;"></p>
           </div>
 
           <div style="display: flex; justify-content: center;">
-            <button class="btn-action btn-secondary" onclick="logout()">RETURN TO LOGIN</button>
+            <button class="btn-action btn-secondary" onclick="logout()">RETURN TO HOME</button>
           </div>
         </div>
       </div>
@@ -877,9 +923,7 @@
 
           <div class="input-group">
             <label for="docPatientSelect">SELECT PATIENT PROFILE</label>
-            <select id="docPatientSelect" onchange="loadPatientHistoryForDoctor()">
-              <option value="vishwa@gmail.com">Vishwa K (vishwa@gmail.com)</option>
-            </select>
+            <select id="docPatientSelect" onchange="loadPatientHistoryForDoctor()"></select>
           </div>
 
           <label style="margin-top: 0.85rem;">PATIENT MEDICAL & SYMPTOM HISTORY</label>
@@ -1049,9 +1093,14 @@
       { name: "Kauvery Speciality Outpost", address: "Bypass Road, Vellore", phone: "+914162253357", specialties: ['General Medicine','Cardiology'] }
     ];
 
+    let registeredPatients = [
+      { name: "Vishwa K", email: "vishwa@gmail.com", age: "24", gender: "Male", dob: "2002-04-15", phone: "+91 9840123456" }
+    ];
+
+    let currentPatient = null;
+
     let globalAppointments = [
-      { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Christian Medical College (CMC)", dateTime: "2026-08-26 | 10:30 AM", specialty: "General Medicine" },
-      { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Gems Skin & Hair Transplant Laser Center", dateTime: "2026-08-25 | 09:00 AM", specialty: "Dermatology" }
+      { patient: "Vishwa K (vishwa@gmail.com)", hospital: "Christian Medical College (CMC)", dateTime: "2026-08-26 | 10:30 AM", specialty: "General Medicine" }
     ];
 
     let globalPrescriptions = {
@@ -1090,7 +1139,20 @@
         opt.innerText = h.name;
         adminSelect.appendChild(opt);
       });
+      
+      updateDoctorPatientDropdown();
     })();
+
+    function updateDoctorPatientDropdown() {
+      const docSelect = document.getElementById('docPatientSelect');
+      docSelect.innerHTML = '';
+      registeredPatients.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.email;
+        opt.innerText = `${p.name} (${p.email}) - Age: ${p.age}, ${p.gender}`;
+        docSelect.appendChild(opt);
+      });
+    }
 
     function setRole(role) {
       selectedRole = role;
@@ -1098,26 +1160,70 @@
       document.getElementById(`role-btn-${role}`).classList.add('active');
       document.getElementById('roleBadge').innerText = role.toUpperCase() + ' PORTAL';
       document.getElementById('heroTitle').innerText = role.toUpperCase() + ' PORTAL';
-      
+
+      const patientFields = document.getElementById('patientDetailsFields');
+      const staffFields = document.getElementById('staffAuthFields');
+      const heading = document.getElementById('loginHeading');
+      const subtext = document.getElementById('loginSubtext');
+      const err = document.getElementById('loginError');
+
+      err.style.display = 'none';
+
       if (role === 'patient') {
-        document.getElementById('loginEmail').value = 'vishwa@gmail.com';
-      } else if (role === 'doctor') {
-        document.getElementById('loginEmail').value = 'doctor@curonova.org';
+        patientFields.style.display = 'block';
+        staffFields.style.display = 'none';
+        heading.innerText = 'Patient Information & Authentication';
+        subtext.innerText = 'Provide your details to initiate your medical consultation.';
       } else {
-        document.getElementById('loginEmail').value = 'admin@curonova.org';
+        patientFields.style.display = 'none';
+        staffFields.style.display = 'block';
+        heading.innerText = 'System Authentication';
+        subtext.innerText = 'Sign in to access your designated healthcare dashboard.';
+
+        if (role === 'doctor') {
+          document.getElementById('staffEmail').value = 'doctor@curonova.org';
+        } else {
+          document.getElementById('staffEmail').value = 'admin@curonova.org';
+        }
       }
     }
 
     function handleLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
       const err = document.getElementById('loginError');
 
       if (selectedRole === 'patient') {
-        if (email.toLowerCase() !== 'vishwa@gmail.com') {
+        const name = document.getElementById('loginName').value.trim();
+        const email = document.getElementById('loginEmail').value.trim();
+        const age = document.getElementById('loginAge').value.trim();
+        const gender = document.getElementById('loginGender').value;
+        const dob = document.getElementById('loginDob').value;
+        const phone = document.getElementById('loginPhone').value.trim();
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!name || !email || !age || !gender || !dob || !phone) {
+          err.innerText = "Please complete all patient profile details (Name, Email, Age, Gender, DOB, and Phone).";
           err.style.display = 'block';
           return;
         }
+
+        if (!emailPattern.test(email)) {
+          err.innerText = "Please enter a valid email address (e.g. yourname@gmail.com).";
+          err.style.display = 'block';
+          return;
+        }
+
         err.style.display = 'none';
+        currentPatient = { name, email, age, gender, dob, phone };
+
+        let existing = registeredPatients.find(p => p.email.toLowerCase() === email.toLowerCase());
+        if (!existing) {
+          registeredPatients.push(currentPatient);
+          updateDoctorPatientDropdown();
+        } else {
+          Object.assign(existing, currentPatient);
+        }
+
         goToScreen('screen-symptoms');
       } else if (selectedRole === 'admin') {
         err.style.display = 'none';
@@ -1237,14 +1343,19 @@
         return;
       }
 
+      const patientStr = currentPatient 
+        ? `${currentPatient.name} (${currentPatient.email})` 
+        : "Patient";
+
       globalAppointments.push({
-        patient: "Vishwa K (vishwa@gmail.com)",
+        patient: patientStr,
         hospital: selectedHospital.name,
         dateTime: `${date} | ${time}`,
         specialty: selectedSpecialties[0] || 'General Medicine'
       });
 
       document.getElementById('resHospital').innerText = selectedHospital.name;
+      document.getElementById('resPatient').innerText = `PATIENT: ${patientStr}`;
       document.getElementById('resDate').innerText = `DATE: ${date}`;
       document.getElementById('resTime').innerText = `TIME: ${time}`;
 
@@ -1269,8 +1380,14 @@
       const patientEmail = document.getElementById('docPatientSelect').value;
       const container = document.getElementById('docHistoryBox');
       const records = globalPrescriptions[patientEmail] || [];
+      const profile = registeredPatients.find(p => p.email === patientEmail);
 
-      let historyHtml = `<strong>LOGGED PAST CONDITIONS:</strong> ${selectedHistory.length > 0 ? selectedHistory.join(', ') : 'None specified.'}<br><br>`;
+      let profileHeader = "";
+      if (profile) {
+        profileHeader = `<strong>PROFILE:</strong> ${profile.name} | Age: ${profile.age} | Gender: ${profile.gender} | DOB: ${profile.dob} | Phone: ${profile.phone}<br><br>`;
+      }
+
+      let historyHtml = `${profileHeader}<strong>LOGGED PAST CONDITIONS:</strong> ${selectedHistory.length > 0 ? selectedHistory.join(', ') : 'None specified.'}<br><br>`;
       
       if (records.length === 0) {
         historyHtml += "<em>No previous doctor prescriptions logged.</em>";
@@ -1330,6 +1447,12 @@
     }
 
     function logout() {
+      document.getElementById('loginName').value = '';
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginAge').value = '';
+      document.getElementById('loginGender').value = '';
+      document.getElementById('loginDob').value = '';
+      document.getElementById('loginPhone').value = '';
       goToScreen('screen-login');
     }
   </script>
